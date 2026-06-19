@@ -1,0 +1,113 @@
+import SwiftUI
+
+struct GardenView: View {
+    var playerData: PlayerData
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
+    private let minSlots = 24
+
+    var body: some View {
+        NavigationStack {
+            ZStack {
+                Color(red: 0.97, green: 0.95, blue: 0.90)
+                    .ignoresSafeArea()
+
+                if playerData.garden.isEmpty {
+                    emptyState
+                } else {
+                    gardenGrid
+                }
+            }
+            .navigationTitle("My Garden")
+            .navigationBarTitleDisplayMode(.large)
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 16) {
+            Text("🌱")
+                .font(.system(size: 64))
+            Text("Your garden is empty")
+                .font(.system(.title3, design: .rounded).bold())
+                .foregroundStyle(Color(red: 0.30, green: 0.22, blue: 0.14))
+            Text("Solve a puzzle to plant your first flower")
+                .font(.system(.subheadline, design: .rounded))
+                .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+        }
+    }
+
+    private var gardenGrid: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 8) {
+                let totalSlots = max(minSlots, playerData.garden.count + 6)
+                ForEach(0..<totalSlots, id: \.self) { index in
+                    if index < playerData.garden.count {
+                        plantSlot(playerData.garden[index])
+                    } else {
+                        emptySlot
+                    }
+                }
+            }
+            .padding(16)
+        }
+    }
+
+    private func plantSlot(_ plant: Plant) -> some View {
+        VStack(spacing: 2) {
+            Text(plant.emoji)
+                .font(.system(size: 36))
+                .frame(width: 56, height: 56)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(slotColor(for: plant.difficulty).opacity(0.3))
+                )
+
+            if plant.fromDaily {
+                Text(shortDate(plant.earnedDate))
+                    .font(.system(size: 9, design: .rounded))
+                    .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+            } else {
+                Text(difficultyLabel(plant.difficulty))
+                    .font(.system(size: 9, design: .rounded))
+                    .foregroundStyle(Color(red: 0.55, green: 0.50, blue: 0.42))
+            }
+        }
+    }
+
+    private var emptySlot: some View {
+        VStack(spacing: 2) {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color(red: 0.88, green: 0.85, blue: 0.80).opacity(0.4))
+                .frame(width: 56, height: 56)
+                .overlay(
+                    Circle()
+                        .fill(Color(red: 0.80, green: 0.76, blue: 0.70).opacity(0.3))
+                        .frame(width: 20, height: 20)
+                )
+            Text(" ")
+                .font(.system(size: 9))
+        }
+    }
+
+    private func slotColor(for difficulty: GridSize) -> Color {
+        switch difficulty {
+        case .five:  return Color(red: 0.76, green: 0.88, blue: 0.72)
+        case .six:   return Color(red: 0.95, green: 0.85, blue: 0.65)
+        case .seven: return Color(red: 0.85, green: 0.72, blue: 0.88)
+        }
+    }
+
+    private func shortDate(_ dateStr: String) -> String {
+        let parts = dateStr.split(separator: "-")
+        guard parts.count == 3 else { return dateStr }
+        return "\(parts[1])/\(parts[2])"
+    }
+
+    private func difficultyLabel(_ difficulty: GridSize) -> String {
+        difficulty.label
+    }
+}
+
+#Preview {
+    GardenView(playerData: PlayerData.shared)
+}

@@ -6,16 +6,14 @@
 //
 
 import SwiftUI
-import CoreData
 
 @main
 struct Puzzle_GardenApp: App {
-    let persistenceController = PersistenceController.shared
+    private let playerData = PlayerData.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            ContentView(playerData: playerData)
         }
     }
 }
