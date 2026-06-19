@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Hydrangea Cluster — Tier 2 Flower -->
+
+  <!-- Stem -->
+  <path d="M50 90 C50 85 50 78 50 68" stroke="#4A3520" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Branching stems to flower head -->
+  <path d="M50 68 C46 64 42 60 40 55" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 68 C54 64 58 60 60 55" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 68 C50 62 50 57 50 52" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 68 C44 63 40 57 38 52" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 68 C56 63 60 57 62 52" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Side leaf stems -->
+  <path d="M50 82 C42 80 35 81 30 86" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 76 C58 74 65 75 70 80" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Large hydrangea leaves -->
+  <path d="M50 82 C42 79 33 79 30 84 C34 80 43 80 50 82Z" fill="#5C8A4A"/>
+  <path d="M50 82 C44 79 36 79 33 84C36 80 44 80 50 82Z" fill="#6B9B4A" opacity="0.6"/>
+  <path d="M50 76 C58 73 66 73 70 78 C66 75 58 75 50 76Z" fill="#5C8A4A"/>
+  <!-- Leaf veins (hydrangea has prominent veins) -->
+  <path d="M30 84 L40 81 L50 82" stroke="#4A7A3A" stroke-width="0.8" opacity="0.5"/>
+  <path d="M36 83 L44 80" stroke="#4A7A3A" stroke-width="0.6" opacity="0.4"/>
+  <path d="M70 78 L60 75 L50 76" stroke="#4A7A3A" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Hydrangea flower mophead — large rounded cluster of 4-petal florets -->
+  <!-- Base cluster shape -->
+  <ellipse cx="50" cy="38" rx="26" ry="20" fill="#7A9AC8" opacity="0.25"/>
+
+  <!-- Individual florets — 4 petals each, arranged in a dense dome -->
+  <!-- Layer 1 (outer) -->
+  <g opacity="0.95">
+    <!-- Floret 1 -->
+    <path d="M28 42 C26 40 26 37 28 36 C30 37 30 40 28 42Z" fill="#8AAAD8"/>
+    <path d="M28 42 C30 44 33 44 34 42 C33 44 30 44 28 42Z" fill="#7A9AC8"/>
+    <path d="M28 42 C26 44 24 43 24 42 C24 41 26 40 28 42Z" fill="#8AAAD8"/>
+    <path d="M28 42 C30 40 30 37 28 36Z" fill="#7A9AC8"/>
+    <circle cx="28" cy="42" r="2" fill="#A0B8E0"/>
+
+    <!-- Floret 2 -->
+    <path d="M38 25 C36 23 36 20 38 19 C40 20 40 23 38 25Z" fill="#8AAAD8"/>
+    <path d="M38 25 C40 27 43 27 44 25 C43 27 40 27 38 25Z" fill="#7A9AC8"/>
+    <path d="M38 25 C36 27 34 26 34 25 C34 24 36 23 38 25Z" fill="#8AAAD8"/>
+    <path d="M38 25 C40 23 40 20 38 19Z" fill="#7A9AC8"/>
+    <circle cx="38" cy="25" r="2" fill="#A0B8E0"/>
+
+    <!-- Floret 3 -->
+    <path d="M50 20 C48 18 48 15 50 14 C52 15 52 18 50 20Z" fill="#8AAAD8"/>
+    <path d="M50 20 C52 22 55 22 56 20 C55 22 52 22 50 20Z" fill="#7A9AC8"/>
+    <path d="M50 20 C48 22 46 21 46 20 C46 19 48 18 50 20Z" fill="#8AAAD8"/>
+    <path d="M50 20 C52 18 52 15 50 14Z" fill="#7A9AC8"/>
+    <circle cx="50" cy="20" r="2" fill="#A0B8E0"/>
+
+    <!-- Floret 4 -->
+    <path d="M62 25 C60 23 60 20 62 19 C64 20 64 23 62 25Z" fill="#9AAAC0"/>
+    <path d="M62 25 C64 27 67 27 68 25 C67 27 64 27 62 25Z" fill="#8A9AB0"/>
+    <path d="M62 25 C60 27 58 26 58 25 C58 24 60 23 62 25Z" fill="#9AAAC0"/>
+    <path d="M62 25 C64 23 64 20 62 19Z" fill="#8A9AB0"/>
+    <circle cx="62" cy="25" r="2" fill="#A8B8D0"/>
+
+    <!-- Floret 5 -->
+    <path d="M72 42 C70 40 70 37 72 36 C74 37 74 40 72 42Z" fill="#9AAAC0"/>
+    <path d="M72 42 C74 44 77 44 78 42 C77 44 74 44 72 42Z" fill="#8A9AB0"/>
+    <path d="M72 42 C70 44 68 43 68 42 C68 41 70 40 72 42Z" fill="#9AAAC0"/>
+    <path d="M72 42 C74 40 74 37 72 36Z" fill="#8A9AB0"/>
+    <circle cx="72" cy="42" r="2" fill="#A8B8D0"/>
+
+    <!-- Floret 6 -->
+    <path d="M68 55 C66 53 66 50 68 49 C70 50 70 53 68 55Z" fill="#8AAAD8"/>
+    <path d="M68 55 C70 57 73 57 74 55 C73 57 70 57 68 55Z" fill="#7A9AC8"/>
+    <path d="M68 55 C66 57 64 56 64 55 C64 54 66 53 68 55Z" fill="#8AAAD8"/>
+    <circle cx="68" cy="55" r="2" fill="#A0B8E0"/>
+
+    <!-- Floret 7 -->
+    <path d="M32 55 C30 53 30 50 32 49 C34 50 34 53 32 55Z" fill="#8AAAD8"/>
+    <path d="M32 55 C34 57 37 57 38 55 C37 57 34 57 32 55Z" fill="#7A9AC8"/>
+    <path d="M32 55 C30 57 28 56 28 55 C28 54 30 53 32 55Z" fill="#8AAAD8"/>
+    <circle cx="32" cy="55" r="2" fill="#A0B8E0"/>
+  </g>
+
+  <!-- Layer 2 (inner/mid) — more flowers fill the dome -->
+  <g opacity="0.9">
+    <!-- Floret A -->
+    <path d="M38 35 C36 33 36 30 38 29 C40 30 40 33 38 35Z" fill="#8AAAD8"/>
+    <path d="M38 35 C40 37 43 37 44 35 C43 37 40 37 38 35Z" fill="#7A9AC8"/>
+    <path d="M38 35 C36 37 34 36 34 35 C34 34 36 33 38 35Z" fill="#8AAAD8"/>
+    <path d="M38 35 C40 33 40 30 38 29Z" fill="#7A9AC8"/>
+    <circle cx="38" cy="35" r="2.2" fill="#B0C8E8"/>
+
+    <!-- Floret B -->
+    <path d="M50 30 C48 28 48 25 50 24 C52 25 52 28 50 30Z" fill="#8AAAD8"/>
+    <path d="M50 30 C52 32 55 32 56 30 C55 32 52 32 50 30Z" fill="#7A9AC8"/>
+    <path d="M50 30 C48 32 46 31 46 30 C46 29 48 28 50 30Z" fill="#8AAAD8"/>
+    <path d="M50 30 C52 28 52 25 50 24Z" fill="#7A9AC8"/>
+    <circle cx="50" cy="30" r="2.2" fill="#B0C8E8"/>
+
+    <!-- Floret C -->
+    <path d="M62 35 C60 33 60 30 62 29 C64 30 64 33 62 35Z" fill="#9AAAC0"/>
+    <path d="M62 35 C64 37 67 37 68 35 C67 37 64 37 62 35Z" fill="#8A9AB0"/>
+    <path d="M62 35 C60 37 58 36 58 35 C58 34 60 33 62 35Z" fill="#9AAAC0"/>
+    <path d="M62 35 C64 33 64 30 62 29Z" fill="#8A9AB0"/>
+    <circle cx="62" cy="35" r="2.2" fill="#A8B8D0"/>
+
+    <!-- Floret D -->
+    <path d="M34 46 C32 44 32 41 34 40 C36 41 36 44 34 46Z" fill="#8AAAD8"/>
+    <path d="M34 46 C36 48 39 48 40 46 C39 48 36 48 34 46Z" fill="#7A9AC8"/>
+    <path d="M34 46 C32 48 30 47 30 46 C30 45 32 44 34 46Z" fill="#8AAAD8"/>
+    <circle cx="34" cy="46" r="2.2" fill="#B0C8E8"/>
+
+    <!-- Floret E -->
+    <path d="M66 46 C64 44 64 41 66 40 C68 41 68 44 66 46Z" fill="#9AAAC0"/>
+    <path d="M66 46 C68 48 71 48 72 46 C71 48 68 48 66 46Z" fill="#8A9AB0"/>
+    <path d="M66 46 C64 48 62 47 62 46 C62 45 64 44 66 46Z" fill="#9AAAC0"/>
+    <circle cx="66" cy="46" r="2.2" fill="#A8B8D0"/>
+
+    <!-- Floret F (bottom area) -->
+    <path d="M42 55 C40 53 40 50 42 49 C44 50 44 53 42 55Z" fill="#8AAAD8"/>
+    <path d="M42 55 C44 57 47 57 48 55 C47 57 44 57 42 55Z" fill="#7A9AC8"/>
+    <path d="M42 55 C40 57 38 56 38 55 C38 54 40 53 42 55Z" fill="#8AAAD8"/>
+    <circle cx="42" cy="55" r="2.2" fill="#B0C8E8"/>
+
+    <!-- Floret G -->
+    <path d="M58 55 C56 53 56 50 58 49 C60 50 60 53 58 55Z" fill="#8AAAD8"/>
+    <path d="M58 55 C60 57 63 57 64 55 C63 57 60 57 58 55Z" fill="#7A9AC8"/>
+    <path d="M58 55 C56 57 54 56 54 55 C54 54 56 53 58 55Z" fill="#8AAAD8"/>
+    <circle cx="58" cy="55" r="2.2" fill="#B0C8E8"/>
+  </g>
+
+  <!-- Center cluster -->
+  <g opacity="0.95">
+    <path d="M50 42 C48 40 48 37 50 36 C52 37 52 40 50 42Z" fill="#A0C0E8"/>
+    <path d="M50 42 C52 44 55 44 56 42 C55 44 52 44 50 42Z" fill="#90B0D8"/>
+    <path d="M50 42 C48 44 46 43 46 42 C46 41 48 40 50 42Z" fill="#A0C0E8"/>
+    <path d="M50 42 C52 40 52 37 50 36Z" fill="#90B0D8"/>
+    <circle cx="50" cy="42" r="2.5" fill="#C8D8F0"/>
+  </g>
+
+  <!-- Ground soil -->
+  <ellipse cx="50" cy="91" rx="11" ry="3" fill="#8B6914" opacity="0.3"/>
+</svg>
