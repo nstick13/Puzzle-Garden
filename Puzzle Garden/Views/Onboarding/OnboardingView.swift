@@ -276,7 +276,7 @@ private struct GardenPlotGrid: View {
                             if isVisible {
                                 Text(plantEmojis[filledRank % plantEmojis.count])
                                     .font(.system(size: 26))
-                                    .scaleEffect(isVisible ? 1.0 : 0.1)
+                                    .transition(.scale(scale: 0.1).combined(with: .opacity))
                             }
                         }
                         .frame(maxWidth: .infinity)
