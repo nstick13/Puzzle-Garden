@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Daily Special Marker — Warm Sun/Star Badge -->
+  <!-- Designed to overlay any plant tile as a corner/overlay indicator -->
+
+  <!-- Outer glow ring -->
+  <circle cx="50" cy="50" r="36" fill="#E8C84A" opacity="0.15"/>
+
+  <!-- Sun rays (8 alternating long/short) -->
+  <!-- Long rays -->
+  <path d="M50 50 L50 10" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L50 90" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L10 50" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L90 50" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Diagonal long rays -->
+  <path d="M50 50 L22 22" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L78 22" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L22 78" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 50 L78 78" stroke="#E8C84A" stroke-width="3" stroke-linecap="round"/>
+  <!-- Short rays (between) -->
+  <path d="M50 50 L36 14" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L64 14" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L86 36" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L86 64" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L64 86" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L36 86" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L14 64" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 50 L14 36" stroke="#F0D460" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Main disc -->
+  <circle cx="50" cy="50" r="24" fill="#E8C84A"/>
+  <circle cx="50" cy="50" r="22" fill="#F0D460"/>
+
+  <!-- Inner ring detail -->
+  <circle cx="50" cy="50" r="18" fill="#E8C84A"/>
+  <circle cx="50" cy="50" r="16" fill="#F5DC70"/>
+
+  <!-- Star facets (warm sparkle) -->
+  <!-- 5-pointed star in center for the "daily special" feel -->
+  <path d="M50 34 L52.5 44 L62 44 L54.5 50 L57 60 L50 54 L43 60 L45.5 50 L38 44 L47.5 44 Z" fill="#E8A820"/>
+  <path d="M50 34 L52.5 44 L62 44 L54.5 50 L57 60 L50 54 L43 60 L45.5 50 L38 44 L47.5 44 Z" fill="#F0C040" opacity="0.6"/>
+
+  <!-- Star highlight -->
+  <path d="M50 36 L52 44 L50 42 L48 44 Z" fill="#F8E060" opacity="0.7"/>
+
+  <!-- Warm terracotta accents on outer ring -->
+  <circle cx="50" cy="28" r="2" fill="#B85C3C" opacity="0.7"/>
+  <circle cx="50" cy="72" r="2" fill="#B85C3C" opacity="0.7"/>
+  <circle cx="28" cy="50" r="2" fill="#B85C3C" opacity="0.7"/>
+  <circle cx="72" cy="50" r="2" fill="#B85C3C" opacity="0.7"/>
+  <circle cx="33" cy="33" r="1.5" fill="#B85C3C" opacity="0.6"/>
+  <circle cx="67" cy="33" r="1.5" fill="#B85C3C" opacity="0.6"/>
+  <circle cx="33" cy="67" r="1.5" fill="#B85C3C" opacity="0.6"/>
+  <circle cx="67" cy="67" r="1.5" fill="#B85C3C" opacity="0.6"/>
+
+  <!-- Center shine dot -->
+  <circle cx="46" cy="46" r="3" fill="#FFFBE8" opacity="0.7"/>
+  <circle cx="47" cy="47" r="1.5" fill="white" opacity="0.5"/>
+</svg>

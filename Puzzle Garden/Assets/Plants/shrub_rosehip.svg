@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Rosehip / Bramble — Tier 3 Tree/Vine -->
+
+  <!-- Main arching canes -->
+  <path d="M20 88 C22 78 28 65 38 52 C48 40 60 30 72 22" stroke="#6B4020" stroke-width="3" stroke-linecap="round"/>
+  <path d="M30 90 C30 80 34 68 42 56 C50 44 62 34 76 26" stroke="#8B5C30" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M15 80 C18 70 25 60 35 50 C45 40 58 32 70 26" stroke="#8B5C30" stroke-width="2" stroke-linecap="round"/>
+  <!-- Shorter sprays -->
+  <path d="M50 88 C52 78 58 66 66 56" stroke="#8B5C30" stroke-width="2" stroke-linecap="round"/>
+  <path d="M60 90 C62 80 68 68 74 58" stroke="#6B4020" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M38 88 C38 78 40 68 44 58" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Thorns on canes -->
+  <path d="M25 82 L22 79" stroke="#6B4020" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M32 74 L35 71" stroke="#6B4020" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M40 64 L37 61" stroke="#6B4020" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 54 L53 51" stroke="#6B4020" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M60 44 L57 41" stroke="#6B4020" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M68 36 L71 33" stroke="#6B4020" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M36 64 L33 61" stroke="#8B5C30" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M44 56 L47 53" stroke="#8B5C30" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M55 68 L52 65" stroke="#8B5C30" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M64 58 L67 55" stroke="#8B5C30" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M72 48 L69 45" stroke="#8B5C30" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Compound leaves (5 leaflets) -->
+  <!-- Leaf cluster 1 (lower left) -->
+  <path d="M28 76 C24 73 20 74 18 78 C21 74 25 74 28 76Z" fill="#5C8A4A"/>
+  <path d="M28 76 C32 73 36 74 38 78 C35 74 31 74 28 76Z" fill="#6B9B4A"/>
+  <path d="M28 76 C28 72 28 67 30 64 C29 67 28 72 28 76Z" fill="#5C8A4A"/>
+  <path d="M28 76 C24 72 22 67 24 63 C24 67 25 72 28 76Z" fill="#6B9B4A"/>
+  <path d="M28 76 C32 72 34 67 32 63 C32 67 31 72 28 76Z" fill="#5C8A4A"/>
+
+  <!-- Leaf cluster 2 (mid) -->
+  <path d="M44 60 C40 57 36 58 34 62 C37 58 41 58 44 60Z" fill="#5C8A4A"/>
+  <path d="M44 60 C48 57 52 58 54 62 C51 58 47 58 44 60Z" fill="#6B9B4A"/>
+  <path d="M44 60 C44 56 44 51 46 48 C45 51 44 56 44 60Z" fill="#5C8A4A"/>
+  <path d="M44 60 C40 56 38 51 40 47 C40 51 41 56 44 60Z" fill="#6B9B4A"/>
+  <path d="M44 60 C48 56 50 51 48 47 C48 51 47 56 44 60Z" fill="#5C8A4A"/>
+
+  <!-- Leaf cluster 3 (upper) -->
+  <path d="M60 42 C56 39 52 40 50 44 C53 40 57 40 60 42Z" fill="#5C8A4A"/>
+  <path d="M60 42 C64 39 68 40 70 44 C67 40 63 40 60 42Z" fill="#6B9B4A"/>
+  <path d="M60 42 C60 38 60 33 62 30 C61 33 60 38 60 42Z" fill="#5C8A4A"/>
+  <path d="M60 42 C56 38 54 33 56 29 C56 33 57 38 60 42Z" fill="#6B9B4A"/>
+  <path d="M60 42 C64 38 66 33 64 29 C64 33 63 38 60 42Z" fill="#5C8A4A"/>
+
+  <!-- Extra leaves -->
+  <path d="M50 72 C46 69 42 70 40 74 C43 70 47 70 50 72Z" fill="#5C8A4A"/>
+  <path d="M50 72 C54 69 58 70 60 74 C57 70 53 70 50 72Z" fill="#6B9B4A"/>
+  <path d="M66 56 C62 53 58 54 56 58 C59 54 63 54 66 56Z" fill="#5C8A4A"/>
+  <path d="M66 56 C70 53 74 54 76 58 C73 54 69 54 66 56Z" fill="#6B9B4A"/>
+  <path d="M74 40 C70 37 66 38 64 42 C67 38 71 38 74 40Z" fill="#5C8A4A"/>
+  <path d="M74 40 C78 37 82 38 84 42 C81 38 77 38 74 40Z" fill="#6B9B4A"/>
+
+  <!-- Late roses (small, simple 5-petal) -->
+  <!-- Rose 1 -->
+  <path d="M36 52 C34 49 34 45 36 43 C38 41 41 43 41 46 C41 49 39 52 36 52Z" fill="#D4847A"/>
+  <path d="M36 52 C33 53 30 51 30 48 C30 45 33 44 35 46Z" fill="#C06070"/>
+  <path d="M36 52 C39 53 41 56 40 59 C38 57 37 54 36 52Z" fill="#D4847A"/>
+  <path d="M36 52 C33 55 31 58 32 61 C33 58 35 55 36 52Z" fill="#E8A090"/>
+  <path d="M36 52 C39 49 40 46 38 43Z" fill="#C06070"/>
+  <circle cx="36" cy="52" r="3" fill="#E8C84A"/>
+  <circle cx="36" cy="52" r="1.8" fill="#F0D060"/>
+
+  <!-- Rose 2 -->
+  <path d="M62 34 C60 31 60 27 62 25 C64 23 67 25 67 28 C67 31 65 34 62 34Z" fill="#C06070"/>
+  <path d="M62 34 C59 35 56 33 56 30 C56 27 59 26 61 28Z" fill="#D4847A"/>
+  <path d="M62 34 C65 35 67 38 66 41 C64 39 63 36 62 34Z" fill="#C06070"/>
+  <path d="M62 34 C59 37 57 40 58 43 C59 40 61 37 62 34Z" fill="#D4847A"/>
+  <path d="M62 34 C65 31 66 28 64 25Z" fill="#E8A090"/>
+  <circle cx="62" cy="34" r="2.5" fill="#E8C84A"/>
+  <circle cx="62" cy="34" r="1.5" fill="#F0D060"/>
+
+  <!-- Rose 3 (smaller, outer area) -->
+  <path d="M76 48 C74 45 74 41 76 39 C78 37 81 39 81 42 C81 45 79 48 76 48Z" fill="#D4847A"/>
+  <path d="M76 48 C73 49 70 47 70 44 C70 41 73 40 75 42Z" fill="#C06070"/>
+  <path d="M76 48 C79 49 81 52 80 55 C78 53 77 50 76 48Z" fill="#D4847A"/>
+  <path d="M76 48 C79 45 80 42 78 39Z" fill="#E8A090"/>
+  <circle cx="76" cy="48" r="2.5" fill="#E8C84A"/>
+
+  <!-- Rosehips (red berries — the main feature) -->
+  <!-- Large hips -->
+  <circle cx="72" cy="26" r="5.5" fill="#B83C3C"/>
+  <circle cx="72" cy="26" r="4" fill="#CC4444"/>
+  <!-- Hip sepal star -->
+  <path d="M72 23 L73 21 L74 23 L72 22Z" fill="#4A3520"/>
+  <path d="M72 23 L70 21 L71 23 L72 22Z" fill="#4A3520"/>
+  <path d="M73 24 L75 22 L74 24Z" fill="#4A3520"/>
+  <!-- Highlight -->
+  <circle cx="70" cy="24" r="1.5" fill="#E05050" opacity="0.7"/>
+
+  <circle cx="24" cy="64" r="5" fill="#B83C3C"/>
+  <circle cx="24" cy="64" r="3.5" fill="#CC4444"/>
+  <path d="M24 61 L25 59 L26 61 L24 60Z" fill="#4A3520"/>
+  <path d="M24 61 L22 59 L23 61 L24 60Z" fill="#4A3520"/>
+  <circle cx="22" cy="62" r="1.2" fill="#E05050" opacity="0.7"/>
+
+  <!-- Medium hips -->
+  <circle cx="48" cy="46" r="4.5" fill="#C04040"/>
+  <circle cx="48" cy="46" r="3" fill="#D44848"/>
+  <path d="M48 43 L49 41 L50 43 L48 42Z" fill="#4A3520"/>
+  <path d="M48 43 L46 41 L47 43 L48 42Z" fill="#4A3520"/>
+  <circle cx="46" cy="44" r="1.2" fill="#E05050" opacity="0.6"/>
+
+  <circle cx="66" cy="60" r="4" fill="#B83C3C"/>
+  <circle cx="66" cy="60" r="2.8" fill="#CC4444"/>
+  <path d="M66 57 L67 55 L68 57 L66 56Z" fill="#4A3520"/>
+  <path d="M66 57 L64 55 L65 57 L66 56Z" fill="#4A3520"/>
+
+  <!-- Small hips (clusters) -->
+  <circle cx="80" cy="34" r="3.5" fill="#C04040"/>
+  <circle cx="84" cy="36" r="3" fill="#B83C3C"/>
+  <circle cx="82" cy="40" r="3" fill="#C04040"/>
+  <circle cx="16" cy="72" r="3" fill="#B83C3C"/>
+  <circle cx="20" cy="76" r="3.5" fill="#C04040"/>
+
+  <!-- Ground soil -->
+  <ellipse cx="40" cy="92" rx="18" ry="3.5" fill="#8B6914" opacity="0.3"/>
+</svg>
