@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Mint Sprig — Tier 1 Herb -->
+
+  <!-- Main stem -->
+  <path d="M50 90 C50 85 50 70 50 35" stroke="#4A3520" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Side branches -->
+  <path d="M50 78 C44 76 38 78 34 82" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 78 C56 76 62 78 66 82" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 68 C43 66 36 66 32 70" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 68 C57 66 64 66 68 70" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 57 C44 55 37 54 34 58" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 57 C56 55 63 54 66 58" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 47 C44 45 38 43 36 47" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 47 C56 45 62 43 64 47" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Leaf pairs — oval, slightly serrated edge via path -->
+  <!-- Bottom pair -->
+  <path d="M50 78 C44 75 37 75 34 80 C37 76 44 77 50 78Z" fill="#6BBF5A"/>
+  <path d="M34 80 C35 77 38 76 40 79 C38 80 35 80 34 80Z" fill="#4A9A3A" opacity="0.5"/>
+  <path d="M50 78 C56 75 63 75 66 80 C63 76 56 77 50 78Z" fill="#5CB04A"/>
+  <path d="M66 80 C65 77 62 76 60 79 C62 80 65 80 66 80Z" fill="#4A9A3A" opacity="0.5"/>
+
+  <!-- Midway pair -->
+  <path d="M50 68 C43 65 36 63 32 68 C36 65 43 66 50 68Z" fill="#6BBF5A"/>
+  <path d="M32 68 C33 65 37 64 39 67 C37 68 33 68 32 68Z" fill="#4A9A3A" opacity="0.5"/>
+  <path d="M50 68 C57 65 64 63 68 68 C64 65 57 66 50 68Z" fill="#5CB04A"/>
+  <path d="M68 68 C67 65 63 64 61 67 C63 68 67 68 68 68Z" fill="#4A9A3A" opacity="0.5"/>
+
+  <!-- Upper-mid pair -->
+  <path d="M50 57 C44 54 37 52 34 56 C37 53 44 55 50 57Z" fill="#6BBF5A"/>
+  <path d="M50 57 C56 54 63 52 66 56 C63 53 56 55 50 57Z" fill="#5CB04A"/>
+
+  <!-- Upper pair -->
+  <path d="M50 47 C44 44 38 42 36 46 C38 43 44 45 50 47Z" fill="#6BBF5A"/>
+  <path d="M50 47 C56 44 62 42 64 46 C62 43 56 45 50 47Z" fill="#5CB04A"/>
+
+  <!-- Leaf veins (subtle) -->
+  <path d="M34 80 C38 77 46 78 50 78" stroke="#4A9A3A" stroke-width="0.6" opacity="0.4"/>
+  <path d="M66 80 C62 77 54 78 50 78" stroke="#4A9A3A" stroke-width="0.6" opacity="0.4"/>
+  <path d="M32 68 C36 65 44 66 50 68" stroke="#4A9A3A" stroke-width="0.6" opacity="0.4"/>
+  <path d="M68 68 C64 65 56 66 50 68" stroke="#4A9A3A" stroke-width="0.6" opacity="0.4"/>
+
+  <!-- Top flower spike — tiny lavender florets -->
+  <path d="M50 35 L50 18" stroke="#6B9B4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Flower whorls (stacked rings around stem) -->
+  <ellipse cx="50" cy="32" rx="5" ry="2.5" fill="#A88CC0" opacity="0.9"/>
+  <circle cx="45" cy="31" r="1.5" fill="#8B6CAC"/>
+  <circle cx="50" cy="30" r="1.5" fill="#8B6CAC"/>
+  <circle cx="55" cy="31" r="1.5" fill="#8B6CAC"/>
+  <circle cx="48" cy="33" r="1.2" fill="#BC9ED0"/>
+  <circle cx="52" cy="33" r="1.2" fill="#BC9ED0"/>
+
+  <ellipse cx="50" cy="26" rx="4" ry="2" fill="#A88CC0" opacity="0.9"/>
+  <circle cx="46" cy="25" r="1.2" fill="#8B6CAC"/>
+  <circle cx="50" cy="24" r="1.2" fill="#8B6CAC"/>
+  <circle cx="54" cy="25" r="1.2" fill="#8B6CAC"/>
+
+  <ellipse cx="50" cy="21" rx="3" ry="1.8" fill="#BC9ED0" opacity="0.9"/>
+  <circle cx="47" cy="20" r="1" fill="#A88CC0"/>
+  <circle cx="50" cy="19" r="1" fill="#A88CC0"/>
+  <circle cx="53" cy="20" r="1" fill="#A88CC0"/>
+
+  <!-- Small leaves at flower base -->
+  <path d="M45 36 C43 34 42 30 44 28 C44 31 44 34 45 36Z" fill="#5CB04A"/>
+  <path d="M55 36 C57 34 58 30 56 28 C56 31 56 34 55 36Z" fill="#5CB04A"/>
+
+  <!-- Ground soil -->
+  <ellipse cx="50" cy="91" rx="10" ry="3" fill="#8B6914" opacity="0.3"/>
+</svg>

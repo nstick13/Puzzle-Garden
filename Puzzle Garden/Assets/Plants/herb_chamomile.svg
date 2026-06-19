@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Chamomile — Tier 1 Herb -->
+
+  <!-- Stems -->
+  <path d="M50 90 C50 85 51 75 52 65" stroke="#4A3520" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 85 C44 80 38 72 35 62" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 80 C56 75 62 68 65 58" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 72 C46 68 44 60 44 52" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Feathery leaves -->
+  <!-- Left leaf cluster -->
+  <path d="M44 80 C42 78 39 77 38 79 C39 77 42 76 44 80Z" fill="#6B9B4A"/>
+  <path d="M43 76 C40 74 37 74 36 76 C38 74 41 73 43 76Z" fill="#5C8A4A"/>
+  <path d="M41 72 C38 71 35 71 34 73 C36 71 39 70 41 72Z" fill="#6B9B4A"/>
+  <!-- Right leaf cluster -->
+  <path d="M56 76 C58 74 61 73 62 75 C61 73 58 72 56 76Z" fill="#6B9B4A"/>
+  <path d="M58 71 C60 69 63 68 64 70 C63 68 60 67 58 71Z" fill="#5C8A4A"/>
+  <!-- Center leaves -->
+  <path d="M49 72 C47 70 46 67 47 64 C47 67 48 69 49 72Z" fill="#5C8A4A"/>
+  <path d="M51 70 C53 68 54 65 53 62 C53 65 52 67 51 70Z" fill="#6B9B4A"/>
+
+  <!-- Flower 1 — center large, fully open -->
+  <!-- Petals -->
+  <path d="M52 40 C52 36 54 30 52 26 C52 30 50 36 52 40Z" fill="#F5F0E8"/>
+  <path d="M52 40 C55 37 60 33 60 29 C57 33 54 37 52 40Z" fill="#F0EBE2"/>
+  <path d="M52 40 C56 38 62 37 64 34 C61 37 55 38 52 40Z" fill="#F5F0E8"/>
+  <path d="M52 40 C56 41 62 43 64 47 C61 43 55 41 52 40Z" fill="#F0EBE2"/>
+  <path d="M52 40 C55 43 58 48 56 52 C55 48 53 43 52 40Z" fill="#F5F0E8"/>
+  <path d="M52 40 C50 44 50 50 48 53 C49 49 50 44 52 40Z" fill="#F0EBE2"/>
+  <path d="M52 40 C49 43 45 47 43 51 C45 47 48 43 52 40Z" fill="#F5F0E8"/>
+  <path d="M52 40 C48 41 43 42 41 46 C43 42 48 40 52 40Z" fill="#F0EBE2"/>
+  <path d="M52 40 C49 38 44 37 42 34 C45 37 49 38 52 40Z" fill="#F5F0E8"/>
+  <path d="M52 40 C49 37 46 33 46 29 C47 33 49 37 52 40Z" fill="#F0EBE2"/>
+  <!-- Yellow center -->
+  <circle cx="52" cy="40" r="7" fill="#E8C84A"/>
+  <circle cx="52" cy="40" r="5" fill="#F0D460"/>
+  <!-- Center texture dots -->
+  <circle cx="50" cy="38" r="1" fill="#C8A030" opacity="0.6"/>
+  <circle cx="54" cy="38" r="1" fill="#C8A030" opacity="0.6"/>
+  <circle cx="52" cy="42" r="1" fill="#C8A030" opacity="0.6"/>
+  <circle cx="52" cy="36" r="0.8" fill="#D4B040" opacity="0.5"/>
+
+  <!-- Flower 2 — left, slightly smaller, slight tilt -->
+  <path d="M35 58 C35 54 37 49 35 45 C35 49 33 54 35 58Z" fill="#F5F0E8"/>
+  <path d="M35 58 C38 55 42 52 42 48 C39 52 37 55 35 58Z" fill="#F0EBE2"/>
+  <path d="M35 58 C38 57 43 57 45 54 C42 57 37 57 35 58Z" fill="#F5F0E8"/>
+  <path d="M35 58 C37 59 41 62 40 66 C39 62 37 59 35 58Z" fill="#F0EBE2"/>
+  <path d="M35 58 C33 60 32 64 29 66 C31 63 33 59 35 58Z" fill="#F5F0E8"/>
+  <path d="M35 58 C32 57 28 57 26 54 C29 57 33 57 35 58Z" fill="#F0EBE2"/>
+  <path d="M35 58 C32 55 28 52 28 48 C30 52 33 55 35 58Z" fill="#F5F0E8"/>
+  <circle cx="35" cy="58" r="5.5" fill="#E8C84A"/>
+  <circle cx="35" cy="58" r="3.5" fill="#F0D460"/>
+
+  <!-- Flower 3 — right, smaller bud/partial -->
+  <path d="M65 54 C64 51 65 47 64 44 C65 47 66 51 65 54Z" fill="#F5F0E8"/>
+  <path d="M65 54 C67 52 70 50 71 47 C69 50 67 52 65 54Z" fill="#F0EBE2"/>
+  <path d="M65 54 C67 55 70 57 69 60 C68 57 66 55 65 54Z" fill="#F5F0E8"/>
+  <path d="M65 54 C63 55 60 56 59 60 C60 56 63 55 65 54Z" fill="#F0EBE2"/>
+  <path d="M65 54 C63 52 61 50 61 47 C62 50 63 52 65 54Z" fill="#F5F0E8"/>
+  <circle cx="65" cy="54" r="5" fill="#E8C84A"/>
+  <circle cx="65" cy="54" r="3" fill="#F0D460"/>
+
+  <!-- Small bud -->
+  <path d="M44 48 C43 46 44 43 44 41 C44 43 45 46 44 48Z" fill="#F5EDD5"/>
+  <circle cx="44" cy="42" r="3" fill="#6B9B4A"/>
+  <path d="M41 43 C41 42 43 41 44 42Z" fill="#5C8A4A"/>
+  <path d="M47 43 C47 42 45 41 44 42Z" fill="#5C8A4A"/>
+
+  <!-- Ground suggestion -->
+  <ellipse cx="50" cy="91" rx="12" ry="3" fill="#8B6914" opacity="0.3"/>
+</svg>

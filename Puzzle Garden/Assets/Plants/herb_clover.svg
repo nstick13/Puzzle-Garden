@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Clover Patch — Tier 1 Herb -->
+
+  <!-- Stems -->
+  <path d="M50 88 L50 68" stroke="#4A3520" stroke-width="2" stroke-linecap="round"/>
+  <path d="M50 85 C42 80 36 75 33 68" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 82 C58 78 64 73 67 65" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M50 78 C46 74 43 69 42 62" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 75 C54 72 57 67 58 60" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 88 C40 86 32 84 28 80" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M50 88 C60 86 68 84 72 80" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Helper: trifoil leaf shape macro -->
+  <!-- Leaf at center/top -->
+  <path d="M50 68 C48 64 44 62 44 58 C44 55 47 53 50 55 C53 53 56 55 56 58 C56 62 52 64 50 68Z" fill="#6B9B4A"/>
+  <!-- Left lobe -->
+  <path d="M44 63 C40 62 37 59 38 55 C39 52 42 51 44 53 C46 55 46 60 44 63Z" fill="#5C8A4A"/>
+  <!-- Right lobe -->
+  <path d="M56 63 C60 62 63 59 62 55 C61 52 58 51 56 53 C54 55 54 60 56 63Z" fill="#5C8A4A"/>
+  <!-- Center dot on leaf -->
+  <circle cx="50" cy="60" r="1.5" fill="#A8C870" opacity="0.7"/>
+  <!-- Pale midrib marks -->
+  <path d="M50 68 L50 58" stroke="#A8C870" stroke-width="0.8" opacity="0.5"/>
+  <path d="M44 63 L41 56" stroke="#A8C870" stroke-width="0.8" opacity="0.5"/>
+  <path d="M56 63 L59 56" stroke="#A8C870" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Left leaf cluster -->
+  <path d="M33 68 C31 64 27 62 27 58 C27 55 30 53 33 55 C36 53 39 55 39 58 C39 62 35 64 33 68Z" fill="#6B9B4A"/>
+  <path d="M27 63 C23 62 20 59 21 55 C22 52 25 51 27 53 C29 55 29 60 27 63Z" fill="#5C8A4A"/>
+  <path d="M39 63 C43 62 46 59 45 55 C44 52 41 51 39 53 C37 55 37 60 39 63Z" fill="#5C8A4A"/>
+  <circle cx="33" cy="60" r="1.5" fill="#A8C870" opacity="0.7"/>
+
+  <!-- Right leaf cluster -->
+  <path d="M67 65 C65 61 61 59 61 55 C61 52 64 50 67 52 C70 50 73 52 73 55 C73 59 69 61 67 65Z" fill="#6B9B4A"/>
+  <path d="M61 60 C57 59 54 56 55 52 C56 49 59 48 61 50 C63 52 63 57 61 60Z" fill="#5C8A4A"/>
+  <path d="M73 60 C77 59 80 56 79 52 C78 49 75 48 73 50 C71 52 71 57 73 60Z" fill="#5C8A4A"/>
+  <circle cx="67" cy="57" r="1.5" fill="#A8C870" opacity="0.7"/>
+
+  <!-- Lower ground leaves -->
+  <!-- Bottom-left -->
+  <path d="M28 80 C26 76 22 74 22 70 C22 67 25 65 28 67 C31 65 34 67 34 70 C34 74 30 76 28 80Z" fill="#7BAB5A"/>
+  <path d="M22 75 C18 74 15 71 16 67 C17 64 20 63 22 65 C24 67 24 72 22 75Z" fill="#6B9B4A"/>
+  <path d="M34 75 C38 74 41 71 40 67 C39 64 36 63 34 65 C32 67 32 72 34 75Z" fill="#6B9B4A"/>
+
+  <!-- Bottom-right leaves -->
+  <path d="M72 80 C70 76 66 74 66 70 C66 67 69 65 72 67 C75 65 78 67 78 70 C78 74 74 76 72 80Z" fill="#7BAB5A"/>
+  <path d="M66 75 C62 74 59 71 60 67 C61 64 64 63 66 65 C68 67 68 72 66 75Z" fill="#6B9B4A"/>
+  <path d="M78 75 C82 74 85 71 84 67 C83 64 80 63 78 65 C76 67 76 72 78 75Z" fill="#6B9B4A"/>
+
+  <!-- Clover flowers -->
+  <!-- Main flower -->
+  <circle cx="50" cy="45" r="7" fill="#E8A89A"/>
+  <circle cx="50" cy="45" r="5" fill="#F0B8AA"/>
+  <!-- Petals texture — dots in a rounded grid -->
+  <circle cx="47" cy="43" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="50" cy="42" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="53" cy="43" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="47" cy="46" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="50" cy="47" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="53" cy="46" r="1.2" fill="#E09090" opacity="0.8"/>
+  <circle cx="50" cy="45" r="1.5" fill="#F8D8D0"/>
+
+  <!-- Left flower -->
+  <circle cx="42" cy="55" r="5" fill="#E8A89A"/>
+  <circle cx="42" cy="55" r="3.5" fill="#F0B8AA"/>
+  <circle cx="40" cy="54" r="0.8" fill="#E09090" opacity="0.8"/>
+  <circle cx="42" cy="53" r="0.8" fill="#E09090" opacity="0.8"/>
+  <circle cx="44" cy="54" r="0.8" fill="#E09090" opacity="0.8"/>
+  <circle cx="42" cy="56" r="0.8" fill="#E09090" opacity="0.8"/>
+
+  <!-- Right flower -->
+  <circle cx="58" cy="52" r="5" fill="#D89898"/>
+  <circle cx="58" cy="52" r="3.5" fill="#E8A89A"/>
+  <circle cx="56" cy="51" r="0.8" fill="#C88080" opacity="0.8"/>
+  <circle cx="58" cy="50" r="0.8" fill="#C88080" opacity="0.8"/>
+  <circle cx="60" cy="51" r="0.8" fill="#C88080" opacity="0.8"/>
+  <circle cx="58" cy="53" r="0.8" fill="#C88080" opacity="0.8"/>
+
+  <!-- Small bud -->
+  <path d="M44 48 L44 44" stroke="#6B9B4A" stroke-width="1.5" stroke-linecap="round"/>
+  <ellipse cx="44" cy="43" rx="2.5" ry="3" fill="#6B9B4A"/>
+
+  <!-- Ground soil -->
+  <ellipse cx="50" cy="91" rx="14" ry="3.5" fill="#8B6914" opacity="0.3"/>
+</svg>
