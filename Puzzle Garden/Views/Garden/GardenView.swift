@@ -6,6 +6,10 @@ struct GardenView: View {
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
     private let minSlots = 24
 
+    @State private var gardenImage: UIImage?
+    @State private var showShareSheet = false
+    @Environment(\.displayScale) private var displayScale
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -20,6 +24,22 @@ struct GardenView: View {
             }
             .navigationTitle("My Garden")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                if !playerData.garden.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            renderAndShare()
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showShareSheet) {
+                if let image = gardenImage {
+                    ShareSheet(items: [image])
+                }
+            }
         }
     }
 
@@ -106,6 +126,90 @@ struct GardenView: View {
     private func difficultyLabel(_ difficulty: GridSize) -> String {
         difficulty.label
     }
+
+    // MARK: - Share
+
+    @MainActor
+    private func renderAndShare() {
+        let view = GardenSnapshotView(playerData: playerData)
+        let renderer = ImageRenderer(content: view)
+        renderer.scale = displayScale
+        if let image = renderer.uiImage {
+            gardenImage = image
+            showShareSheet = true
+        }
+    }
+}
+
+// MARK: - Snapshot view (used for ImageRenderer; no NavigationStack)
+
+private struct GardenSnapshotView: View {
+    var playerData: PlayerData
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 6)
+    private let minSlots = 24
+
+    var body: some View {
+        VStack(spacing: 12) {
+            HStack(spacing: 6) {
+                Text("🌿")
+                    .font(.system(size: 24))
+                Text("My Puzzle Garden")
+                    .font(.system(.headline, design: .rounded).bold())
+                    .foregroundStyle(Color(red: 0.20, green: 0.38, blue: 0.22))
+            }
+
+            LazyVGrid(columns: columns, spacing: 8) {
+                let totalSlots = max(minSlots, playerData.garden.count + 6)
+                ForEach(0..<totalSlots, id: \.self) { index in
+                    if index < playerData.garden.count {
+                        snapshotPlantSlot(playerData.garden[index])
+                    } else {
+                        snapshotEmptySlot
+                    }
+                }
+            }
+        }
+        .padding(16)
+        .background(Color(red: 0.97, green: 0.95, blue: 0.90))
+        .frame(width: 360)
+    }
+
+    private func snapshotPlantSlot(_ plant: Plant) -> some View {
+        Text(plant.emoji)
+            .font(.system(size: 32))
+            .frame(width: 48, height: 48)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(slotColor(for: plant.difficulty).opacity(0.3))
+            )
+    }
+
+    private var snapshotEmptySlot: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .fill(Color(red: 0.88, green: 0.85, blue: 0.80).opacity(0.4))
+            .frame(width: 48, height: 48)
+    }
+
+    private func slotColor(for difficulty: GridSize) -> Color {
+        switch difficulty {
+        case .five:  return Color(red: 0.76, green: 0.88, blue: 0.72)
+        case .six:   return Color(red: 0.95, green: 0.85, blue: 0.65)
+        case .seven: return Color(red: 0.85, green: 0.72, blue: 0.88)
+        }
+    }
+}
+
+// MARK: - UIActivityViewController wrapper
+
+private struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

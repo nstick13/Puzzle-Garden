@@ -2,10 +2,11 @@ import SwiftUI
 
 struct ContentView: View {
     var playerData: PlayerData
+    var storeManager: StoreManager
 
     var body: some View {
         TabView {
-            HomeView(playerData: playerData)
+            HomeView(playerData: playerData, storeManager: storeManager)
                 .tabItem {
                     Label("Home", systemImage: "leaf.fill")
                 }
@@ -25,5 +26,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(playerData: PlayerData.shared)
+    ContentView(playerData: PlayerData.shared, storeManager: StoreManager.shared)
 }

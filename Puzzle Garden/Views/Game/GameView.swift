@@ -193,6 +193,18 @@ struct GameView: View {
                             .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
                     )
                 }
+
+                ShareLink(item: shareText) {
+                    Label("Share Result", systemImage: "square.and.arrow.up")
+                        .font(.system(.subheadline, design: .rounded).bold())
+                        .foregroundStyle(Color(red: 0.25, green: 0.50, blue: 0.28))
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
+                        )
+                }
             }
             .padding(32)
         }
@@ -201,6 +213,25 @@ struct GameView: View {
             insertion: .opacity.combined(with: .scale(scale: 0.75)),
             removal: .opacity
         ))
+    }
+
+    // MARK: - Share text
+
+    private var shareText: String {
+        let n = game.puzzle.size
+        var rows: [String] = []
+        for r in 0..<n {
+            var line = ""
+            for c in 0..<n {
+                line += game.puzzle.solution[r][c] == 1 ? "🌸" : "⬜"
+            }
+            rows.append(line)
+        }
+        let grid = rows.joined(separator: "\n")
+        let label = isDaily
+            ? "Puzzle Garden — Daily \(PlayerData.todayString())"
+            : "Puzzle Garden — \(game.puzzle.difficulty.label)"
+        return "\(grid)\n\(label)"
     }
 
     // MARK: - Drag gesture
