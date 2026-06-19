@@ -68,6 +68,18 @@ struct GameView: View {
         .onChange(of: game.wrongPlacement) { _, _ in
             triggerShake()
         }
+        .onChange(of: game.correctPlacement) { _, newValue in
+            if newValue != nil {
+                SoundManager.shared.playFlowerPlaced()
+                HapticsManager.shared.hapticFlowerPlaced()
+            }
+        }
+        .onChange(of: game.showWin) { _, newValue in
+            if newValue {
+                SoundManager.shared.playSolve()
+                HapticsManager.shared.hapticSolve()
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -243,7 +255,13 @@ struct GameView: View {
                 let row = Int(value.location.y / cellSize)
                 let n   = game.puzzle.size
                 guard row >= 0, row < n, col >= 0, col < n else { return }
-                game.dragMark(CellCoord(row: row, col: col))
+                let coord = CellCoord(row: row, col: col)
+                let willMark = !game.isSolved && game.cellStates[row][col] == .empty
+                game.dragMark(coord)
+                if willMark {
+                    SoundManager.shared.playDigMark()
+                    HapticsManager.shared.hapticDigMark()
+                }
             }
     }
 
