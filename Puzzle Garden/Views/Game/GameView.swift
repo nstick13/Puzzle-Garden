@@ -5,6 +5,8 @@ struct GameView: View {
     @State private var conflictTrigger = false   // drives shake animation
     @AppStorage("showRules") private var showRules = true
 
+    @Environment(\.dismiss) private var dismiss
+
     let isDaily: Bool
     var playerData: PlayerData
 
@@ -15,43 +17,52 @@ struct GameView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            headerBar
-                .padding(.horizontal)
-                .padding(.vertical, 12)
+        // Top-level ZStack so game.showWin is read at body scope — not inside
+        // GeometryReader, whose content closure may be re-invoked outside the
+        // Observation tracking context, causing the win overlay to silently skip.
+        ZStack {
+            VStack(spacing: 0) {
+                headerBar
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
 
-            if showRules {
-                rulesBar
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 8)
-            }
+                if showRules {
+                    rulesBar
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
+                }
 
-            Spacer(minLength: 0)
+                Spacer(minLength: 0)
 
-            GeometryReader { geo in
-                let available = min(geo.size.width, geo.size.height)
-                let cellSize  = available / CGFloat(game.puzzle.size)
+                GeometryReader { geo in
+                    let available = min(geo.size.width, geo.size.height)
+                    let cellSize  = available / CGFloat(game.puzzle.size)
 
-                ZStack(alignment: .topLeading) {
                     grid(cellSize: cellSize)
                         .modifier(ShakeModifier(trigger: conflictTrigger))
                         .gesture(dragGesture(cellSize: cellSize))
                         .overlay(outerBorder)
-
-                    if game.showWin {
-                        winOverlay(gridSize: available)
-                    }
+                        .frame(width: available, height: available)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .animation(.spring(response: 0.5, dampingFraction: 0.75), value: game.showWin)
-                .frame(width: available, height: available)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .aspectRatio(1, contentMode: .fit)
-            .padding(.horizontal, 16)
+                .aspectRatio(1, contentMode: .fit)
+                .padding(.horizontal, 16)
 
-            Spacer(minLength: 0)
+                Spacer(minLength: 0)
+            }
+            .background(Color(red: 0.97, green: 0.95, blue: 0.90))
+
+            // Win overlay is outside GeometryReader so game.showWin is observed
+            // at body scope. This guarantees the view re-renders on win.
+            if game.showWin {
+                winOverlay
+                    .transition(.asymmetric(
+                        insertion: .opacity.combined(with: .scale(scale: 0.8)),
+                        removal: .opacity
+                    ))
+            }
         }
-        .background(Color(red: 0.97, green: 0.95, blue: 0.90))
+        .animation(.spring(response: 0.5, dampingFraction: 0.75), value: game.showWin)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
@@ -62,6 +73,8 @@ struct GameView: View {
                     solveTime: TimeInterval(game.elapsedSeconds),
                     isDaily: isDaily
                 )
+                SoundManager.shared.playSolve()
+                HapticsManager.shared.hapticSolve()
             }
         }
         .onDisappear { game.stopTimer() }
@@ -72,12 +85,6 @@ struct GameView: View {
             if newValue != nil {
                 SoundManager.shared.playFlowerPlaced()
                 HapticsManager.shared.hapticFlowerPlaced()
-            }
-        }
-        .onChange(of: game.showWin) { _, newValue in
-            if newValue {
-                SoundManager.shared.playSolve()
-                HapticsManager.shared.hapticSolve()
             }
         }
     }
@@ -165,18 +172,17 @@ struct GameView: View {
             .strokeBorder(Color(red: 0.40, green: 0.30, blue: 0.20), lineWidth: 2)
     }
 
-    private func winOverlay(gridSize: CGFloat) -> some View {
+    private var winOverlay: some View {
         ZStack {
-            Color(red: 1.0, green: 0.97, blue: 0.80)
-                .opacity(0.95)
-                .cornerRadius(12)
+            Color(red: 0.97, green: 0.95, blue: 0.90)
+                .ignoresSafeArea()
 
-            VStack(spacing: 14) {
+            VStack(spacing: 16) {
                 Text("☀️")
-                    .font(.system(size: 64))
+                    .font(.system(size: 72))
 
                 Text("Puzzle Solved!")
-                    .font(.system(.title2, design: .rounded).bold())
+                    .font(.system(.title, design: .rounded).bold())
                     .foregroundStyle(Color(red: 0.20, green: 0.38, blue: 0.22))
 
                 Text(timeString)
@@ -193,38 +199,49 @@ struct GameView: View {
                 if let plant = playerData.lastAwardedPlant {
                     HStack(spacing: 8) {
                         Text(plant.emoji)
-                            .font(.system(size: 28))
+                            .font(.system(size: 32))
                         Text("Plant earned!")
                             .font(.system(.subheadline, design: .rounded))
                             .foregroundStyle(Color(red: 0.30, green: 0.22, blue: 0.14))
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
                     .background(
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 14)
                             .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
                     )
                 }
 
-                ShareLink(item: shareText) {
-                    Label("Share Result", systemImage: "square.and.arrow.up")
-                        .font(.system(.subheadline, design: .rounded).bold())
-                        .foregroundStyle(Color(red: 0.25, green: 0.50, blue: 0.28))
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
-                        )
+                VStack(spacing: 10) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Continue")
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color(red: 0.25, green: 0.50, blue: 0.28))
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+
+                    ShareLink(item: shareText) {
+                        Label("Share Result", systemImage: "square.and.arrow.up")
+                            .font(.system(.subheadline, design: .rounded).bold())
+                            .foregroundStyle(Color(red: 0.25, green: 0.50, blue: 0.28))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
+                            )
+                    }
                 }
+                .padding(.horizontal, 32)
+                .padding(.top, 8)
             }
             .padding(32)
         }
-        .frame(width: gridSize, height: gridSize)
-        .transition(.asymmetric(
-            insertion: .opacity.combined(with: .scale(scale: 0.75)),
-            removal: .opacity
-        ))
     }
 
     // MARK: - Share text
