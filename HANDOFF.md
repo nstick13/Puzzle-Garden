@@ -1,6 +1,6 @@
 # Puzzle Garden — Agent Handoff
 
-_Last updated: 2026-06-19_
+_Last updated: 2026-06-20_
 
 ## What this is
 
@@ -56,11 +56,9 @@ Puzzle Garden/
 
 ## Git / repo status
 
-- Local repo is committed and clean. Latest commit adds gameplay, views, models, and a Swift `.gitignore` (xcuserdata is now untracked).
-- **Pending:** pushing to a new **public** GitHub repo. `gh` CLI is installed (v2.95) but **not yet authenticated** — user needs to run `gh auth login` (GitHub.com → HTTPS → browser, "Yes" to git credentials). Then:
-  ```
-  gh repo create Puzzle-Garden --public --source=. --remote=origin --push
-  ```
+- **GitHub repo:** [https://github.com/nstick13/Puzzle-Garden](https://github.com/nstick13/Puzzle-Garden) — public, all commits pushed.
+- Local repo is clean and in sync with `origin/main`.
+- `.gitignore` excludes `xcuserdata/` and `DerivedData/` — no Xcode user data tracked.
 
 ## Open product decisions
 
