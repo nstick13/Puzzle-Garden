@@ -1,118 +1,112 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <!-- Wisteria Draping Vine — Tier 3 Tree/Vine -->
-
-  <!-- Main overhead branch/beam -->
-  <path d="M8 22 C20 18 40 15 60 15 C75 15 85 18 92 22" stroke="#6B4020" stroke-width="4" stroke-linecap="round"/>
-  <!-- Smaller branches -->
-  <path d="M20 20 C22 18 24 16 26 15" stroke="#8B5C30" stroke-width="2" stroke-linecap="round"/>
-  <path d="M40 16 C42 14 44 13 46 13" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M60 15 C62 13 64 12 66 12" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M80 20 C82 18 84 16 86 16" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round"/>
-
-  <!-- Hanging vine stems (long, draping) -->
-  <path d="M20 20 C20 25 19 30 20 35 C21 40 20 50 18 60" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M32 17 C32 22 31 28 32 34 C33 40 32 50 30 62" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M46 14 C46 20 45 28 46 36 C47 44 46 54 44 66" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M58 14 C58 20 57 28 58 36 C59 44 58 54 56 66" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M70 16 C70 22 69 30 70 38 C71 46 70 56 68 68" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M84 20 C84 25 83 32 84 40 C85 48 84 58 82 70" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-
-  <!-- Pinnate leaves along vines -->
-  <!-- Vine 1 leaves -->
-  <ellipse cx="16" cy="28" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-30,16,28)"/>
-  <ellipse cx="22" cy="28" rx="4" ry="2" fill="#6B9B4A" transform="rotate(20,22,28)"/>
-  <ellipse cx="17" cy="38" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-25,17,38)"/>
-  <ellipse cx="22" cy="42" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(20,22,42)"/>
-  <!-- Vine 2 leaves -->
-  <ellipse cx="28" cy="25" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-20,28,25)"/>
-  <ellipse cx="35" cy="26" rx="4" ry="2" fill="#6B9B4A" transform="rotate(25,35,26)"/>
-  <ellipse cx="29" cy="36" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-20,29,36)"/>
-  <ellipse cx="34" cy="40" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(20,34,40)"/>
-  <ellipse cx="28" cy="50" rx="3" ry="1.6" fill="#5C8A4A" transform="rotate(-15,28,50)"/>
-  <!-- Vine 3 leaves -->
-  <ellipse cx="42" cy="22" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-15,42,22)"/>
-  <ellipse cx="49" cy="22" rx="4" ry="2" fill="#6B9B4A" transform="rotate(15,49,22)"/>
-  <ellipse cx="43" cy="33" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-15,43,33)"/>
-  <ellipse cx="48" cy="37" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(15,48,37)"/>
-  <ellipse cx="42" cy="47" rx="3" ry="1.6" fill="#5C8A4A" transform="rotate(-10,42,47)"/>
-  <ellipse cx="47" cy="51" rx="3" ry="1.6" fill="#6B9B4A" transform="rotate(10,47,51)"/>
-  <!-- Vine 4/5/6 leaves abbreviated -->
-  <ellipse cx="54" cy="22" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-15,54,22)"/>
-  <ellipse cx="61" cy="22" rx="4" ry="2" fill="#6B9B4A" transform="rotate(15,61,22)"/>
-  <ellipse cx="55" cy="33" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-10,55,33)"/>
-  <ellipse cx="60" cy="38" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(15,60,38)"/>
-  <ellipse cx="66" cy="24" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-10,66,24)"/>
-  <ellipse cx="73" cy="24" rx="4" ry="2" fill="#6B9B4A" transform="rotate(15,73,24)"/>
-  <ellipse cx="67" cy="35" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-10,67,35)"/>
-  <ellipse cx="72" cy="39" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(10,72,39)"/>
-  <ellipse cx="80" cy="28" rx="4" ry="2" fill="#5C8A4A" transform="rotate(-15,80,28)"/>
-  <ellipse cx="87" cy="28" rx="4" ry="2" fill="#6B9B4A" transform="rotate(15,87,28)"/>
-  <ellipse cx="81" cy="38" rx="3.5" ry="1.8" fill="#5C8A4A" transform="rotate(-10,81,38)"/>
-  <ellipse cx="86" cy="42" rx="3.5" ry="1.8" fill="#6B9B4A" transform="rotate(15,86,42)"/>
-
-  <!-- Wisteria flower racemes — long drooping clusters of tiny purple florets -->
-  <!-- Raceme = elongated stem with small pea-like flowers -->
-
-  <!-- Raceme 1 -->
-  <path d="M18 56 C17 60 16 64 15 70 C14 74 14 80 16 86" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="16" cy="59" rx="4" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="16" cy="64" rx="4.5" ry="2.5" fill="#9B7CBC"/>
-  <ellipse cx="15" cy="69" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="15" cy="74" rx="4" ry="2.5" fill="#9B7CBC"/>
-  <ellipse cx="15" cy="79" rx="3.5" ry="2" fill="#A88CC0"/>
-  <ellipse cx="16" cy="84" rx="2.5" ry="2" fill="#BC9ED0"/>
-  <ellipse cx="16" cy="88" rx="2" ry="1.5" fill="#C8ACD8"/>
-
+  <!-- Overhead beam/branch -->
+  <path d="M6 22 C18 17 38 14 60 14 C76 14 88 17 94 22" stroke="#6B4020" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <!-- Smaller secondary branches -->
+  <path d="M18 19 C20 17 23 15 25 14" stroke="#8B5C30" stroke-width="2.3" stroke-linecap="round" fill="none"/>
+  <path d="M38 15 C40 13 43 12 45 11" stroke="#8B5C30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M60 14 C62 12 65 11 67 11" stroke="#8B5C30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M80 19 C82 17 85 15 87 15" stroke="#8B5C30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Hanging vine stems -->
+  <path d="M18 19 C18 24 17 30 18 37 C19 43 18 53 16 64" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M30 16 C30 22 29 29 30 36 C31 43 30 53 28 65" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M44 13 C44 20 43 29 44 37 C45 46 44 56 42 68" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M58 13 C58 20 57 29 58 37 C59 46 58 56 56 68" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M70 15 C70 22 69 31 70 39 C71 48 70 58 68 70" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M84 20 C84 26 83 34 84 42 C85 50 84 60 82 72" stroke="#5C8A40" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Pinnate leaves (paired ellipses along vines) -->
+  <!-- Vine 1 -->
+  <ellipse cx="15" cy="28" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-28,15,28)"/>
+  <ellipse cx="21" cy="28" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(22,21,28)"/>
+  <ellipse cx="16" cy="38" rx="4" ry="2" fill="#4A7A30" transform="rotate(-24,16,38)"/>
+  <ellipse cx="21" cy="42" rx="4" ry="2" fill="#5C8A40" transform="rotate(20,21,42)"/>
+  <ellipse cx="15" cy="50" rx="3.5" ry="1.8" fill="#4A7A30" transform="rotate(-18,15,50)"/>
+  <!-- Vine 2 -->
+  <ellipse cx="27" cy="24" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-20,27,24)"/>
+  <ellipse cx="33" cy="24" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(24,33,24)"/>
+  <ellipse cx="28" cy="35" rx="4" ry="2" fill="#4A7A30" transform="rotate(-20,28,35)"/>
+  <ellipse cx="33" cy="39" rx="4" ry="2" fill="#5C8A40" transform="rotate(20,33,39)"/>
+  <ellipse cx="27" cy="50" rx="3.5" ry="1.8" fill="#4A7A30" transform="rotate(-15,27,50)"/>
+  <ellipse cx="31" cy="56" rx="3.5" ry="1.8" fill="#5C8A40" transform="rotate(15,31,56)"/>
+  <!-- Vine 3 -->
+  <ellipse cx="41" cy="21" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-15,41,21)"/>
+  <ellipse cx="47" cy="21" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(15,47,21)"/>
+  <ellipse cx="42" cy="32" rx="4" ry="2" fill="#4A7A30" transform="rotate(-14,42,32)"/>
+  <ellipse cx="47" cy="36" rx="4" ry="2" fill="#5C8A40" transform="rotate(14,47,36)"/>
+  <ellipse cx="41" cy="46" rx="3.5" ry="1.8" fill="#4A7A30" transform="rotate(-10,41,46)"/>
+  <ellipse cx="46" cy="50" rx="3.5" ry="1.8" fill="#5C8A40" transform="rotate(10,46,50)"/>
+  <!-- Vine 4 -->
+  <ellipse cx="55" cy="21" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-12,55,21)"/>
+  <ellipse cx="61" cy="21" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(12,61,21)"/>
+  <ellipse cx="56" cy="32" rx="4" ry="2" fill="#4A7A30" transform="rotate(-10,56,32)"/>
+  <ellipse cx="61" cy="36" rx="4" ry="2" fill="#5C8A40" transform="rotate(14,61,36)"/>
+  <ellipse cx="55" cy="46" rx="3.5" ry="1.8" fill="#4A7A30" transform="rotate(-10,55,46)"/>
+  <ellipse cx="60" cy="50" rx="3.5" ry="1.8" fill="#5C8A40" transform="rotate(10,60,50)"/>
+  <!-- Vine 5 -->
+  <ellipse cx="67" cy="23" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-10,67,23)"/>
+  <ellipse cx="73" cy="23" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(14,73,23)"/>
+  <ellipse cx="68" cy="35" rx="4" ry="2" fill="#4A7A30" transform="rotate(-10,68,35)"/>
+  <ellipse cx="73" cy="39" rx="4" ry="2" fill="#5C8A40" transform="rotate(10,73,39)"/>
+  <ellipse cx="67" cy="50" rx="3.5" ry="1.8" fill="#4A7A30" transform="rotate(-8,67,50)"/>
+  <!-- Vine 6 -->
+  <ellipse cx="81" cy="28" rx="4.5" ry="2.2" fill="#4A7A30" transform="rotate(-15,81,28)"/>
+  <ellipse cx="87" cy="28" rx="4.5" ry="2.2" fill="#5C8A40" transform="rotate(15,87,28)"/>
+  <ellipse cx="82" cy="38" rx="4" ry="2" fill="#4A7A30" transform="rotate(-10,82,38)"/>
+  <ellipse cx="87" cy="42" rx="4" ry="2" fill="#5C8A40" transform="rotate(14,87,42)"/>
+  <!-- Wisteria racemes — long drooping clusters of purple pea florets -->
+  <!-- Raceme 1 (far left, short) -->
+  <path d="M16 60 C15 64 14 68 13 74 C12 79 12 84 14 89" stroke="#7A5898" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <ellipse cx="14" cy="63" rx="5" ry="3" fill="#7A5898"/>
+  <ellipse cx="14" cy="68" rx="5.5" ry="3" fill="#8B68AC"/>
+  <ellipse cx="13" cy="73" rx="5" ry="3" fill="#7A5898"/>
+  <ellipse cx="13" cy="78" rx="4.5" ry="2.8" fill="#9878BC"/>
+  <ellipse cx="13" cy="83" rx="4" ry="2.5" fill="#A888C8"/>
+  <ellipse cx="14" cy="87" rx="3" ry="2" fill="#BCA0D4"/>
   <!-- Raceme 2 -->
-  <path d="M30 56 C29 61 28 66 27 72 C26 77 26 83 28 89" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="28" cy="59" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="28" cy="64" rx="5" ry="2.8" fill="#7A5898"/>
-  <ellipse cx="27" cy="70" rx="5" ry="2.8" fill="#8B6CAC"/>
-  <ellipse cx="27" cy="76" rx="4.5" ry="2.5" fill="#9B7CBC"/>
-  <ellipse cx="27" cy="81" rx="4" ry="2.2" fill="#A88CC0"/>
-  <ellipse cx="27" cy="86" rx="3" ry="2" fill="#BC9ED0"/>
-  <ellipse cx="28" cy="91" rx="2" ry="1.5" fill="#C8ACD8"/>
-
-  <!-- Raceme 3 (longest, center) -->
-  <path d="M44 60 C43 65 42 71 41 78 C40 83 40 88 42 95" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="42" cy="63" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="42" cy="68" rx="5" ry="2.8" fill="#7A5898"/>
-  <ellipse cx="41" cy="74" rx="5" ry="2.8" fill="#8B6CAC"/>
-  <ellipse cx="41" cy="80" rx="4.5" ry="2.5" fill="#9B7CBC"/>
-  <ellipse cx="41" cy="85" rx="4" ry="2.2" fill="#A88CC0"/>
-  <ellipse cx="41" cy="90" rx="3" ry="2" fill="#BC9ED0"/>
-  <ellipse cx="42" cy="95" rx="2" ry="1.5" fill="#C8ACD8"/>
-
-  <!-- Raceme 4 -->
-  <path d="M56 60 C55 65 54 71 53 78 C52 83 52 88 54 95" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="54" cy="63" rx="4.5" ry="2.5" fill="#7A5898"/>
-  <ellipse cx="54" cy="68" rx="5" ry="2.8" fill="#8B6CAC"/>
-  <ellipse cx="53" cy="74" rx="5" ry="2.8" fill="#7A5898"/>
-  <ellipse cx="53" cy="80" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="53" cy="85" rx="4" ry="2.2" fill="#9B7CBC"/>
-  <ellipse cx="53" cy="90" rx="3" ry="2" fill="#A88CC0"/>
-  <ellipse cx="54" cy="95" rx="2" ry="1.5" fill="#BC9ED0"/>
-
+  <path d="M28 60 C27 65 26 70 25 76 C24 82 24 87 26 93" stroke="#7A5898" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <ellipse cx="26" cy="63" rx="5.5" ry="3" fill="#6E4888"/>
+  <ellipse cx="26" cy="68" rx="6" ry="3.2" fill="#7A5898"/>
+  <ellipse cx="25" cy="73" rx="6" ry="3.2" fill="#8B68AC"/>
+  <ellipse cx="25" cy="79" rx="5.5" ry="3" fill="#9878BC"/>
+  <ellipse cx="25" cy="84" rx="5" ry="2.8" fill="#A888C8"/>
+  <ellipse cx="25" cy="89" rx="4" ry="2.5" fill="#BCA0D4"/>
+  <ellipse cx="26" cy="94" rx="2.5" ry="2" fill="#CCB4E0"/>
+  <!-- Raceme 3 (center-left, longest) -->
+  <path d="M42 63 C41 68 40 74 39 81 C38 87 38 92 40 97" stroke="#7A5898" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <ellipse cx="40" cy="66" rx="5.5" ry="3" fill="#7A5898"/>
+  <ellipse cx="40" cy="71" rx="6" ry="3.2" fill="#6E4888"/>
+  <ellipse cx="39" cy="77" rx="6" ry="3.2" fill="#7A5898"/>
+  <ellipse cx="39" cy="82" rx="5.5" ry="3" fill="#8B68AC"/>
+  <ellipse cx="39" cy="87" rx="5" ry="2.8" fill="#9878BC"/>
+  <ellipse cx="39" cy="92" rx="4" ry="2.5" fill="#A888C8"/>
+  <ellipse cx="40" cy="97" rx="2.5" ry="2" fill="#BCA0D4"/>
+  <!-- Raceme 4 (center) -->
+  <path d="M56 63 C55 68 54 74 53 81 C52 87 52 92 54 97" stroke="#7A5898" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <ellipse cx="54" cy="66" rx="5.5" ry="3" fill="#6E4888"/>
+  <ellipse cx="54" cy="71" rx="6" ry="3.2" fill="#7A5898"/>
+  <ellipse cx="53" cy="77" rx="6" ry="3.2" fill="#6E4888"/>
+  <ellipse cx="53" cy="82" rx="5.5" ry="3" fill="#7A5898"/>
+  <ellipse cx="53" cy="87" rx="5" ry="2.8" fill="#8B68AC"/>
+  <ellipse cx="53" cy="92" rx="4" ry="2.5" fill="#9878BC"/>
+  <ellipse cx="54" cy="97" rx="2.5" ry="2" fill="#BCA0D4"/>
   <!-- Raceme 5 -->
-  <path d="M68 62 C67 67 66 73 65 79 C64 84 64 89 66 94" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="66" cy="65" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="66" cy="70" rx="5" ry="2.8" fill="#7A5898"/>
-  <ellipse cx="65" cy="76" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="65" cy="81" rx="4" ry="2.2" fill="#9B7CBC"/>
-  <ellipse cx="65" cy="86" rx="3.5" ry="2" fill="#A88CC0"/>
-  <ellipse cx="65" cy="91" rx="2.5" ry="1.8" fill="#BC9ED0"/>
-
-  <!-- Raceme 6 -->
-  <path d="M82 64 C81 69 80 74 79 80 C78 85 78 90 80 94" stroke="#7A5898" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="80" cy="67" rx="4" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="80" cy="72" rx="4.5" ry="2.5" fill="#7A5898"/>
-  <ellipse cx="79" cy="77" rx="4.5" ry="2.5" fill="#8B6CAC"/>
-  <ellipse cx="79" cy="82" rx="4" ry="2.2" fill="#9B7CBC"/>
-  <ellipse cx="79" cy="87" rx="3" ry="2" fill="#A88CC0"/>
-  <ellipse cx="80" cy="92" rx="2" ry="1.5" fill="#BC9ED0"/>
-
-  <!-- Extra raceme buds at top of some vines -->
-  <ellipse cx="20" cy="55" rx="3.5" ry="2" fill="#7A5898" opacity="0.7"/>
-  <ellipse cx="32" cy="55" rx="3.5" ry="2" fill="#8B6CAC" opacity="0.7"/>
-  <ellipse cx="70" cy="60" rx="3.5" ry="2" fill="#7A5898" opacity="0.7"/>
+  <path d="M68 64 C67 69 66 75 65 81 C64 86 64 91 66 96" stroke="#7A5898" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <ellipse cx="66" cy="67" rx="5" ry="2.8" fill="#7A5898"/>
+  <ellipse cx="66" cy="72" rx="5.5" ry="3" fill="#8B68AC"/>
+  <ellipse cx="65" cy="77" rx="5.5" ry="3" fill="#7A5898"/>
+  <ellipse cx="65" cy="82" rx="5" ry="2.8" fill="#8B68AC"/>
+  <ellipse cx="65" cy="87" rx="4.5" ry="2.5" fill="#9878BC"/>
+  <ellipse cx="65" cy="92" rx="3" ry="2" fill="#A888C8"/>
+  <!-- Raceme 6 (right) -->
+  <path d="M82 65 C81 70 80 75 79 81 C78 86 78 91 80 95" stroke="#7A5898" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <ellipse cx="80" cy="68" rx="4.5" ry="2.8" fill="#8B68AC"/>
+  <ellipse cx="80" cy="73" rx="5" ry="3" fill="#7A5898"/>
+  <ellipse cx="79" cy="78" rx="5" ry="3" fill="#8B68AC"/>
+  <ellipse cx="79" cy="83" rx="4.5" ry="2.8" fill="#9878BC"/>
+  <ellipse cx="79" cy="88" rx="4" ry="2.5" fill="#A888C8"/>
+  <ellipse cx="80" cy="93" rx="2.5" ry="2" fill="#BCA0D4"/>
+  <!-- Opening bud tips -->
+  <ellipse cx="18" cy="59" rx="4" ry="2.3" fill="#6E4888" opacity="0.75"/>
+  <ellipse cx="30" cy="59" rx="4.5" ry="2.5" fill="#7A5898" opacity="0.75"/>
+  <ellipse cx="70" cy="62" rx="4" ry="2.3" fill="#6E4888" opacity="0.75"/>
 </svg>

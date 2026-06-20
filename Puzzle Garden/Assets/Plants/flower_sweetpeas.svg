@@ -1,75 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Sweet Peas — Tier 2 Flower -->
-
-  <!-- Trellis/stake support -->
-  <path d="M50 90 L50 15" stroke="#C4935A" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
-
-  <!-- Twining vine stem -->
-  <path d="M50 88 C52 84 54 80 50 76 C46 72 44 68 48 64 C52 60 54 56 50 52 C46 48 44 44 48 40 C52 36 54 32 50 28 C48 24 48 20 50 16" stroke="#5C8A4A" stroke-width="2" stroke-linecap="round"/>
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Sweet Peas — Climbing Vine — Tier 2 Flower -->
+  <ellipse cx="50" cy="92" rx="12" ry="3.5" fill="#7A5C2A" opacity="0.25"/>
+  <!-- Stake support (subtle) -->
+  <path d="M50 90 L50 14" stroke="#C4935A" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.45" fill="none"/>
+  <!-- Twining main stem -->
+  <path d="M50 89 C52 84 55 80 50 75 C45 70 43 65 48 60 C53 55 55 50 50 46 C45 42 43 37 48 32 C53 27 55 23 50 18" stroke="#5C8A40" stroke-width="2.2" stroke-linecap="round" fill="none"/>
   <!-- Tendrils (curling) -->
-  <path d="M50 70 C55 68 60 65 62 60 C60 63 56 66 55 70" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
-  <path d="M50 55 C44 52 38 52 36 56 C38 52 43 50 50 55" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
-  <path d="M50 42 C56 40 60 37 60 32 C58 36 54 39 54 43" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
-  <!-- Spiral tendril -->
-  <path d="M48 64 C46 62 43 62 42 64 C41 66 43 68 45 67 C47 66 47 63 45 62" stroke="#7BAB5A" stroke-width="1" stroke-linecap="round" fill="none"/>
-  <path d="M52 34 C54 32 57 32 58 34 C59 36 57 38 55 37 C53 36 53 33 55 32" stroke="#7BAB5A" stroke-width="1" stroke-linecap="round" fill="none"/>
-
-  <!-- Compound leaves -->
-  <!-- Leaf pair 1 -->
-  <path d="M50 76 C46 73 40 73 38 77 C41 73 46 74 50 76Z" fill="#6B9B4A"/>
-  <path d="M50 76 C54 73 60 73 62 77 C59 73 54 74 50 76Z" fill="#5C8A4A"/>
-  <!-- Leaf pair 2 -->
-  <path d="M48 62 C44 59 38 59 36 63 C39 59 44 60 48 62Z" fill="#6B9B4A"/>
-  <path d="M48 62 C52 59 58 59 60 63 C57 59 52 60 48 62Z" fill="#5C8A4A"/>
-  <!-- Leaf pair 3 -->
-  <path d="M50 48 C46 45 40 45 38 49 C41 45 46 46 50 48Z" fill="#6B9B4A"/>
-  <path d="M50 48 C54 45 60 45 62 49 C59 45 54 46 50 48Z" fill="#5C8A4A"/>
-  <!-- Leaf pair 4 -->
-  <path d="M48 34 C44 31 38 31 36 35 C39 31 44 32 48 34Z" fill="#6B9B4A"/>
-
-  <!-- Sweet pea flowers (butterfly-shaped: large standard petal + wings + keel) -->
-  <!-- Flower 1 — lower left -->
-  <path d="M50 78 C44 76 36 74 32 70" stroke="#5C8A4A" stroke-width="1.3" stroke-linecap="round"/>
-  <!-- Standard petal (large upright back petal) -->
-  <path d="M36 65 C33 60 34 54 38 52 C42 50 46 53 46 58 C46 62 42 66 36 65Z" fill="#C89ACA"/>
-  <path d="M36 65 C34 61 35 55 38 53Z" fill="#B080B0" opacity="0.6"/>
-  <!-- Wings (side petals) -->
-  <path d="M36 65 C32 66 28 64 27 60 C28 56 32 55 35 58Z" fill="#D8A8D8"/>
-  <path d="M46 58 C49 57 52 55 52 51 C51 48 48 48 45 51Z" fill="#D8A8D8"/>
-  <!-- Keel (lower petals, lighter) -->
-  <path d="M36 65 C38 68 43 68 45 65 C42 68 38 68 36 65Z" fill="#E8C0E0"/>
-
-  <!-- Flower 2 — upper right -->
-  <path d="M50 52 C56 50 64 48 68 44" stroke="#5C8A4A" stroke-width="1.3" stroke-linecap="round"/>
-  <path d="M64 39 C67 34 68 28 64 26 C60 24 56 27 56 32 C56 36 60 40 64 39Z" fill="#C070A0"/>
-  <path d="M64 39 C66 35 67 29 64 27Z" fill="#A05080" opacity="0.6"/>
-  <path d="M64 39 C68 40 72 38 73 34 C72 30 68 29 65 32Z" fill="#D090B8"/>
-  <path d="M56 32 C53 31 50 29 50 25 C51 22 54 22 57 25Z" fill="#D090B8"/>
-  <path d="M64 39 C62 42 57 42 55 39 C58 42 62 42 64 39Z" fill="#E8B0D0"/>
-
-  <!-- Flower 3 — lower cluster -->
-  <path d="M50 68 C46 67 40 67 36 70" stroke="#5C8A4A" stroke-width="1.2" stroke-linecap="round"/>
-  <path d="M40 64 C37 59 38 53 42 51 C46 49 50 52 50 57 C50 61 46 65 40 64Z" fill="#D8A8D8"/>
-  <path d="M40 64 C36 65 32 63 31 59 C32 55 36 54 39 57Z" fill="#E8C0E0"/>
-  <path d="M50 57 C53 56 56 54 56 50 C55 47 52 47 49 50Z" fill="#E8C0E0"/>
-  <path d="M40 64 C42 67 47 67 49 64 C46 67 42 67 40 64Z" fill="#F0D0E8"/>
-
-  <!-- Flower 4 — upper small bud/flower -->
-  <path d="M50 38 C54 37 58 36 60 32" stroke="#5C8A4A" stroke-width="1.2" stroke-linecap="round"/>
-  <path d="M58 28 C60 24 62 20 60 17 C58 15 55 16 54 20 C54 23 56 27 58 28Z" fill="#C89ACA" opacity="0.9"/>
-  <path d="M58 28 C61 29 64 27 65 24 C64 21 61 21 59 23Z" fill="#D8A8D8" opacity="0.9"/>
-  <path d="M54 20 C51 20 48 18 48 15 C49 13 52 13 54 16Z" fill="#D8A8D8" opacity="0.8"/>
-
-  <!-- Buds (closed) -->
-  <path d="M48 30 L46 26" stroke="#5C8A4A" stroke-width="1.2" stroke-linecap="round"/>
-  <path d="M46 26 C45 23 46 19 48 18 C50 19 50 23 48 26 C47 24 47 21 48 18Z" fill="#6B9B4A"/>
-  <ellipse cx="47" cy="22" rx="2.5" ry="3.5" fill="#C89ACA" opacity="0.8"/>
-
-  <path d="M52 22 L54 18" stroke="#5C8A4A" stroke-width="1.2" stroke-linecap="round"/>
-  <ellipse cx="54" cy="16" rx="2.5" ry="3.5" fill="#6B9B4A"/>
-  <ellipse cx="54" cy="15" rx="2" ry="2.5" fill="#D8A8D8" opacity="0.8"/>
-
-  <!-- Ground soil -->
-  <ellipse cx="50" cy="91" rx="11" ry="3" fill="#8B6914" opacity="0.3"/>
+  <path d="M50 72 C55 70 60 67 62 62 C60 65 56 68 55 72" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M50 55 C44 52 38 52 36 57 C38 52 43 50 50 55" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M50 40 C56 38 60 36 60 30 C58 34 54 37 54 41" stroke="#7BAB5A" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <!-- Spiral tendrils -->
+  <path d="M48 63 C46 61 43 61 42 63 C41 65 43 67 45 66 C47 65 47 62 45 61" stroke="#7BAB5A" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <path d="M52 34 C54 32 57 32 58 34 C59 37 57 39 55 38 C53 37 53 34 55 32" stroke="#7BAB5A" stroke-width="1" stroke-linecap="round" fill="none"/>
+  <!-- Compound leaf pairs -->
+  <path d="M50 76 C46 73 40 73 38 77 C41 73 46 74 50 76Z" fill="#5C8A40"/>
+  <path d="M50 76 C54 73 60 73 62 77 C59 73 54 74 50 76Z" fill="#4A7A30"/>
+  <path d="M48 61 C44 58 38 58 36 62 C39 58 44 59 48 61Z" fill="#5C8A40"/>
+  <path d="M48 61 C52 58 58 58 60 62 C57 58 52 59 48 61Z" fill="#4A7A30"/>
+  <path d="M50 47 C46 44 40 44 38 48 C41 44 46 45 50 47Z" fill="#5C8A40"/>
+  <path d="M50 47 C54 44 60 44 62 48 C59 44 54 45 50 47Z" fill="#4A7A30"/>
+  <path d="M48 33 C44 30 38 30 36 34 C39 30 44 31 48 33Z" fill="#5C8A40"/>
+  <!-- Flower 1 — lower left, full bloom -->
+  <path d="M50 78 C44 76 36 74 32 70" stroke="#5A7A30" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <!-- Standard (large back petal) -->
+  <path d="M32 64 C29 59 30 53 34 51 C38 49 42 52 42 57 C42 62 38 66 32 64Z" fill="#BC8ACC"/>
+  <path d="M32 64 C30 60 31 54 34 52Z" fill="#A070B0" opacity="0.5"/>
+  <!-- Wings -->
+  <path d="M32 64 C28 65 24 63 23 59 C23 55 27 54 30 57Z" fill="#D0A0DC"/>
+  <path d="M42 57 C45 56 48 54 48 50 C47 47 44 47 41 50Z" fill="#D0A0DC"/>
+  <!-- Keel -->
+  <path d="M32 64 C34 67 39 67 41 64 C38 67 34 67 32 64Z" fill="#E8C0EC"/>
+  <!-- Flower 2 — upper right, darker -->
+  <path d="M50 52 C56 50 64 48 68 44" stroke="#5A7A30" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <path d="M64 38 C67 33 68 27 64 25 C60 23 56 26 56 31 C56 35 60 39 64 38Z" fill="#9A5CAC"/>
+  <path d="M64 38 C66 34 67 28 64 26Z" fill="#7A3C8C" opacity="0.5"/>
+  <path d="M64 38 C68 39 72 37 73 33 C72 29 68 28 65 31Z" fill="#B078C0"/>
+  <path d="M56 31 C53 30 50 28 50 24 C51 21 54 21 57 24Z" fill="#B078C0"/>
+  <path d="M64 38 C62 41 57 41 55 38 C58 41 62 41 64 38Z" fill="#D0A0DC"/>
+  <!-- Flower 3 — left cluster, pale pink -->
+  <path d="M50 68 C44 66 38 66 34 69" stroke="#5A7A30" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M36 63 C33 58 34 52 38 50 C42 48 46 51 46 56 C46 60 42 64 36 63Z" fill="#D8A8DC"/>
+  <path d="M36 63 C32 64 28 62 27 58 C28 54 32 53 35 56Z" fill="#EAC0EC"/>
+  <path d="M46 56 C49 55 52 53 52 49 C51 46 48 46 45 49Z" fill="#EAC0EC"/>
+  <path d="M36 63 C38 66 43 66 45 63 C42 66 38 66 36 63Z" fill="#F4D8F8"/>
+  <!-- Flower 4 — upper bud/small -->
+  <path d="M50 38 C54 37 58 35 60 31" stroke="#5A7A30" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M58 27 C60 23 62 19 60 16 C58 14 55 15 54 19 C54 22 56 26 58 27Z" fill="#BC8ACC" opacity="0.9"/>
+  <path d="M58 27 C61 28 64 26 65 23 C64 20 61 20 59 22Z" fill="#D0A0DC" opacity="0.9"/>
+  <path d="M54 19 C51 19 48 17 48 14 C49 12 52 12 54 15Z" fill="#D0A0DC" opacity="0.8"/>
+  <!-- Closed buds -->
+  <path d="M48 30 L46 26" stroke="#5A7A30" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M46 26 C45 23 46 19 48 18 C50 19 50 23 48 26 C47 24 47 21 48 18Z" fill="#5C8A40"/>
+  <ellipse cx="47" cy="22" rx="2.8" ry="3.8" fill="#BC8ACC" opacity="0.85"/>
+  <path d="M52 22 L54 18" stroke="#5A7A30" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <ellipse cx="54" cy="16" rx="2.5" ry="3.5" fill="#5C8A40"/>
+  <ellipse cx="54" cy="15" rx="2" ry="2.8" fill="#D0A0DC" opacity="0.85"/>
 </svg>

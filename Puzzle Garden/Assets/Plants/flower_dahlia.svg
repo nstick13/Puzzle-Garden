@@ -1,73 +1,63 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Dahlia — Tier 2 Flower -->
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Dahlia — Terracotta Geometric Bloom — Tier 2 Flower -->
+  <ellipse cx="50" cy="92" rx="12" ry="3.5" fill="#7A5C2A" opacity="0.25"/>
   <!-- Stem -->
-  <path d="M50 90 C50 85 50 78 50 65" stroke="#4A3520" stroke-width="2.5" stroke-linecap="round"/>
-  <!-- Side leaf stems -->
-  <path d="M50 82 C42 80 35 80 30 85" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M50 75 C58 73 65 73 70 78" stroke="#5C8A4A" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M50 68 C43 65 37 63 34 68" stroke="#5C8A4A" stroke-width="1.5" stroke-linecap="round"/>
-
-  <!-- Leaves (pinnate, dahlia characteristic) -->
-  <path d="M50 82 C42 78 33 77 30 83 C34 79 43 80 50 82Z" fill="#5C8A4A"/>
-  <path d="M50 75 C58 71 66 71 70 76 C66 73 58 73 50 75Z" fill="#6B9B4A"/>
-  <path d="M50 68 C43 64 36 62 34 66 C37 63 44 65 50 68Z" fill="#5C8A4A"/>
-  <!-- Leaf veins -->
-  <path d="M30 83 L40 80 L50 82" stroke="#4A7A3A" stroke-width="0.7" opacity="0.5"/>
-
+  <path d="M50 90 C50 84 50 76 50 63" stroke="#5A7A30" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <!-- Leaf branches -->
+  <path d="M50 83 C42 80 35 81 30 86" stroke="#5A7A30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M50 75 C58 72 65 73 70 78" stroke="#5A7A30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M50 68 C43 65 37 63 34 68" stroke="#5A7A30" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Pinnate dahlia leaves -->
+  <path d="M50 83 C42 79 33 78 30 84 C34 79 43 80 50 83Z" fill="#4A7A30"/>
+  <path d="M50 75 C58 71 66 71 70 76 C65 72 57 73 50 75Z" fill="#5C8A40"/>
+  <path d="M50 68 C43 64 36 62 34 66 C37 63 44 65 50 68Z" fill="#4A7A30"/>
+  <!-- Leaf vein -->
+  <path d="M30 84 L40 81 L50 83" stroke="#3A6A20" stroke-width="0.7" fill="none" opacity="0.5"/>
   <!-- Sepals -->
-  <path d="M50 65 C46 62 44 58 46 55 C48 59 49 62 50 65Z" fill="#5C8A4A"/>
-  <path d="M50 65 C54 62 56 58 54 55 C52 59 51 62 50 65Z" fill="#5C8A4A"/>
-  <path d="M50 65 C48 60 48 55 50 52 C52 55 52 60 50 65Z" fill="#6B9B4A"/>
-  <path d="M50 65 C44 61 40 56 42 52 C44 56 46 61 50 65Z" fill="#5C8A4A" opacity="0.7"/>
-  <path d="M50 65 C56 61 60 56 58 52 C56 56 54 61 50 65Z" fill="#5C8A4A" opacity="0.7"/>
-
-  <!-- Dahlia bloom — many symmetrical pointed petals radiating from center -->
-  <!-- Outermost petal ring (8 petals) — terracotta orange -->
-  <path d="M50 52 C48 46 46 36 50 26 C54 36 52 46 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C55 47 62 40 72 36 C66 44 58 49 50 52Z" fill="#C86848"/>
-  <path d="M50 52 C56 50 64 50 74 52 C64 54 56 54 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C55 57 62 64 72 68 C64 60 58 55 50 52Z" fill="#C86848"/>
-  <path d="M50 52 C48 58 46 68 50 78 C54 68 52 58 50 52Z" fill="#D4795A" opacity="0.8"/>
-  <path d="M50 52 C45 57 38 64 28 68 C36 60 42 55 50 52Z" fill="#C86848"/>
-  <path d="M50 52 C44 50 36 50 26 52 C36 54 44 54 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C45 47 38 40 28 36 C34 44 42 49 50 52Z" fill="#C86848"/>
-
-  <!-- Second petal ring (8 petals, rotated 22.5°) -->
-  <path d="M50 52 C49 46 48 38 50 30 C52 38 51 46 50 52Z" fill="#E89A7A" opacity="0.9"/>
-  <path d="M50 52 C54 48 59 43 67 40 C62 47 57 50 50 52Z" fill="#D4795A" opacity="0.9"/>
-  <path d="M50 52 C55 52 62 52 70 54 C62 56 55 56 50 52Z" fill="#E89A7A" opacity="0.9"/>
-  <path d="M50 52 C54 56 59 61 67 64 C62 57 57 54 50 52Z" fill="#D4795A" opacity="0.9"/>
-  <path d="M50 52 C49 58 48 66 50 74 C52 66 51 58 50 52Z" fill="#E89A7A" opacity="0.8"/>
-  <path d="M50 52 C46 56 41 61 33 64 C38 57 43 54 50 52Z" fill="#D4795A" opacity="0.9"/>
-  <path d="M50 52 C45 52 38 52 30 54 C38 56 45 56 50 52Z" fill="#E89A7A" opacity="0.9"/>
-  <path d="M50 52 C46 48 41 43 33 40 C38 47 43 50 50 52Z" fill="#D4795A" opacity="0.9"/>
-
-  <!-- Inner ring (shorter petals) -->
-  <path d="M50 52 C49 48 49 43 50 39 C51 43 51 48 50 52Z" fill="#E8A890"/>
-  <path d="M50 52 C53 49 56 46 60 44 C57 48 54 50 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C54 52 58 53 62 54 C58 55 54 55 50 52Z" fill="#E8A890"/>
-  <path d="M50 52 C53 55 56 58 60 60 C57 56 54 54 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C49 56 49 61 50 65 C51 61 51 56 50 52Z" fill="#E8A890" opacity="0.8"/>
-  <path d="M50 52 C47 55 44 58 40 60 C43 56 46 54 50 52Z" fill="#D4795A"/>
-  <path d="M50 52 C46 52 42 53 38 54 C42 55 46 55 50 52Z" fill="#E8A890"/>
-  <path d="M50 52 C47 49 44 46 40 44 C43 48 46 50 50 52Z" fill="#D4795A"/>
-
-  <!-- Innermost tiny petals -->
-  <path d="M50 52 C49 50 49 47 50 46 C51 47 51 50 50 52Z" fill="#F0B098"/>
-  <path d="M50 52 C52 50 54 48 55 46 C53 49 52 51 50 52Z" fill="#E8A890"/>
-  <path d="M50 52 C52 54 54 55 55 58 C53 55 51 53 50 52Z" fill="#F0B098"/>
-  <path d="M50 52 C48 54 46 55 45 58 C47 55 49 53 50 52Z" fill="#E8A890"/>
-  <path d="M50 52 C48 50 46 48 45 46 C47 49 48 51 50 52Z" fill="#F0B098"/>
-
-  <!-- Center disc -->
-  <circle cx="50" cy="52" r="5" fill="#B85C2C"/>
-  <circle cx="50" cy="52" r="3.5" fill="#C87040"/>
-  <circle cx="49" cy="51" r="1.2" fill="#E8A030" opacity="0.8"/>
-  <circle cx="51" cy="51" r="1.2" fill="#E8A030" opacity="0.8"/>
-  <circle cx="50" cy="53" r="1.2" fill="#E8A030" opacity="0.8"/>
-  <circle cx="50" cy="52" r="1" fill="#F0C050"/>
-
-  <!-- Ground soil -->
-  <ellipse cx="50" cy="91" rx="11" ry="3" fill="#8B6914" opacity="0.3"/>
+  <path d="M50 63 C46 61 43 57 45 53 C47 57 48 61 50 63Z" fill="#4A7A30"/>
+  <path d="M50 63 C54 61 57 57 55 53 C53 57 52 61 50 63Z" fill="#4A7A30"/>
+  <path d="M50 63 C48 59 47 54 50 52 C53 54 52 59 50 63Z" fill="#5C8A40"/>
+  <path d="M50 63 C44 60 40 55 42 51 C44 55 46 60 50 63Z" fill="#4A7A30" opacity="0.7"/>
+  <path d="M50 63 C56 60 60 55 58 51 C56 55 54 60 50 63Z" fill="#4A7A30" opacity="0.7"/>
+  <!-- Dahlia bloom — many pointed quilled petals -->
+  <!-- Outermost petal ring — deep terracotta (8 petals) -->
+  <path d="M50 52 C48 45 46 35 50 24 C54 35 52 45 50 52Z" fill="#C8683A"/>
+  <path d="M50 52 C55 47 63 40 73 35 C67 44 58 49 50 52Z" fill="#BC5C30"/>
+  <path d="M50 52 C56 50 65 50 75 52 C65 54 56 54 50 52Z" fill="#C8683A"/>
+  <path d="M50 52 C55 57 63 64 73 69 C65 60 58 55 50 52Z" fill="#BC5C30"/>
+  <path d="M50 52 C48 59 46 69 50 79 C54 69 52 59 50 52Z" fill="#C8683A" opacity="0.85"/>
+  <path d="M50 52 C45 57 37 64 27 69 C35 60 42 55 50 52Z" fill="#BC5C30"/>
+  <path d="M50 52 C44 50 35 50 25 52 C35 54 44 54 50 52Z" fill="#C8683A"/>
+  <path d="M50 52 C45 47 37 40 27 35 C33 44 42 49 50 52Z" fill="#BC5C30"/>
+  <!-- Second ring — medium terracotta, rotated 22.5° -->
+  <path d="M50 52 C49 46 48 37 50 29 C52 37 51 46 50 52Z" fill="#D8785A" opacity="0.92"/>
+  <path d="M50 52 C55 48 60 43 68 40 C62 47 57 50 50 52Z" fill="#C8683A" opacity="0.92"/>
+  <path d="M50 52 C55 52 62 52 71 54 C62 56 55 56 50 52Z" fill="#D8785A" opacity="0.92"/>
+  <path d="M50 52 C55 57 60 62 68 65 C62 57 57 54 50 52Z" fill="#C8683A" opacity="0.92"/>
+  <path d="M50 52 C49 58 48 67 50 75 C52 67 51 58 50 52Z" fill="#D8785A" opacity="0.85"/>
+  <path d="M50 52 C45 57 40 62 32 65 C38 57 43 54 50 52Z" fill="#C8683A" opacity="0.92"/>
+  <path d="M50 52 C45 52 38 52 29 54 C38 56 45 56 50 52Z" fill="#D8785A" opacity="0.92"/>
+  <path d="M50 52 C45 48 40 43 32 40 C38 47 43 50 50 52Z" fill="#C8683A" opacity="0.92"/>
+  <!-- Third ring — warm amber/terracotta -->
+  <path d="M50 52 C49 48 49 42 50 38 C51 42 51 48 50 52Z" fill="#E8907A"/>
+  <path d="M50 52 C53 49 57 46 61 44 C58 48 54 50 50 52Z" fill="#D8785A"/>
+  <path d="M50 52 C54 52 59 53 63 55 C59 56 54 55 50 52Z" fill="#E8907A"/>
+  <path d="M50 52 C53 56 57 59 61 62 C58 57 54 54 50 52Z" fill="#D8785A"/>
+  <path d="M50 52 C49 56 49 62 50 66 C51 62 51 56 50 52Z" fill="#E8907A" opacity="0.85"/>
+  <path d="M50 52 C47 56 43 59 39 62 C42 57 46 54 50 52Z" fill="#D8785A"/>
+  <path d="M50 52 C46 52 41 53 37 55 C41 56 46 55 50 52Z" fill="#E8907A"/>
+  <path d="M50 52 C47 49 43 46 39 44 C42 48 46 50 50 52Z" fill="#D8785A"/>
+  <!-- Innermost short petals -->
+  <path d="M50 52 C49 49 49 46 50 44 C51 46 51 49 50 52Z" fill="#F0A888"/>
+  <path d="M50 52 C52 50 54 48 56 46 C54 49 52 51 50 52Z" fill="#E8907A"/>
+  <path d="M50 52 C52 54 54 56 56 58 C54 55 51 53 50 52Z" fill="#F0A888"/>
+  <path d="M50 52 C48 54 46 56 44 58 C46 55 49 53 50 52Z" fill="#E8907A"/>
+  <path d="M50 52 C48 50 46 48 44 46 C46 49 48 51 50 52Z" fill="#F0A888"/>
+  <!-- Dark center disc -->
+  <circle cx="50" cy="52" r="5.5" fill="#8B3820"/>
+  <circle cx="50" cy="52" r="4" fill="#A84A2C"/>
+  <circle cx="49" cy="51" r="1.3" fill="#D07848" opacity="0.8"/>
+  <circle cx="51" cy="51" r="1.3" fill="#D07848" opacity="0.8"/>
+  <circle cx="50" cy="53.5" r="1.3" fill="#D07848" opacity="0.8"/>
+  <circle cx="50" cy="52" r="1.2" fill="#E8B060"/>
 </svg>
