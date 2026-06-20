@@ -1,6 +1,6 @@
 # Puzzle Garden — Agent Handoff
 
-_Last updated: 2026-06-19_
+_Last updated: 2026-06-20_
 
 ## What this is
 
@@ -9,7 +9,7 @@ Solving puzzles plants flowers in a persistent garden — the garden is the rete
 and the core differentiator vs. the Meowdoku/Starstruck/Queens clone market.
 
 - **Platform:** iOS 16+, SwiftUI, Swift 5.9+, iPhone + iPad
-- **Dependencies:** none — all Apple-native (SwiftUI, StoreKit 2 planned, ImageRenderer planned)
+- **Dependencies:** none — all Apple-native (SwiftUI, StoreKit 2, ImageRenderer)
 - **Persistence:** Codable JSON to `player_data.json` in Documents (deliberately *not* SwiftData — chosen for migration-free iteration)
 - **Positioning:** "The logic puzzle you love, without the nonsense." No ads, ever. Free daily puzzle + $2.99 one-time IAP for unlimited free play.
 - **Full product spec:** see [`puzzle-garden-scope.md`](puzzle-garden-scope.md) — read this for product/monetization/UX detail.
@@ -21,9 +21,8 @@ and the core differentiator vs. the Meowdoku/Starstruck/Queens clone market.
 | 1 | Core engine: puzzle model, generator, solver, uniqueness validation, unit tests | ✅ Complete |
 | 2 | Game UI: grid, tap/long-press/drag gestures, conflict shake, win overlay, timer, home | ✅ Complete |
 | 3 | Garden + daily + stats: garden grid, plant awards, streaks, stats dashboard, calendar | ✅ Complete |
-| — | Session 5 win-detection root-cause fix (see learnings) | ✅ Complete |
-| 4 | Share card (emoji + ImageRenderer) + StoreKit 2 IAP + paywall | ⏳ Next up |
-| 5 | Polish: sound, haptics, settings, app icon, onboarding | ⏳ Pending |
+| 4 | Share card (emoji + ImageRenderer) + StoreKit 2 IAP + paywall | ✅ Complete |
+| 5 | Polish: sound, haptics, settings, app icon, onboarding | ⏳ Next up |
 | 6 | Ship: screenshots, ASO, privacy policy, TestFlight, App Review | ⏳ Pending |
 
 ## Code map (what's actually built)
@@ -35,41 +34,64 @@ Puzzle Garden/
 │   ├── QueensSolver.swift      // backtracking solve(), isValid(), countSolutions()
 │   ├── PuzzleGenerator.swift   // flood-fill regions, SeededRNG (xorshift64), DailyPuzzleManager
 │   ├── GameState.swift         // @Observable game state machine (current session)
-│   └── PlayerData.swift        // @Observable singleton, JSON persistence, streaks/plants/daily
+│   ├── PlayerData.swift        // @Observable singleton, JSON persistence, streaks/plants/daily
+│   └── StoreManager.swift      // @Observable singleton, StoreKit 2, com.puzzlegarden.fullaccess
 ├── Views/
-│   ├── Game/GameView.swift, CellView.swift
+│   ├── Game/GameView.swift, CellView.swift, ShareCard.swift
 │   ├── Garden/GardenView.swift
 │   ├── Home/HomeView.swift
+│   ├── Paywall/PaywallView.swift
 │   └── Stats/StatsView.swift, CalendarView.swift
 ├── ContentView.swift           // TabView: Home / Garden / Stats
-└── Puzzle_GardenApp.swift      // injects PlayerData.shared
+├── Puzzle_GardenApp.swift      // injects PlayerData.shared
+└── Puzzle Garden.storekit      // local StoreKit config for simulator testing (v5 format)
 ```
 
 ## Critical gotchas (don't relearn these the hard way)
 
-1. **`@Observable` + SwiftUI animation:** any `@Observable` model that drives a transition must `import SwiftUI`. But do **not** call `withAnimation` from inside the model — it doesn't reliably propagate. Mutate the property plainly and put `.animation(_, value:)` on the **View** side. (This bit us twice on win detection.)
+1. **`@Observable` + SwiftUI animation:** any `@Observable` model that drives a transition must `import SwiftUI`. Do **not** call `withAnimation` from inside the model — put `.animation(_, value:)` on the **View** side.
 2. **Fire-once side effects (e.g. record solve on win):** use a callback closure on the model (`var onWin: (() -> Void)?`, set in `.onAppear`), **not** `.task(id:)` or `.onChange(of:)`. Those silently skip when the state change originates from a gesture handler inside an `@Observable` model.
 3. **Diagonal rule is adjacency-only** (`|Δr|==1 && |Δc|==1`), NOT the full N-Queens diagonal sweep. Matches LinkedIn Queens rules.
 4. **New Swift files auto-register:** the project uses `PBXFileSystemSynchronizedRootGroup` (Xcode 15+), so files dropped in `Puzzle Garden/` are picked up automatically — no `.pbxproj` edits.
 5. **Daily seed:** `year*10000 + month*100 + day` → `UInt64`, deterministic per day, device-local (no server).
-6. **Uniqueness validation** uses `countSolutions` with early exit at 2; expect ~30–60% discard rate on 7×7. Grid size is the primary difficulty lever.
+6. **Uniqueness validation** uses `countSolutions` with early exit at 2; expect ~30–60% discard rate on 7×7.
+7. **StoreKit config file:** must be Xcode-generated (v5 format). Hand-crafted JSON (v2 format) silently returns empty products. Create via File → New → File from Template → StoreKit Configuration File. The working file is at `Puzzle Garden/Puzzle Garden.storekit`. To test purchases in the simulator: Edit Scheme → Run → Options → StoreKit Configuration → select it.
+8. **StoreManager is `@MainActor @Observable`** — no deinit (singleton lives for app lifetime). `hasFullAccess` is checked in `HomeView` before launching Free Play; `PaywallView` auto-dismisses when it flips true.
+
+## IAP details
+
+- Product ID: `com.puzzlegarden.fullaccess`
+- Type: Non-consumable, $2.99 one-time
+- What it gates: Free Play only. Daily puzzle is always free.
+- Verification: `Transaction.currentEntitlements` (no server)
+- Still needed before ship: add **In-App Purchase capability** in Xcode (Signing & Capabilities tab) — this is a GUI-only step that adds the entitlement to the build.
+- Planned value-adds (not yet built): daily archive, larger grids (8×8+), streak shield, garden themes
+
+## Share card details
+
+- `Views/Game/ShareCard.swift` — `ShareCardView` renders emoji grid (colored squares per region, 🌸 on solution cells) + header + footer
+- `ImageRenderer` at 3× scale, triggered via `.task(id: game.showWin)` in GameView
+- `ShareLink` appears in win overlay once image is ready
+- Footer says `puzzlegarden.app` — update when domain is confirmed
 
 ## Git / repo status
 
-- Local repo is committed and clean. Latest commit adds gameplay, views, models, and a Swift `.gitignore` (xcuserdata is now untracked).
-- **Pending:** pushing to a new **public** GitHub repo. `gh` CLI is installed (v2.95) but **not yet authenticated** — user needs to run `gh auth login` (GitHub.com → HTTPS → browser, "Yes" to git credentials). Then:
-  ```
-  gh repo create Puzzle-Garden --public --source=. --remote=origin --push
-  ```
+- Repo is on GitHub: `https://github.com/nstick13/Puzzle-Garden` (public)
+- Local and remote are in sync up to Phase 4 (push before starting Phase 5)
 
 ## Open product decisions
 
-1. **Plant art** — commission illustrator, AI-generate, or minimal/geometric? (Currently emoji placeholders by difficulty tier: herbs/flowers/trees.)
+1. **Plant art** — commission illustrator, AI-generate, or minimal/geometric? (Currently emoji placeholders.)
 2. **Garden layout at launch** — auto-place only, or allow rearranging? (Scope says keep v1 dead simple.)
 3. **Sound direction** — naturalistic ambient vs. stylized.
-4. **TestFlight beta timeline.**
-5. **Name availability** — "Puzzle Garden" is generic; verify App Store / domain / handles before committing. Backups: Garden Logic, Bloom Puzzle, Plot & Plant.
+4. **Name availability** — "Puzzle Garden" is generic; verify App Store / domain / handles before committing. Backups: Garden Logic, Bloom Puzzle, Plot & Plant.
+5. **TestFlight beta timeline.**
 
 ## Suggested next task
 
-Phase 4: start with the **text/emoji share card** (low-risk, high marketing value — every share is a free impression), then **StoreKit 2 full-access IAP** (`com.puzzlegarden.fullaccess`, non-consumable, verified via `Transaction.currentEntitlements`, no server). Daily puzzle must always stay free; only Free Play is gated.
+Phase 5 polish — suggested order:
+1. **Haptics** — `UIImpactFeedbackGenerator` on correct placement, `UINotificationFeedbackGenerator` (.success) on win. Low effort, high feel.
+2. **App icon** — needed before TestFlight. Even a placeholder beats the default.
+3. **Settings screen** — sound toggle, reset progress, restore purchase link.
+4. **Onboarding** — first-launch tutorial or tooltip overlay on the grid.
+5. **Sound** — last because it needs assets and direction decision first.
