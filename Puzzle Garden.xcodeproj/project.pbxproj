@@ -30,7 +30,6 @@
 
 /* Begin PBXFileReference section */
 		7857FFF72FE6D46B002903AE /* Puzzle Garden.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Puzzle Garden.storekit"; path = "Puzzle Garden/Puzzle Garden.storekit"; sourceTree = "<group>"; };
-		7857FFFB2FE6D4BF002903AE /* Puzzle Garden.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Puzzle Garden.storekit"; path = "Puzzle Garden/Puzzle Garden.storekit"; sourceTree = "<group>"; };
 		7876B3312FDC2A17002208CB /* Puzzle Garden.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Puzzle Garden.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7876B3452FDC2A18002208CB /* Puzzle GardenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Puzzle GardenTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7876B34F2FDC2A18002208CB /* Puzzle GardenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Puzzle GardenUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,7 +97,6 @@
 			isa = PBXGroup;
 			children = (
 				7857FFF72FE6D46B002903AE /* Puzzle Garden.storekit */,
-				7857FFFB2FE6D4BF002903AE /* Puzzle Garden.storekit */,
 				7876B3332FDC2A17002208CB /* Puzzle Garden */,
 				7876B3482FDC2A18002208CB /* Puzzle GardenTests */,
 				7876B3522FDC2A18002208CB /* Puzzle GardenUITests */,

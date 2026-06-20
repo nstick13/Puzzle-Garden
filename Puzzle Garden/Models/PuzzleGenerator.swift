@@ -43,7 +43,7 @@ enum PuzzleGenerator {
     // MARK: - Region generation
 
     /// Flood-fill region partition. Returns nil if it can't assign all cells.
-    private static func makeRegions(n: Int, rng: inout SeededRNG) -> [[Int]]? {
+    private nonisolated static func makeRegions(n: Int, rng: inout SeededRNG) -> [[Int]]? {
         let regions = makeRegionsUnchecked(n: n, rng: &rng)
         // Verify every region ID 0..<n appears at least once
         let ids = Set(regions.flatMap { $0 })
@@ -51,7 +51,7 @@ enum PuzzleGenerator {
         return regions
     }
 
-    private static func makeRegionsUnchecked(n: Int, rng: inout SeededRNG) -> [[Int]] {
+    private nonisolated static func makeRegionsUnchecked(n: Int, rng: inout SeededRNG) -> [[Int]] {
         var grid = Array(repeating: Array(repeating: -1, count: n), count: n)
 
         // Pick one random seed cell per region
@@ -89,14 +89,14 @@ enum PuzzleGenerator {
         return grid
     }
 
-    private static func neighbors(_ r: Int, _ c: Int, n: Int) -> [(Int, Int)] {
+    private nonisolated static func neighbors(_ r: Int, _ c: Int, n: Int) -> [(Int, Int)] {
         [(r-1,c),(r+1,c),(r,c-1),(r,c+1)].filter { $0.0 >= 0 && $0.0 < n && $0.1 >= 0 && $0.1 < n }
     }
 
     // MARK: - Randomised solve
 
     /// Backtrack with randomised column order so each run produces a different solution layout.
-    private static func solveRandom(n: Int, regions: [[Int]], rng: inout SeededRNG) -> [[Int]]? {
+    private nonisolated static func solveRandom(n: Int, regions: [[Int]], rng: inout SeededRNG) -> [[Int]]? {
         var board       = Array(repeating: Array(repeating: 0, count: n), count: n)
         var usedCols    = Set<Int>(minimumCapacity: n)
         var usedRegions = Set<Int>(minimumCapacity: n)
@@ -108,7 +108,7 @@ enum PuzzleGenerator {
         return board
     }
 
-    private static func _randomSolve(
+    private nonisolated static func _randomSolve(
         _ board: inout [[Int]],
         _ regions: [[Int]],
         colOrders: [[Int]],
@@ -141,7 +141,7 @@ enum PuzzleGenerator {
         return false
     }
 
-    private static func hasAdjacentDiagonal(_ board: [[Int]], row: Int, col: Int) -> Bool {
+    private nonisolated static func hasAdjacentDiagonal(_ board: [[Int]], row: Int, col: Int) -> Bool {
         let prevRow = row - 1
         guard prevRow >= 0 else { return false }
         let n = board[prevRow].count
