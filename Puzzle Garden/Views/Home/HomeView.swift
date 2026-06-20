@@ -7,6 +7,8 @@ struct HomeView: View {
     @State private var activePuzzle: Puzzle?
     @State private var isGenerating = false
     @State private var activeIsDaily = false
+    @State private var showPaywall = false
+    @State private var store = StoreManager.shared
 
     var body: some View {
         NavigationStack {
@@ -77,14 +79,20 @@ struct HomeView: View {
                         .pickerStyle(.segmented)
                         .padding(.horizontal, 32)
 
-                        Button(action: generateFreePlay) {
+                        Button(action: onFreePlayTapped) {
                             Group {
                                 if isGenerating {
                                     ProgressView()
                                         .tint(.white)
                                 } else {
-                                    Label("New Puzzle", systemImage: "leaf.fill")
-                                        .font(.system(.headline, design: .rounded))
+                                    HStack {
+                                        Label("New Puzzle", systemImage: "leaf.fill")
+                                            .font(.system(.headline, design: .rounded))
+                                        if !store.hasFullAccess {
+                                            Image(systemName: "lock.fill")
+                                                .font(.system(size: 13))
+                                        }
+                                    }
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -95,6 +103,7 @@ struct HomeView: View {
                         }
                         .disabled(isGenerating)
                         .padding(.horizontal, 32)
+                        .sheet(isPresented: $showPaywall) { PaywallView() }
                     }
 
                     Spacer()
@@ -111,6 +120,11 @@ struct HomeView: View {
     private func generateDaily() {
         activeIsDaily = true
         generate(seed: DailyPuzzleManager.todaySeed(), difficulty: .five)
+    }
+
+    private func onFreePlayTapped() {
+        guard store.hasFullAccess else { showPaywall = true; return }
+        generateFreePlay()
     }
 
     private func generateFreePlay() {
