@@ -11,7 +11,7 @@ final class StoreManager {
     private(set) var errorMessage: String?
 
     private let productID = "com.puzzlegarden.fullaccess"
-    private var product: Product?
+    private(set) var product: Product?
     private var transactionListener: Task<Void, Error>?
 
     private init() {

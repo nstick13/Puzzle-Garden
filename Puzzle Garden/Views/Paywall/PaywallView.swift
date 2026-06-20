@@ -3,7 +3,7 @@ import StoreKit
 
 struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var store = StoreManager.shared
+    private let store = StoreManager.shared
     @State private var isRestoring = false
 
     var body: some View {
@@ -46,11 +46,11 @@ struct PaywallView: View {
                 Spacer()
 
                 // Error / loading state
-                if store.product == nil && store.purchaseError == nil {
+                if store.product == nil && store.errorMessage == nil {
                     Text("Loading product…")
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
-                } else if let error = store.purchaseError {
+                } else if let error = store.errorMessage {
                     Text(error)
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.red)
@@ -62,7 +62,7 @@ struct PaywallView: View {
                 VStack(spacing: 12) {
                     Button(action: { Task { await store.purchase() } }) {
                         Group {
-                            if store.isPurchasing {
+                            if store.isLoading {
                                 ProgressView().tint(.white)
                             } else {
                                 Text(priceLabel)
@@ -75,7 +75,7 @@ struct PaywallView: View {
                         .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .disabled(store.product == nil || store.isPurchasing)
+                    .disabled(store.product == nil || store.isLoading)
 
                     Button(action: {
                         isRestoring = true

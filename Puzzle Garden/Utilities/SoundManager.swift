@@ -12,6 +12,9 @@ final class SoundManager {
     }
 
     private func setupEngine() {
+        #if targetEnvironment(simulator)
+        return
+        #else
         do {
             try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
@@ -20,6 +23,7 @@ final class SoundManager {
         } catch {
             // Engine setup failed; sounds will be silently skipped
         }
+        #endif
     }
 
     private var soundEnabled: Bool {
