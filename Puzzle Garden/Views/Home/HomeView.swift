@@ -2,13 +2,13 @@ import SwiftUI
 
 struct HomeView: View {
     var playerData: PlayerData
+    var storeManager: StoreManager
 
     @State private var selectedDifficulty: GridSize = .five
     @State private var activePuzzle: Puzzle?
     @State private var isGenerating = false
     @State private var activeIsDaily = false
     @State private var showPaywall = false
-    @State private var store = StoreManager.shared
 
     var body: some View {
         NavigationStack {
@@ -43,7 +43,7 @@ struct HomeView: View {
                         }
                     }
 
-                    // Daily puzzle button
+                    // Daily puzzle button (always free)
                     Button(action: generateDaily) {
                         HStack {
                             Label("Today's Puzzle", systemImage: "sun.max.fill")
@@ -65,11 +65,18 @@ struct HomeView: View {
                     }
                     .padding(.horizontal, 32)
 
-                    // Free play section
+                    // Free play section (gated behind purchase)
                     VStack(spacing: 12) {
-                        Text("Free Play")
-                            .font(.system(.footnote, design: .rounded).uppercaseSmallCaps())
-                            .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+                        HStack {
+                            Text("Free Play")
+                                .font(.system(.footnote, design: .rounded).uppercaseSmallCaps())
+                                .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+                            if !storeManager.hasFullAccess {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(Color(red: 0.72, green: 0.55, blue: 0.35))
+                            }
+                        }
 
                         Picker("Difficulty", selection: $selectedDifficulty) {
                             ForEach(GridSize.allCases, id: \.self) { size in
@@ -78,21 +85,19 @@ struct HomeView: View {
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal, 32)
+                        .opacity(storeManager.hasFullAccess ? 1 : 0.5)
 
-                        Button(action: onFreePlayTapped) {
+                        Button(action: handleFreePlayTap) {
                             Group {
                                 if isGenerating {
                                     ProgressView()
                                         .tint(.white)
+                                } else if storeManager.hasFullAccess {
+                                    Label("New Puzzle", systemImage: "leaf.fill")
+                                        .font(.system(.headline, design: .rounded))
                                 } else {
-                                    HStack {
-                                        Label("New Puzzle", systemImage: "leaf.fill")
-                                            .font(.system(.headline, design: .rounded))
-                                        if !store.hasFullAccess {
-                                            Image(systemName: "lock.fill")
-                                                .font(.system(size: 13))
-                                        }
-                                    }
+                                    Label("Unlock Free Play", systemImage: "lock.open.fill")
+                                        .font(.system(.headline, design: .rounded))
                                 }
                             }
                             .frame(maxWidth: .infinity)
@@ -112,6 +117,9 @@ struct HomeView: View {
             .navigationDestination(item: $activePuzzle) { puzzle in
                 GameView(puzzle: puzzle, isDaily: activeIsDaily, playerData: playerData)
             }
+            .sheet(isPresented: $showPaywall) {
+                StoreView(storeManager: storeManager) { showPaywall = false }
+            }
         }
     }
 
@@ -122,8 +130,11 @@ struct HomeView: View {
         generate(seed: DailyPuzzleManager.todaySeed(), difficulty: .five)
     }
 
-    private func onFreePlayTapped() {
-        guard store.hasFullAccess else { showPaywall = true; return }
+    private func handleFreePlayTap() {
+        guard storeManager.hasFullAccess else {
+            showPaywall = true
+            return
+        }
         generateFreePlay()
     }
 
@@ -146,5 +157,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(playerData: PlayerData.shared)
+    HomeView(playerData: PlayerData.shared, storeManager: StoreManager.shared)
 }

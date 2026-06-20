@@ -27,6 +27,7 @@ struct PlayerStats: Codable {
 struct Plant: Codable, Identifiable {
     var id: UUID = UUID()
     var emoji: String
+    var assetName: String?
     var earnedDate: String
     var fromDaily: Bool
     var difficulty: GridSize
@@ -50,7 +51,25 @@ private struct PlayerDataStore: Codable {
     var lastPlayedDate: String?
 }
 
-// MARK: - Plant emoji pools
+// MARK: - Plant asset names (SVG imagesets in Assets.xcassets/Plants/)
+
+enum PlantAsset {
+    static let easy:   [String] = ["Plants/herb_lavender", "Plants/herb_chamomile", "Plants/herb_clover", "Plants/herb_mint", "Plants/herb_thyme"]
+    static let medium: [String] = ["Plants/flower_rose", "Plants/flower_foxglove", "Plants/flower_hydrangea", "Plants/flower_dahlia", "Plants/flower_sweetpeas"]
+    static let hard:   [String] = ["Plants/tree_apple_blossom", "Plants/vine_wisteria", "Plants/shrub_rosehip", "Plants/tree_elderflower", "Plants/vine_climbing_roses"]
+
+    static func random(for difficulty: GridSize) -> String {
+        let pool: [String]
+        switch difficulty {
+        case .five:  pool = easy
+        case .six:   pool = medium
+        case .seven: pool = hard
+        }
+        return pool.randomElement()!
+    }
+}
+
+// MARK: - Plant emoji pools (fallback for legacy saved plants without assetName)
 
 enum PlantEmoji {
     static let easy:   [String] = ["🌱", "🌿", "🪴", "☘️"]
@@ -154,6 +173,7 @@ final class PlayerData {
 
         let plant = Plant(
             emoji: PlantEmoji.random(for: difficulty),
+            assetName: PlantAsset.random(for: difficulty),
             earnedDate: date,
             fromDaily: isDaily,
             difficulty: difficulty,

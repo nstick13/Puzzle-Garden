@@ -76,8 +76,9 @@ Puzzle Garden/
 
 ## Git / repo status
 
-- Repo is on GitHub: `https://github.com/nstick13/Puzzle-Garden` (public)
-- Local and remote are in sync up to Phase 4 (push before starting Phase 5)
+- **GitHub repo:** [https://github.com/nstick13/Puzzle-Garden](https://github.com/nstick13/Puzzle-Garden) — public, all commits pushed.
+- Local repo is clean and in sync with `origin/main`.
+- `.gitignore` excludes `xcuserdata/` and `DerivedData/` — no Xcode user data tracked.
 
 ## Open product decisions
 

@@ -1,81 +1,111 @@
-import StoreKit
+import Foundation
 import Observation
+import StoreKit
 
-@MainActor
 @Observable
 final class StoreManager {
     static let shared = StoreManager()
 
-    private let productID = "com.puzzlegarden.fullaccess"
+    private(set) var hasFullAccess = false
+    private(set) var isLoading = false
+    private(set) var errorMessage: String?
 
-    var hasFullAccess = false
-    var product: Product?
-    var isPurchasing = false
-    var purchaseError: String?
+    private let productID = "com.puzzlegarden.fullaccess"
+    private var product: Product?
+    private var transactionListener: Task<Void, Error>?
 
     private init() {
+        transactionListener = listenForTransactions()
         Task {
-            for await result in Transaction.updates {
-                await self.handle(result)
-            }
+            await refreshEntitlements()
+            await loadProduct()
         }
-        Task { await load() }
     }
 
-    // MARK: - Public
+    deinit {
+        transactionListener?.cancel()
+    }
+
+    var priceString: String {
+        product?.displayPrice ?? "$2.99"
+    }
+
+    // MARK: - Purchase
 
     func purchase() async {
-        guard let product, !isPurchasing else { return }
-        isPurchasing = true
-        purchaseError = nil
-        defer { isPurchasing = false }
+        guard let product else { return }
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
         do {
             let result = try await product.purchase()
             switch result {
-            case .success(let verification): await handle(verification)
-            case .userCancelled, .pending: break
-            @unknown default: break
+            case .success(let verification):
+                let transaction = try checkVerified(verification)
+                await transaction.finish()
+                hasFullAccess = true
+            case .pending, .userCancelled:
+                break
+            @unknown default:
+                break
             }
         } catch {
-            purchaseError = error.localizedDescription
+            errorMessage = error.localizedDescription
         }
     }
 
+    // MARK: - Restore
+
     func restore() async {
-        purchaseError = nil
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
         do {
             try await AppStore.sync()
             await refreshEntitlements()
         } catch {
-            purchaseError = error.localizedDescription
+            errorMessage = error.localizedDescription
         }
     }
 
-    // MARK: - Private
+    // MARK: - Internal
 
-    private func load() async {
+    private func loadProduct() async {
         do {
             let products = try await Product.products(for: [productID])
             product = products.first
         } catch {
-            purchaseError = error.localizedDescription
+            // Non-fatal: price falls back to default display string
         }
-        await refreshEntitlements()
     }
 
     private func refreshEntitlements() async {
-        var found = false
         for await result in Transaction.currentEntitlements {
-            if case .verified(let tx) = result, tx.productID == productID {
-                found = true
+            if case .verified(let transaction) = result,
+               transaction.productID == productID {
+                hasFullAccess = true
+                return
             }
         }
-        hasFullAccess = found
     }
 
-    private func handle(_ result: VerificationResult<Transaction>) async {
-        guard case .verified(let tx) = result else { return }
-        await tx.finish()
-        await refreshEntitlements()
+    private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+        switch result {
+        case .unverified(_, let error): throw error
+        case .verified(let safe): return safe
+        }
+    }
+
+    private func listenForTransactions() -> Task<Void, Error> {
+        Task.detached { [weak self] in
+            for await result in Transaction.updates {
+                guard let self else { return }
+                if case .verified(let transaction) = result,
+                   transaction.productID == self.productID {
+                    await transaction.finish()
+                    await MainActor.run { self.hasFullAccess = true }
+                }
+            }
+        }
     }
 }
