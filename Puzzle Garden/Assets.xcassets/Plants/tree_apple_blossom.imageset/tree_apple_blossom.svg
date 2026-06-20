@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Apple/Pear Blossom Tree — Tier 3 Tree -->
+  <ellipse cx="50" cy="93" rx="16" ry="4" fill="#8B6914" opacity="0.3"/>
+  <!-- Trunk -->
+  <path d="M50 91 C50 85 49 78 49 70" stroke="#6B4020" stroke-width="5.5" stroke-linecap="round" fill="none"/>
+  <path d="M49 70 C48 65 47 60 48 54" stroke="#6B4020" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <!-- Bark texture details -->
+  <path d="M49 86 C47 84 47 81 49 79" stroke="#8B5C30" stroke-width="1.4" opacity="0.5" fill="none"/>
+  <path d="M50 80 C52 78 52 75 50 73" stroke="#8B5C30" stroke-width="1.4" opacity="0.5" fill="none"/>
+  <!-- Main branches -->
+  <path d="M49 65 C44 60 36 54 27 49" stroke="#6B4020" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M49 65 C54 60 62 54 71 48" stroke="#6B4020" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+  <path d="M49 57 C48 51 46 43 44 35" stroke="#8B5C30" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <path d="M49 57 C52 51 54 43 56 35" stroke="#8B5C30" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <!-- Sub-branches -->
+  <path d="M34 51 C29 47 23 45 19 47" stroke="#8B5C30" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <path d="M34 51 C32 45 31 39 33 33" stroke="#8B5C30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M64 50 C69 46 75 44 79 46" stroke="#8B5C30" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <path d="M64 50 C66 44 67 38 65 32" stroke="#8B5C30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M44 38 C40 33 36 26 38 20" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M56 38 C60 33 64 26 62 20" stroke="#8B5C30" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M49 54 C48 47 48 38 50 30" stroke="#A07050" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Fine twigs -->
+  <path d="M19 47 C17 43 18 38 21 36" stroke="#A07050" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <path d="M19 47 C15 47 13 45 14 42" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M33 33 C31 27 33 21 37 19" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M33 33 C29 29 29 23 33 21" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M79 46 C81 42 82 38 79 35" stroke="#A07050" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <path d="M79 46 C83 46 85 44 84 41" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M65 32 C63 26 65 20 69 18" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M65 32 C69 28 69 22 65 20" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M38 20 C36 14 38 8 42 7" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M62 20 C64 14 62 8 58 7" stroke="#A07050" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M50 30 C48 23 48 15 50 11" stroke="#A07050" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <path d="M50 30 C52 23 52 15 50 11" stroke="#A07050" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+  <!-- Spring leaves (fresh, young green) -->
+  <ellipse cx="27" cy="48" rx="4.5" ry="2.5" fill="#7BAB5A" transform="rotate(-20,27,48)"/>
+  <ellipse cx="21" cy="45" rx="4" ry="2.2" fill="#6B9B4A" transform="rotate(-30,21,45)"/>
+  <ellipse cx="71" cy="47" rx="4.5" ry="2.5" fill="#7BAB5A" transform="rotate(20,71,47)"/>
+  <ellipse cx="77" cy="44" rx="4" ry="2.2" fill="#6B9B4A" transform="rotate(25,77,44)"/>
+  <ellipse cx="44" cy="36" rx="4" ry="2.2" fill="#7BAB5A" transform="rotate(-15,44,36)"/>
+  <ellipse cx="56" cy="36" rx="4" ry="2.2" fill="#6B9B4A" transform="rotate(15,56,36)"/>
+  <ellipse cx="50" cy="29" rx="3.5" ry="2" fill="#7BAB5A"/>
+  <!-- Apple blossoms — 5 round petals, pink centers -->
+  <!-- Blossom 1 far left -->
+  <path d="M17 42 C15 39 13 36 15 33 C17 31 19 33 19 36Z" fill="#F5D0E0"/>
+  <path d="M17 42 C20 40 23 38 24 36 C23 38 21 41 17 42Z" fill="#F0C8D8"/>
+  <path d="M17 42 C20 44 22 47 21 49 C19 47 17 45 17 42Z" fill="#F5D0E0"/>
+  <path d="M17 42 C14 44 12 47 13 49 C14 47 16 45 17 42Z" fill="#F0C8D8"/>
+  <path d="M17 42 C14 40 11 38 12 36 C13 38 15 40 17 42Z" fill="#F5D0E0"/>
+  <circle cx="17" cy="42" r="3.2" fill="#F0D460"/>
+  <circle cx="16" cy="41" r="0.9" fill="#C8A030" opacity="0.7"/>
+  <circle cx="18" cy="41" r="0.9" fill="#C8A030" opacity="0.7"/>
+  <circle cx="17" cy="43" r="0.9" fill="#C8A030" opacity="0.7"/>
+  <!-- Blossom 2 left mid -->
+  <path d="M35 27 C33 24 31 21 33 19 C35 17 37 19 37 22Z" fill="#F8E0EC"/>
+  <path d="M35 27 C38 25 41 23 42 21 C41 23 39 26 35 27Z" fill="#F0D0E0"/>
+  <path d="M35 27 C38 29 40 32 39 34 C37 32 35 30 35 27Z" fill="#F8E0EC"/>
+  <path d="M35 27 C32 29 30 32 31 34 C32 32 34 30 35 27Z" fill="#F0D0E0"/>
+  <path d="M35 27 C32 25 29 23 30 21 C31 23 33 25 35 27Z" fill="#F8E0EC"/>
+  <circle cx="35" cy="27" r="3" fill="#F0D460"/>
+  <circle cx="34" cy="26" r="0.8" fill="#C8A030" opacity="0.7"/>
+  <circle cx="36" cy="26" r="0.8" fill="#C8A030" opacity="0.7"/>
+  <!-- Blossom 3 top center -->
+  <path d="M50 13 C48 10 46 7 48 5 C50 3 52 5 52 8Z" fill="#FFF0F8"/>
+  <path d="M50 13 C53 11 56 9 57 7 C56 9 54 12 50 13Z" fill="#F0E0F0"/>
+  <path d="M50 13 C53 15 55 18 54 20 C52 18 50 16 50 13Z" fill="#FFF0F8"/>
+  <path d="M50 13 C47 15 45 18 46 20 C47 18 49 16 50 13Z" fill="#F0E0F0"/>
+  <path d="M50 13 C47 11 44 9 45 7 C46 9 48 11 50 13Z" fill="#FFF0F8"/>
+  <circle cx="50" cy="13" r="2.8" fill="#F0D460"/>
+  <!-- Blossom 4 right mid -->
+  <path d="M65 25 C63 22 61 19 63 17 C65 15 67 17 67 20Z" fill="#F5D0E0"/>
+  <path d="M65 25 C68 23 71 21 72 19 C71 21 69 24 65 25Z" fill="#F0C8D8"/>
+  <path d="M65 25 C68 27 70 30 69 32 C67 30 65 28 65 25Z" fill="#F5D0E0"/>
+  <path d="M65 25 C62 27 60 30 61 32 C62 30 64 28 65 25Z" fill="#F0C8D8"/>
+  <path d="M65 25 C62 23 59 21 60 19 C61 21 63 23 65 25Z" fill="#F5D0E0"/>
+  <circle cx="65" cy="25" r="3" fill="#F0D460"/>
+  <circle cx="64" cy="24" r="0.8" fill="#C8A030" opacity="0.7"/>
+  <!-- Blossom 5 far right -->
+  <path d="M83 40 C81 37 79 34 81 32 C83 30 85 32 85 35Z" fill="#F5D0E0"/>
+  <path d="M83 40 C86 38 89 36 90 34 C89 36 87 39 83 40Z" fill="#F0C8D8"/>
+  <path d="M83 40 C86 42 88 45 87 47 C85 45 83 43 83 40Z" fill="#F5D0E0"/>
+  <path d="M83 40 C80 42 78 45 79 47 C80 45 82 43 83 40Z" fill="#F0C8D8"/>
+  <path d="M83 40 C80 38 77 36 78 34 C79 36 81 38 83 40Z" fill="#F5D0E0"/>
+  <circle cx="83" cy="40" r="3" fill="#F0D460"/>
+  <!-- Blossom 6 upper left -->
+  <path d="M41 10 C39 7 37 4 39 2 C41 0 43 2 43 5Z" fill="#FFF0F8"/>
+  <path d="M41 10 C44 8 47 6 48 4 C47 6 45 9 41 10Z" fill="#F0E0F0"/>
+  <path d="M41 10 C44 12 46 15 45 17 C43 15 41 13 41 10Z" fill="#FFF0F8"/>
+  <path d="M41 10 C38 12 36 15 37 17 C38 15 40 13 41 10Z" fill="#F0E0F0"/>
+  <path d="M41 10 C38 8 35 6 36 4 C37 6 39 8 41 10Z" fill="#FFF0F8"/>
+  <circle cx="41" cy="10" r="2.5" fill="#F0D460"/>
+  <!-- Blossom 7 upper right -->
+  <path d="M59 10 C57 7 55 4 57 2 C59 0 61 2 61 5Z" fill="#F8E0EC"/>
+  <path d="M59 10 C62 8 65 6 66 4 C65 6 63 9 59 10Z" fill="#F0D0E0"/>
+  <path d="M59 10 C62 12 64 15 63 17 C61 15 59 13 59 10Z" fill="#F8E0EC"/>
+  <path d="M59 10 C56 12 54 15 55 17 C56 15 58 13 59 10Z" fill="#F0D0E0"/>
+  <path d="M59 10 C56 8 53 6 54 4 C55 6 57 8 59 10Z" fill="#F8E0EC"/>
+  <circle cx="59" cy="10" r="2.5" fill="#F0D460"/>
+  <!-- Extra scattered blossoms -->
+  <circle cx="29" cy="32" r="4.5" fill="#F5D0E0" opacity="0.8"/>
+  <circle cx="29" cy="32" r="2.5" fill="#F0D060"/>
+  <circle cx="69" cy="21" r="4" fill="#F0C8D8" opacity="0.8"/>
+  <circle cx="69" cy="21" r="2.2" fill="#F0D060"/>
+  <!-- Fallen petals at base -->
+  <ellipse cx="35" cy="90" rx="3.5" ry="1.5" fill="#F5D0E0" opacity="0.5"/>
+  <ellipse cx="65" cy="90" rx="3" ry="1.3" fill="#F0C8D8" opacity="0.5"/>
+  <ellipse cx="50" cy="91" rx="3" ry="1.2" fill="#F5D0E0" opacity="0.4"/>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Thyme / Creeping Herb — Tier 1 Herb -->
+  <ellipse cx="50" cy="89" rx="26" ry="5" fill="#6B8B3A" opacity="0.25"/>
+  <ellipse cx="50" cy="91" rx="20" ry="3.5" fill="#8B6914" opacity="0.2"/>
+  <!-- Woody spreading stems -->
+  <path d="M50 86 C44 82 36 78 24 75" stroke="#8B6030" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <path d="M50 86 C56 82 64 78 76 75" stroke="#8B6030" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <path d="M50 86 C48 78 45 70 42 62" stroke="#8B6030" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M50 86 C52 78 55 70 58 62" stroke="#8B6030" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M50 86 C46 80 40 75 32 73" stroke="#8B6030" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <path d="M50 86 C54 80 60 75 68 73" stroke="#8B6030" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  <!-- Sub-branches -->
+  <path d="M36 78 C32 74 27 72 23 74" stroke="#8B6030" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M64 78 C68 74 73 72 77 74" stroke="#8B6030" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+  <path d="M43 72 C39 68 34 66 31 68" stroke="#8B6030" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M57 72 C61 68 66 66 69 68" stroke="#8B6030" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  <path d="M42 64 C37 62 32 63 29 66" stroke="#8B6030" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+  <path d="M58 64 C63 62 68 63 71 66" stroke="#8B6030" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+  <!-- Dense tiny oval leaves -->
+  <ellipse cx="40" cy="79" rx="3.2" ry="1.9" fill="#6B8B3A" transform="rotate(-22,40,79)"/>
+  <ellipse cx="34" cy="77" rx="3" ry="1.8" fill="#7A9B48" transform="rotate(-30,34,77)"/>
+  <ellipse cx="28" cy="75" rx="2.8" ry="1.7" fill="#6B8B3A" transform="rotate(-18,28,75)"/>
+  <ellipse cx="23" cy="74" rx="2.5" ry="1.5" fill="#7A9B48" transform="rotate(-10,23,74)"/>
+  <ellipse cx="60" cy="79" rx="3.2" ry="1.9" fill="#6B8B3A" transform="rotate(22,60,79)"/>
+  <ellipse cx="66" cy="77" rx="3" ry="1.8" fill="#7A9B48" transform="rotate(30,66,77)"/>
+  <ellipse cx="72" cy="75" rx="2.8" ry="1.7" fill="#6B8B3A" transform="rotate(18,72,75)"/>
+  <ellipse cx="77" cy="74" rx="2.5" ry="1.5" fill="#7A9B48" transform="rotate(10,77,74)"/>
+  <ellipse cx="34" cy="72" rx="2.5" ry="1.5" fill="#6B8B3A" transform="rotate(-28,34,72)"/>
+  <ellipse cx="30" cy="70" rx="2.4" ry="1.4" fill="#7A9B48"/>
+  <ellipse cx="27" cy="73" rx="2.4" ry="1.4" fill="#6B8B3A" transform="rotate(-15,27,73)"/>
+  <ellipse cx="66" cy="72" rx="2.5" ry="1.5" fill="#6B8B3A" transform="rotate(28,66,72)"/>
+  <ellipse cx="70" cy="70" rx="2.4" ry="1.4" fill="#7A9B48"/>
+  <ellipse cx="73" cy="73" rx="2.4" ry="1.4" fill="#6B8B3A" transform="rotate(15,73,73)"/>
+  <ellipse cx="43" cy="76" rx="2.5" ry="1.5" fill="#6B8B3A" transform="rotate(-10,43,76)"/>
+  <ellipse cx="42" cy="70" rx="2.5" ry="1.5" fill="#7A9B48" transform="rotate(-15,42,70)"/>
+  <ellipse cx="43" cy="65" rx="2.3" ry="1.4" fill="#6B8B3A" transform="rotate(-10,43,65)"/>
+  <ellipse cx="57" cy="76" rx="2.5" ry="1.5" fill="#6B8B3A" transform="rotate(10,57,76)"/>
+  <ellipse cx="58" cy="70" rx="2.5" ry="1.5" fill="#7A9B48" transform="rotate(15,58,70)"/>
+  <ellipse cx="57" cy="65" rx="2.3" ry="1.4" fill="#6B8B3A" transform="rotate(10,57,65)"/>
+  <ellipse cx="45" cy="81" rx="2.5" ry="1.4" fill="#7A9B48" transform="rotate(-5,45,81)"/>
+  <ellipse cx="55" cy="81" rx="2.5" ry="1.4" fill="#7A9B48" transform="rotate(5,55,81)"/>
+  <ellipse cx="38" cy="66" rx="2.2" ry="1.3" fill="#6B8B3A" transform="rotate(-20,38,66)"/>
+  <ellipse cx="62" cy="66" rx="2.2" ry="1.3" fill="#6B8B3A" transform="rotate(20,62,66)"/>
+  <ellipse cx="35" cy="69" rx="2.2" ry="1.3" fill="#7A9B48" transform="rotate(-15,35,69)"/>
+  <ellipse cx="65" cy="69" rx="2.2" ry="1.3" fill="#7A9B48" transform="rotate(15,65,69)"/>
+  <!-- Tiny flower clusters at branch tips -->
+  <circle cx="23" cy="73" r="4" fill="#C06890" opacity="0.9"/>
+  <circle cx="23" cy="73" r="2.5" fill="#DC88A8"/>
+  <circle cx="22" cy="71.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="24" cy="71.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="23" cy="74.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="77" cy="73" r="4" fill="#C06890" opacity="0.9"/>
+  <circle cx="77" cy="73" r="2.5" fill="#DC88A8"/>
+  <circle cx="76" cy="71.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="78" cy="71.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="77" cy="74.5" r="0.9" fill="#F0A8C4"/>
+  <circle cx="42" cy="60" r="3.2" fill="#C06890" opacity="0.9"/>
+  <circle cx="42" cy="60" r="2" fill="#DC88A8"/>
+  <circle cx="58" cy="59" r="3.2" fill="#C06890" opacity="0.9"/>
+  <circle cx="58" cy="59" r="2" fill="#DC88A8"/>
+  <circle cx="31" cy="66" r="2.8" fill="#D07898" opacity="0.9"/>
+  <circle cx="31" cy="66" r="1.6" fill="#DC88A8"/>
+  <circle cx="69" cy="66" r="2.8" fill="#D07898" opacity="0.9"/>
+  <circle cx="69" cy="66" r="1.6" fill="#DC88A8"/>
+  <circle cx="50" cy="58" r="2.8" fill="#C06890" opacity="0.9"/>
+  <circle cx="50" cy="58" r="1.8" fill="#DC88A8"/>
+</svg>

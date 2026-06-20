@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Rose Full Bloom — Cottage Style — Tier 2 Flower -->
+  <ellipse cx="50" cy="92" rx="12" ry="3.5" fill="#7A5C2A" opacity="0.25"/>
+  <!-- Stem -->
+  <path d="M50 90 C50 84 50 76 50 62" stroke="#5A7A30" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+  <!-- Thorns -->
+  <path d="M50 80 L45 76" stroke="#7A5030" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <path d="M50 72 L55 68" stroke="#7A5030" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+  <!-- Leaf branches -->
+  <path d="M50 82 C43 79 36 80 32 85" stroke="#5A7A30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M50 74 C57 71 64 72 68 77" stroke="#5A7A30" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M50 66 C43 63 37 61 34 65" stroke="#5A7A30" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Compound leaves -->
+  <path d="M50 82 C43 78 34 77 32 83 C36 78 44 79 50 82Z" fill="#4A7A30"/>
+  <path d="M32 83 C33 79 37 78 39 81 C37 82 34 83 32 83Z" fill="#3A6A20" opacity="0.7"/>
+  <path d="M35 85 C33 83 30 83 28 85 C30 83 33 82 35 85Z" fill="#4A7A30"/>
+  <path d="M50 74 C57 70 65 70 68 75 C64 71 57 72 50 74Z" fill="#4A7A30"/>
+  <path d="M68 75 C67 71 63 70 61 73 C63 74 66 75 68 75Z" fill="#3A6A20" opacity="0.7"/>
+  <path d="M50 66 C43 62 36 60 34 64 C37 61 44 63 50 66Z" fill="#5C8A40"/>
+  <!-- Leaf veins -->
+  <path d="M32 83 L42 80 L50 82" stroke="#3A6A20" stroke-width="0.7" fill="none" opacity="0.45"/>
+  <path d="M68 75 L58 72 L50 74" stroke="#3A6A20" stroke-width="0.7" fill="none" opacity="0.45"/>
+  <!-- Sepals (green calyx base) -->
+  <path d="M50 62 C46 60 43 56 45 52 C47 56 48 60 50 62Z" fill="#4A7A30"/>
+  <path d="M50 62 C54 60 57 56 55 52 C53 56 52 60 50 62Z" fill="#4A7A30"/>
+  <path d="M50 62 C48 58 47 53 50 51 C53 53 52 58 50 62Z" fill="#5C8A40"/>
+  <path d="M50 62 C44 59 40 55 42 50 C44 54 46 59 50 62Z" fill="#4A7A30" opacity="0.7"/>
+  <path d="M50 62 C56 59 60 55 58 50 C56 54 54 59 50 62Z" fill="#4A7A30" opacity="0.7"/>
+  <!-- Outermost petal ring — cupped, open cottage rose -->
+  <path d="M50 56 C44 53 37 49 37 42 C37 36 43 33 47 37 C45 33 47 27 50 25 C53 27 55 33 53 37 C57 33 63 36 63 42 C63 49 56 53 50 56Z" fill="#B85868"/>
+  <!-- Outer petals -->
+  <path d="M50 56 C46 51 39 48 37 42 C43 46 47 51 50 56Z" fill="#A84858"/>
+  <path d="M50 56 C54 51 61 48 63 42 C57 46 53 51 50 56Z" fill="#B85868"/>
+  <path d="M50 56 C50 48 52 39 50 33 C48 39 50 48 50 56Z" fill="#CC7080"/>
+  <path d="M50 56 C44 52 38 44 38 38 C40 44 45 52 50 56Z" fill="#A84858"/>
+  <path d="M50 56 C56 52 62 44 62 38 C60 44 55 52 50 56Z" fill="#B85868"/>
+  <!-- Additional outer petals (fuller) -->
+  <path d="M50 56 C42 54 34 52 32 46 C36 50 43 53 50 56Z" fill="#C06878" opacity="0.8"/>
+  <path d="M50 56 C58 54 66 52 68 46 C64 50 57 53 50 56Z" fill="#B85868" opacity="0.8"/>
+  <!-- Mid petal ring — lighter, more open -->
+  <path d="M50 53 C46 48 42 44 42 39 C42 35 46 34 48 37 C48 34 50 31 50 29 C50 31 52 34 52 37 C54 34 58 35 58 39 C58 44 54 48 50 53Z" fill="#CC7888"/>
+  <path d="M50 53 C47 48 43 44 42 40 C45 44 48 49 50 53Z" fill="#BC6878"/>
+  <path d="M50 53 C53 48 57 44 58 40 C55 44 52 49 50 53Z" fill="#CC7888"/>
+  <path d="M50 53 C50 47 50 40 50 36 C50 40 50 47 50 53Z" fill="#D88898" opacity="0.9"/>
+  <!-- Inner petals — warm rosy pink -->
+  <path d="M50 50 C47 46 45 42 46 38 C47 36 49 35 50 38 C51 35 53 36 54 38 C55 42 53 46 50 50Z" fill="#DC9898"/>
+  <path d="M50 50 C48 46 46 43 47 40 C48 38 49 38 50 40Z" fill="#CC8080"/>
+  <path d="M50 50 C52 46 54 43 53 40 C52 38 51 38 50 40Z" fill="#DC9898"/>
+  <!-- Innermost petals — cream/soft -->
+  <path d="M50 47 C48 44 48 41 50 40 C52 41 52 44 50 47Z" fill="#E8A8A0"/>
+  <path d="M50 47 C47 44 48 42 50 41Z" fill="#D89898"/>
+  <path d="M50 47 C53 44 52 42 50 41Z" fill="#E8A8A0"/>
+  <!-- Center stamens — warm golden -->
+  <circle cx="50" cy="42" r="4" fill="#C8A020"/>
+  <circle cx="50" cy="42" r="2.8" fill="#E0BC30"/>
+  <circle cx="49" cy="40.5" r="0.9" fill="#A88010" opacity="0.8"/>
+  <circle cx="51" cy="40.5" r="0.9" fill="#A88010" opacity="0.8"/>
+  <circle cx="50" cy="43" r="0.9" fill="#A88010" opacity="0.8"/>
+  <circle cx="48.5" cy="42.5" r="0.7" fill="#D4C040" opacity="0.7"/>
+  <circle cx="51.5" cy="42.5" r="0.7" fill="#D4C040" opacity="0.7"/>
+</svg>

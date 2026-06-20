@@ -74,8 +74,7 @@ struct GardenView: View {
 
     private func plantSlot(_ plant: Plant) -> some View {
         VStack(spacing: 2) {
-            Text(plant.emoji)
-                .font(.system(size: 36))
+            plantImage(plant)
                 .frame(width: 56, height: 56)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
@@ -91,6 +90,19 @@ struct GardenView: View {
                     .font(.system(size: 9, design: .rounded))
                     .foregroundStyle(Color(red: 0.55, green: 0.50, blue: 0.42))
             }
+        }
+    }
+
+    @ViewBuilder
+    private func plantImage(_ plant: Plant) -> some View {
+        if let assetName = plant.assetName {
+            Image(assetName)
+                .resizable()
+                .scaledToFit()
+                .padding(8)
+        } else {
+            Text(plant.emoji)
+                .font(.system(size: 36))
         }
     }
 
@@ -176,13 +188,22 @@ private struct GardenSnapshotView: View {
     }
 
     private func snapshotPlantSlot(_ plant: Plant) -> some View {
-        Text(plant.emoji)
-            .font(.system(size: 32))
-            .frame(width: 48, height: 48)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(slotColor(for: plant.difficulty).opacity(0.3))
-            )
+        Group {
+            if let assetName = plant.assetName {
+                Image(assetName)
+                    .resizable()
+                    .scaledToFit()
+                    .padding(6)
+            } else {
+                Text(plant.emoji)
+                    .font(.system(size: 32))
+            }
+        }
+        .frame(width: 48, height: 48)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(slotColor(for: plant.difficulty).opacity(0.3))
+        )
     }
 
     private var snapshotEmptySlot: some View {
