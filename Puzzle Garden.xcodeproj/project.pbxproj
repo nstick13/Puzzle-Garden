@@ -290,6 +290,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Puzzle Garden/Puzzle_Garden.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KJC9RK5RAC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Puzzle Garden/Info.plist";
@@ -323,6 +324,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Puzzle Garden/Puzzle_Garden.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KJC9RK5RAC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Puzzle Garden/Info.plist";
