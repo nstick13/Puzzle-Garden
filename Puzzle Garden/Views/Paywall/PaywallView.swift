@@ -45,8 +45,12 @@ struct PaywallView: View {
 
                 Spacer()
 
-                // Error
-                if let error = store.purchaseError {
+                // Error / loading state
+                if store.product == nil && store.purchaseError == nil {
+                    Text("Loading product…")
+                        .font(.system(.caption, design: .rounded))
+                        .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+                } else if let error = store.purchaseError {
                     Text(error)
                         .font(.system(.caption, design: .rounded))
                         .foregroundStyle(.red)
