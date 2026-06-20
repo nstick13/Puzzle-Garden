@@ -3,6 +3,7 @@ import SwiftUI
 struct GameView: View {
     @State private var game: GameState
     @State private var conflictTrigger = false   // drives shake animation
+    @State private var shareImage: UIImage?
     @AppStorage("showRules") private var showRules = true
 
     let isDaily: Bool
@@ -65,6 +66,10 @@ struct GameView: View {
             }
         }
         .onDisappear { game.stopTimer() }
+        .task(id: game.showWin) {
+            guard game.showWin else { return }
+            shareImage = ShareCardView(puzzle: game.puzzle, elapsedSeconds: game.elapsedSeconds).rendered()
+        }
         .onChange(of: game.wrongPlacement) { _, _ in
             triggerShake()
         }
@@ -192,6 +197,23 @@ struct GameView: View {
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
                     )
+                }
+
+                if let img = shareImage {
+                    ShareLink(
+                        item: Image(uiImage: img),
+                        preview: SharePreview("Puzzle Garden", image: Image(uiImage: img))
+                    ) {
+                        Label("Share", systemImage: "square.and.arrow.up")
+                            .font(.system(.subheadline, design: .rounded).bold())
+                            .foregroundStyle(Color(red: 0.20, green: 0.38, blue: 0.22))
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 10)
+                            .background(
+                                Capsule()
+                                    .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.15))
+                            )
+                    }
                 }
             }
             .padding(32)
