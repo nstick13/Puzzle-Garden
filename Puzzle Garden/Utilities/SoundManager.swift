@@ -7,21 +7,40 @@ final class SoundManager {
     private let engine = AVAudioEngine()
     private var isEngineRunning = false
 
-    private init() {
-        setupEngine()
-    }
+    private var didConfigureSession = false
 
-    private func setupEngine() {
+    private init() {}
+
+    /// Lazily configures the audio session and starts the engine the first time
+    /// a sound is needed. Returns true if the engine is running and safe to use.
+    ///
+    /// Note: `engine.start()` can raise an uncatchable Objective-C exception if the
+    /// graph has no output chain, so we touch `mainMixerNode` first to force the
+    /// output node to be built before starting.
+    @discardableResult
+    private func ensureEngineRunning() -> Bool {
         #if targetEnvironment(simulator)
-        return
+        return false
         #else
+        if isEngineRunning && engine.isRunning { return true }
+
         do {
-            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
+            if !didConfigureSession {
+                try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+                didConfigureSession = true
+            }
+            // Force the output graph to exist before starting so start() can't
+            // hit the "required condition is false" assertion.
+            _ = engine.mainMixerNode
+            engine.prepare()
             try engine.start()
-            isEngineRunning = true
+            isEngineRunning = engine.isRunning
+            return isEngineRunning
         } catch {
-            // Engine setup failed; sounds will be silently skipped
+            // Engine setup failed; sounds will be silently skipped.
+            isEngineRunning = false
+            return false
         }
         #endif
     }
@@ -55,7 +74,7 @@ final class SoundManager {
     }
 
     private func playTone(frequency: Float, duration: Float, amplitude: Float) {
-        guard isEngineRunning else { return }
+        guard ensureEngineRunning() else { return }
         let sr: Double = 44100
         let frames = AVAudioFrameCount(sr * Double(duration))
         guard let buffer = makePCMBuffer(sampleRate: sr, frameCount: frames) else { return }
@@ -69,7 +88,7 @@ final class SoundManager {
     }
 
     private func playChime(frequencies: [Float], duration: Float, amplitude: Float) {
-        guard isEngineRunning else { return }
+        guard ensureEngineRunning() else { return }
         let sr: Double = 44100
         let frames = AVAudioFrameCount(sr * Double(duration))
         guard let buffer = makePCMBuffer(sampleRate: sr, frameCount: frames) else { return }
@@ -90,7 +109,7 @@ final class SoundManager {
     }
 
     private func playChord(frequencies: [Float], duration: Float, amplitude: Float) {
-        guard isEngineRunning else { return }
+        guard ensureEngineRunning() else { return }
         let sr: Double = 44100
         let frames = AVAudioFrameCount(sr * Double(duration))
         guard let buffer = makePCMBuffer(sampleRate: sr, frameCount: frames) else { return }
