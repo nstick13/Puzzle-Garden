@@ -194,6 +194,50 @@ struct GameStateWinTests {
         _ = timeAtWin  // Timer stopped; no further increment without a running timer
     }
 
+    @Test func winDetectedForGeneratedPuzzleViaTapPath() {
+        // Solve a *real generated* puzzle through the actual tap interaction path,
+        // exactly as a player would — this is the scenario that fails on device.
+        guard let puzzle = PuzzleGenerator.generate(difficulty: .five, seed: 42) else {
+            Issue.record("Generator returned nil"); return
+        }
+        let state = GameState(puzzle: puzzle)
+        for r in 0..<puzzle.size {
+            for c in 0..<puzzle.size where puzzle.solution[r][c] == 1 {
+                state.tap(CellCoord(row: r, col: c))  // → marked
+                state.tap(CellCoord(row: r, col: c))  // → flower
+            }
+        }
+        #expect(state.showWin, "showWin should be true after solving a generated puzzle")
+        #expect(state.conflicts.isEmpty)
+    }
+
+    @Test func winDetectedDespiteExtraWrongFlowers() {
+        // Easy mode: placing all correct flowers wins even if incorrect guesses (red ✗)
+        // are still on the board — the player shouldn't have to clear them.
+        guard let puzzle = PuzzleGenerator.generate(difficulty: .five, seed: 42) else {
+            Issue.record("Generator returned nil"); return
+        }
+        let state = GameState(puzzle: puzzle)
+        let n = puzzle.size
+
+        // Drop a wrong flower on the first non-solution cell.
+        outer: for r in 0..<n {
+            for c in 0..<n where puzzle.solution[r][c] != 1 {
+                state.tap(CellCoord(row: r, col: c)); state.tap(CellCoord(row: r, col: c))
+                break outer
+            }
+        }
+        #expect(!state.showWin, "Should not be solved with only a wrong flower placed")
+
+        // Now place every correct flower.
+        for r in 0..<n {
+            for c in 0..<n where puzzle.solution[r][c] == 1 {
+                state.tap(CellCoord(row: r, col: c)); state.tap(CellCoord(row: r, col: c))
+            }
+        }
+        #expect(state.showWin, "Win should fire once all correct flowers are placed, despite the stray wrong one")
+    }
+
     @Test func winNotTriggeredWithConflicts() {
         var board = Array(repeating: Array(repeating: 0, count: 5), count: 5)
         _ = QueensSolver.solve(&board, regions5)
