@@ -65,7 +65,17 @@ Puzzle Garden/
 - What it gates: Free Play only. Daily puzzle is always free.
 - Verification: `Transaction.currentEntitlements` (no server)
 - Still needed before ship: add **In-App Purchase capability** in Xcode (Signing & Capabilities tab) — this is a GUI-only step that adds the entitlement to the build.
-- Planned value-adds (not yet built): daily archive, larger grids (8×8+), streak shield, garden themes
+- Bigger grids: **8×8 and 9×9 shipped** on branch `feature/bigger-puzzles` — generated on-device, ride the existing Free Play gate (part of the $2.99 Full Access, no new IAP).
+- Planned value-adds (not yet built): daily archive, streak shield, garden themes
+
+## Backlog: 10×10 "weekly drop" (potential paid upgrade)
+
+10×10 was deliberately **not** shipped on-device: worst-case generation runs multi-second (the uniqueness refiner blows up at that size). Idea for later:
+
+- **Pre-generate** a curated batch of 10×10 puzzles *offline* (a CLI/script reusing `PuzzleGenerator` — slow generation is fine off-device), then bundle them as pre-configured puzzle data.
+- Ship them as a **weekly drop** (a handful of fresh 10×10s each week) rather than infinite on-demand generation.
+- Position as a **separate premium upgrade** (its own IAP, e.g. a subscription or one-time "Grandmaster" pack) on top of Full Access — not bundled into the $2.99.
+- Engine already supports arbitrary N, so adding `.ten` to `GridSize` is a one-line change; the only real work is the offline generation pipeline + a puzzle-pack loader + the new entitlement.
 
 ## Share card details
 

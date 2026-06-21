@@ -126,6 +126,8 @@ struct GardenView: View {
         case .five:  return Color(red: 0.76, green: 0.88, blue: 0.72)
         case .six:   return Color(red: 0.95, green: 0.85, blue: 0.65)
         case .seven: return Color(red: 0.85, green: 0.72, blue: 0.88)
+        case .eight: return Color(red: 0.72, green: 0.82, blue: 0.90)
+        case .nine:  return Color(red: 0.90, green: 0.74, blue: 0.72)
         }
     }
 
@@ -217,6 +219,8 @@ private struct GardenSnapshotView: View {
         case .five:  return Color(red: 0.76, green: 0.88, blue: 0.72)
         case .six:   return Color(red: 0.95, green: 0.85, blue: 0.65)
         case .seven: return Color(red: 0.85, green: 0.72, blue: 0.88)
+        case .eight: return Color(red: 0.72, green: 0.82, blue: 0.90)
+        case .nine:  return Color(red: 0.90, green: 0.74, blue: 0.72)
         }
     }
 }

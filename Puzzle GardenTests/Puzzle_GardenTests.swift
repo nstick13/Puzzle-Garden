@@ -141,6 +141,51 @@ struct PuzzleGeneratorTests {
         let elapsed = Date().timeIntervalSince(start)
         #expect(elapsed < 5.0, "7×7 generation took \(elapsed)s — investigate if consistently slow")
     }
+
+    // MARK: - Larger Full Access sizes (8×8, 9×9)
+
+    @Test(arguments: [GridSize.eight, GridSize.nine])
+    func generatesUniqueLargePuzzle(_ size: GridSize) {
+        let n = size.rawValue
+        // Sweep several seeds: the solution-first generator should produce a valid, uniquely
+        // solvable puzzle for every one of them.
+        for seed in stride(from: UInt64(1), through: 20, by: 1) {
+            guard let p = PuzzleGenerator.generate(difficulty: size, seed: seed) else {
+                Issue.record("\(size.label) returned nil for seed \(seed)")
+                continue
+            }
+            #expect(p.size == n)
+            #expect(p.regions.count == n && p.regions.allSatisfy { $0.count == n })
+
+            // Every region id 0..<n is present (one region per queen).
+            #expect(Set(p.regions.flatMap { $0 }).count == n)
+
+            // The stored solution is genuinely valid …
+            #expect(isValidSolution(p.solution, regions: p.regions, n: n))
+            // … and it's the *only* solution.
+            #expect(QueensSolver.countSolutions(p.grid, p.regions) == 1)
+        }
+    }
+
+    /// One queen per row/column/region with no distance-1 diagonal adjacency.
+    private func isValidSolution(_ solution: [[Int]], regions: [[Int]], n: Int) -> Bool {
+        var cols = Set<Int>(), regs = Set<Int>(), queens: [(Int, Int)] = []
+        for r in 0..<n {
+            var perRow = 0
+            for c in 0..<n where solution[r][c] == 1 {
+                perRow += 1; cols.insert(c); regs.insert(regions[r][c]); queens.append((r, c))
+            }
+            if perRow != 1 { return false }
+        }
+        if cols.count != n || regs.count != n { return false }
+        for i in 0..<queens.count {
+            for j in (i + 1)..<queens.count {
+                let a = queens[i], b = queens[j]
+                if abs(a.0 - b.0) == 1 && abs(a.1 - b.1) == 1 { return false }
+            }
+        }
+        return true
+    }
 }
 
 struct GameStateWinTests {

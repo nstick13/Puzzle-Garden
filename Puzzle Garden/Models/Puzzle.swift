@@ -5,10 +5,15 @@ enum GridSize: Int, Codable, CaseIterable, Hashable {
     case five  = 5
     case six   = 6
     case seven = 7
+    case eight = 8
+    case nine  = 9
 
     var label: String {
         "\(rawValue)×\(rawValue)"
     }
+
+    /// Sizes 8×8 and 9×9 are the Full Access "bigger puzzles" set.
+    var isLarge: Bool { rawValue >= 8 }
 }
 
 /// A fully-described Queens puzzle: empty grid, region map, and the unique solution.
