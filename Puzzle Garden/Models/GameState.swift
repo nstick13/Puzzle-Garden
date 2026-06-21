@@ -120,8 +120,14 @@ final class GameState {
 
     private func checkWin() {
         let n = puzzle.size
-        let placed = cellStates.flatMap { $0 }.filter { $0 == .flower }.count
-        guard placed == n, conflicts.isEmpty else { return }
+        // Easy mode: the puzzle is solved once every correct cell (the unique solution)
+        // holds a flower. Incorrect guesses render as a red ✗ and never block the win —
+        // the player is not required to clear them first.
+        for r in 0..<n {
+            for c in 0..<n where puzzle.solution[r][c] == 1 {
+                if cellStates[r][c] != .flower { return }
+            }
+        }
         stopTimer()
         isSolved = true
         showWin = true
