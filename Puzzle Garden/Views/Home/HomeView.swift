@@ -78,12 +78,29 @@ struct HomeView: View {
                             }
                         }
 
-                        Picker("Difficulty", selection: $selectedDifficulty) {
-                            ForEach(GridSize.allCases, id: \.self) { size in
-                                Text(size.label).tag(size)
+                        Menu {
+                            Picker("Difficulty", selection: $selectedDifficulty) {
+                                ForEach(GridSize.allCases, id: \.self) { size in
+                                    Text(size.label).tag(size)
+                                }
                             }
+                        } label: {
+                            HStack {
+                                Text("Grid size")
+                                    .font(.system(.subheadline, design: .rounded))
+                                Spacer()
+                                Text(selectedDifficulty.label)
+                                    .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 11))
+                            }
+                            .foregroundStyle(Color(red: 0.45, green: 0.35, blue: 0.25))
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                            .background(Color(red: 0.96, green: 0.93, blue: 0.86))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
-                        .pickerStyle(.segmented)
+                        .disabled(!storeManager.hasFullAccess)
                         .padding(.horizontal, 32)
                         .opacity(storeManager.hasFullAccess ? 1 : 0.5)
 

@@ -63,7 +63,8 @@ enum PlantAsset {
         switch difficulty {
         case .five:  pool = easy
         case .six:   pool = medium
-        case .seven: pool = hard
+        // 7×7 and the larger Full Access sizes (8–9) all draw from the "hard" pool for now.
+        case .seven, .eight, .nine: pool = hard
         }
         return pool.randomElement()!
     }
@@ -81,7 +82,7 @@ enum PlantEmoji {
         switch difficulty {
         case .five:  pool = easy
         case .six:   pool = medium
-        case .seven: pool = hard
+        case .seven, .eight, .nine: pool = hard
         }
         return pool.randomElement()!
     }
