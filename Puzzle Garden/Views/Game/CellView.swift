@@ -1,6 +1,8 @@
 import SwiftUI
 
-/// Earthy botanical palette — one color per region ID (wraps if more than 8 regions).
+/// Earthy botanical palette — one color per region ID. Holds 10 distinct hues so
+/// no plot ever reuses a color up through 10×10 (largest planned grid); only wraps
+/// beyond that. The 9th/10th were added so 9×9 doesn't repeat sage.
 let regionColors: [Color] = [
     Color(red: 0.76, green: 0.88, blue: 0.72),  // sage
     Color(red: 0.95, green: 0.85, blue: 0.65),  // wheat
@@ -10,6 +12,8 @@ let regionColors: [Color] = [
     Color(red: 0.88, green: 0.88, blue: 0.68),  // butter
     Color(red: 0.80, green: 0.70, blue: 0.65),  // dusty rose
     Color(red: 0.70, green: 0.80, blue: 0.76),  // seafoam
+    Color(red: 0.72, green: 0.74, blue: 0.93),  // periwinkle
+    Color(red: 0.93, green: 0.74, blue: 0.80),  // blush
 ]
 
 struct CellView: View {
