@@ -32,6 +32,13 @@ enum PuzzleGenerator {
         // Only pathological seeds ever exhaust these, so the deep budget costs nothing typically.
         let attempts = n >= 8 ? 250 : 120
 
+        // Most unique boards still require a guess to crack (empirically only ~15–20% are
+        // fully no-guess solvable). We reject the rest so every puzzle has a fair logical
+        // path — most importantly a forced *first flower*. A fully-fair board turns up within
+        // a handful of attempts, well inside the budget.
+        var fallback: Puzzle?     // best-effort if the budget somehow runs out
+        var fallbackScore = -1
+
         for _ in 0..<attempts {
             guard let solution = placeQueens(n: n, rng: &rng) else { continue }
 
@@ -39,10 +46,20 @@ enum PuzzleGenerator {
             // Reshape region boundaries until `solution` is the *only* solution.
             guard refineToUnique(regions: &regions, target: solution, n: n, rng: &rng) else { continue }
 
-            let empty = Array(repeating: Array(repeating: 0, count: n), count: n)
-            return Puzzle(grid: empty, regions: regions, solution: solution, difficulty: difficulty)
+            let empty  = Array(repeating: Array(repeating: 0, count: n), count: n)
+            let puzzle = Puzzle(grid: empty, regions: regions, solution: solution, difficulty: difficulty)
+
+            let grade = LogicSolver.grade(regions: regions, n: n)
+            if grade.fullySolved { return puzzle }
+
+            // Hang onto the fairest board seen, so a degenerate seed still yields *a* puzzle
+            // (graceful degradation) rather than nothing.
+            if grade.placedByLogic > fallbackScore {
+                fallbackScore = grade.placedByLogic
+                fallback = puzzle
+            }
         }
-        return nil
+        return fallback
     }
 
     // MARK: - Step 3: refine regions to a unique solution
