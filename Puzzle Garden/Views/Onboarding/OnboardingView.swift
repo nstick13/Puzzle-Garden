@@ -16,8 +16,10 @@ struct OnboardingView: View {
             TabView(selection: $currentPage) {
                 MechanicPage()
                     .tag(0)
-                GardenPage()
+                ControlsPage()
                     .tag(1)
+                GardenPage()
+                    .tag(2)
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -35,7 +37,7 @@ struct OnboardingView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if currentPage == 1 {
+            if currentPage == 2 {
                 Button(action: onDismiss) {
                     Text("Get started")
                         .font(.system(.headline, design: .rounded))
@@ -107,6 +109,130 @@ private struct RuleRow: View {
             Text(text)
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(Color(red: 0.30, green: 0.25, blue: 0.20))
+        }
+    }
+}
+
+// MARK: - Page 2: The Controls
+
+private struct ControlsPage: View {
+    private let warmGreen = Color(red: 0.353, green: 0.478, blue: 0.235)
+    private let warmGray  = Color(red: 0.45, green: 0.42, blue: 0.38)
+
+    var body: some View {
+        VStack(spacing: 28) {
+            Spacer().frame(height: 72)
+
+            Text("Two taps\nto play")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(warmGreen)
+                .multilineTextAlignment(.center)
+
+            TapDemoCell()
+                .padding(.vertical, 4)
+
+            VStack(alignment: .leading, spacing: 14) {
+                RuleRow(icon: "hand.point.up.left",
+                        iconColor: Color(red: 0.769, green: 0.443, blue: 0.294),
+                        text: "**Single tap** to rule a square out — tap again to clear it")
+                RuleRow(icon: "hand.tap.fill",
+                        iconColor: warmGreen,
+                        text: "**Double tap** to plant a flower. Only a quick double tap counts as a guess")
+            }
+            .padding(.horizontal, 36)
+
+            Spacer()
+        }
+    }
+}
+
+/// A single demo cell that loops: single-tap → ✕, clear, then double-tap → flower.
+private struct TapDemoCell: View {
+    private enum Symbol { case none, mark, flower }
+
+    @State private var symbol: Symbol = .none
+    @State private var caption = "Single tap to rule it out"
+    @State private var ringScale: CGFloat = 0.3
+    @State private var ringOpacity: Double = 0
+
+    private let green = Color(red: 0.353, green: 0.478, blue: 0.235)
+    private let warmGray = Color(red: 0.45, green: 0.42, blue: 0.38)
+
+    var body: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(green.opacity(0.20))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(green.opacity(0.45), lineWidth: 2)
+                    )
+
+                // Tap ripple.
+                Circle()
+                    .fill(green.opacity(0.35))
+                    .frame(width: 70, height: 70)
+                    .scaleEffect(ringScale)
+                    .opacity(ringOpacity)
+
+                switch symbol {
+                case .none:
+                    EmptyView()
+                case .mark:
+                    Image(systemName: "xmark")
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundStyle(warmGray.opacity(0.7))
+                        .transition(.scale(scale: 0.4).combined(with: .opacity))
+                case .flower:
+                    Image(systemName: "leaf.fill")
+                        .font(.system(size: 48))
+                        .foregroundStyle(green)
+                        .transition(.scale(scale: 0.3).combined(with: .opacity))
+                }
+            }
+            .frame(width: 132, height: 132)
+
+            Text(caption)
+                .font(.system(.subheadline, design: .rounded).weight(.medium))
+                .foregroundStyle(warmGray)
+                .animation(.easeInOut(duration: 0.2), value: caption)
+        }
+        .task { await loop() }
+    }
+
+    private func ripple() async {
+        ringScale = 0.3
+        ringOpacity = 0.6
+        withAnimation(.easeOut(duration: 0.45)) {
+            ringScale = 1.25
+            ringOpacity = 0
+        }
+        try? await Task.sleep(nanoseconds: 220_000_000)
+    }
+
+    private func loop() async {
+        while !Task.isCancelled {
+            // Single tap → rule out.
+            caption = "Single tap to rule it out"
+            await ripple()
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { symbol = .mark }
+            try? await Task.sleep(nanoseconds: 1_300_000_000)
+
+            // Single tap again → clear.
+            await ripple()
+            withAnimation(.easeInOut(duration: 0.25)) { symbol = .none }
+            try? await Task.sleep(nanoseconds: 700_000_000)
+
+            // Double tap → plant a flower.
+            caption = "Double tap to plant a flower"
+            await ripple()
+            await ripple()
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.55)) { symbol = .flower }
+            try? await Task.sleep(nanoseconds: 1_700_000_000)
+
+            // Reset for the next loop.
+            withAnimation(.easeInOut(duration: 0.3)) { symbol = .none }
+            try? await Task.sleep(nanoseconds: 600_000_000)
         }
     }
 }

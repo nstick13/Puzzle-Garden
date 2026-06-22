@@ -164,8 +164,19 @@ struct GameView: View {
                             size:       cellSize,
                             popAnimation: game.correctPlacement == coord
                         )
-                        .onTapGesture { game.tap(coord) }
-                        .onLongPressGesture(minimumDuration: 0.4) { game.longPress(coord) }
+                        // Double tap = guess (plant a flower). Single tap = rule the
+                        // square out. The count:2 gesture is declared first so SwiftUI
+                        // waits out the double-tap window before firing a single tap —
+                        // two slow taps stay two single taps, never a guess.
+                        .onTapGesture(count: 2) { game.guess(coord) }
+                        .onTapGesture(count: 1) {
+                            let wasEmpty = game.cellStates[row][col] == .empty
+                            game.toggleMark(coord)
+                            if wasEmpty {
+                                SoundManager.shared.playDigMark()
+                                HapticsManager.shared.hapticDigMark()
+                            }
+                        }
                     }
                 }
             }

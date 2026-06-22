@@ -51,24 +51,28 @@ final class GameState {
 
     // MARK: - Interactions
 
-    /// Cycles: empty → marked → flower → empty.
-    func tap(_ coord: CellCoord) {
+    /// Single tap — rule a square *out*. Toggles the dig mark on/off, and also
+    /// clears a flower back to empty. Never plants a flower: only a true double
+    /// tap (`guess`) does that, so a slow second tap can't be mistaken for a guess.
+    func toggleMark(_ coord: CellCoord) {
         guard !isSolved else { return }
         switch cellStates[coord.row][coord.col] {
         case .empty:  cellStates[coord.row][coord.col] = .marked
-        case .marked:
-            cellStates[coord.row][coord.col] = .flower
-            checkWrongPlacement(coord)
+        case .marked: cellStates[coord.row][coord.col] = .empty
         case .flower: cellStates[coord.row][coord.col] = .empty
         }
         refreshState()
     }
 
-    /// Jumps straight to flower (long press).
-    func longPress(_ coord: CellCoord) {
+    /// Double tap — the only "guess". Plants a flower, or lifts one already there.
+    func guess(_ coord: CellCoord) {
         guard !isSolved else { return }
-        cellStates[coord.row][coord.col] = .flower
-        checkWrongPlacement(coord)
+        if cellStates[coord.row][coord.col] == .flower {
+            cellStates[coord.row][coord.col] = .empty
+        } else {
+            cellStates[coord.row][coord.col] = .flower
+            checkWrongPlacement(coord)
+        }
         refreshState()
     }
 
