@@ -26,12 +26,21 @@ struct CellView: View {
 
     @State private var scale: CGFloat = 1.0
 
+    // Inset leaves a small gap so the cream board shows between tiles (cozy,
+    // meowdoku-style). Kept proportional so gaps stay even across grid sizes.
+    private var inset: CGFloat { size * 0.05 }
+    private var corner: CGFloat { size * 0.18 }
+
     var body: some View {
         ZStack {
-            regionColors[regionID % regionColors.count]
+            RoundedRectangle(cornerRadius: corner, style: .continuous)
+                .fill(regionColors[regionID % regionColors.count])
+                .padding(inset)
 
             if isConflict {
-                Color.red.opacity(0.30)
+                RoundedRectangle(cornerRadius: corner, style: .continuous)
+                    .fill(Color.red.opacity(0.30))
+                    .padding(inset)
             }
 
             switch state {
@@ -55,7 +64,7 @@ struct CellView: View {
             }
         }
         .frame(width: size, height: size)
-        .border(Color(white: 0.55), width: 0.5)
+        .contentShape(Rectangle())   // keep the full cell tappable despite the gap
         .onChange(of: popAnimation) { _, shouldPop in
             guard shouldPop else { return }
             scale = 1.4

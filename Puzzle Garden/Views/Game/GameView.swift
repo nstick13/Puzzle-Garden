@@ -42,7 +42,6 @@ struct GameView: View {
                     grid(cellSize: cellSize)
                         .modifier(ShakeModifier(trigger: conflictTrigger))
                         .gesture(dragGesture(cellSize: cellSize))
-                        .overlay(outerBorder)
                         .frame(width: available, height: available)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -181,11 +180,6 @@ struct GameView: View {
                 }
             }
         }
-    }
-
-    private var outerBorder: some View {
-        Rectangle()
-            .strokeBorder(Color(red: 0.40, green: 0.30, blue: 0.20), lineWidth: 2)
     }
 
     private var winOverlay: some View {
