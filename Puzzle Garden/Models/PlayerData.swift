@@ -258,6 +258,27 @@ final class PlayerData {
         return plant
     }
 
+    // MARK: - v2 rearrange
+
+    /// Move/swap a collectible within its bed (tap-to-rearrange). `toSlot` may be empty
+    /// (just moves) or occupied (swaps the two). No-op across different beds.
+    func moveCollectible(setID: String, fromSlot: Int, toSlot: Int) {
+        guard fromSlot != toSlot,
+              var sets = collections[GardenPackage.packageID],
+              let bedIndex = sets.firstIndex(where: { $0.id == setID }),
+              let aIndex = sets[bedIndex].members.firstIndex(where: { $0.slot == fromSlot })
+        else { return }
+
+        if let bIndex = sets[bedIndex].members.firstIndex(where: { $0.slot == toSlot }) {
+            sets[bedIndex].members[aIndex].slot = toSlot
+            sets[bedIndex].members[bIndex].slot = fromSlot
+        } else {
+            sets[bedIndex].members[aIndex].slot = toSlot
+        }
+        collections[GardenPackage.packageID] = sets
+        save()
+    }
+
     // MARK: - v2 collectible award + growth
 
     /// Drop a freshly earned collectible (as `.seed`) into the garden's first non-full bed,

@@ -27,11 +27,15 @@ struct GardenView: View {
 
     @State private var gardenImage: UIImage?
     @State private var showShareSheet = false
+    @State private var picked: PickedPlot?
     @Environment(\.displayScale) private var displayScale
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var sets: [CollectibleSet] { playerData.gardenSets }
     private var totalPlants: Int { sets.reduce(0) { $0 + $1.members.count } }
     private var bedsInBloom: Int { sets.filter { $0.isComplete }.count }
+
+    struct PickedPlot: Equatable { let setID: String; let slot: Int }
 
     var body: some View {
         NavigationStack {
@@ -43,6 +47,11 @@ struct GardenView: View {
                 } else {
                     scene
                 }
+
+                // Ambient life floats over the scene (fixed, doesn't scroll).
+                BreezeLayer(paused: playerData.isWilted, reduceMotion: reduceMotion)
+                WanderingCat(asleep: playerData.isWilted, reduceMotion: reduceMotion)
+                    .padding(.bottom, 2)
             }
             .navigationTitle("My Garden")
             .navigationBarTitleDisplayMode(.large)
@@ -64,12 +73,11 @@ struct GardenView: View {
         }
     }
 
+    // Sky tints with the system clock; refreshes each minute as the sun/moon arcs.
     private var background: some View {
-        LinearGradient(
-            colors: [Garden.creamWarm, Garden.cream],
-            startPoint: .top, endPoint: .bottom
-        )
-        .ignoresSafeArea()
+        TimelineView(.periodic(from: .now, by: 60)) { ctx in
+            SkyBackground(model: SkyModel(date: ctx.date))
+        }
     }
 
     private var scene: some View {
@@ -82,12 +90,32 @@ struct GardenView: View {
                 }
 
                 ForEach(Array(sets.enumerated()), id: \.element.id) { _, set in
-                    BedStageView(set: set, animated: true)
+                    BedStageView(
+                        set: set,
+                        animated: true,
+                        wilted: playerData.isWilted,
+                        selectedSlot: picked?.setID == set.id ? picked?.slot : nil,
+                        onTapPlot: { slot, hasPlant in handleTap(setID: set.id, slot: slot, hasPlant: hasPlant) }
+                    )
                 }
             }
             .padding(.horizontal, 16)
             .padding(.top, 4)
             .padding(.bottom, 32)
+        }
+    }
+
+    /// Tap a plant to lift it, tap another plot in the same bed to drop/swap it.
+    private func handleTap(setID: String, slot: Int, hasPlant: Bool) {
+        withAnimation(.spring(response: 0.32, dampingFraction: 0.7)) {
+            if let p = picked {
+                if p.setID == setID, p.slot != slot {
+                    playerData.moveCollectible(setID: setID, fromSlot: p.slot, toSlot: slot)
+                }
+                picked = nil
+            } else if hasPlant {
+                picked = PickedPlot(setID: setID, slot: slot)
+            }
         }
     }
 
@@ -173,9 +201,17 @@ struct GardenView: View {
 private struct BedStageView: View {
     let set: CollectibleSet
     var animated: Bool
+    var wilted: Bool = false
+    var selectedSlot: Int? = nil
+    var onTapPlot: ((Int, Bool) -> Void)? = nil
 
     private var sortedMembers: [Collectible] {
         self.set.members.sorted { $0.slot < $1.slot }
+    }
+
+    /// Member occupying a given slot index (slots are reorderable, not contiguous).
+    private func member(atSlot slot: Int) -> Collectible? {
+        self.set.members.first { $0.slot == slot }
     }
 
     var body: some View {
@@ -226,10 +262,14 @@ private struct BedStageView: View {
     private var planter: some View {
         HStack(spacing: 8) {
             ForEach(0..<set.capacity, id: \.self) { i in
+                let m = member(atSlot: i)
                 PlotView(
-                    member: i < sortedMembers.count ? sortedMembers[i] : nil,
+                    member: m,
                     phase: Double(i),
-                    animated: animated
+                    animated: animated,
+                    wilted: wilted,
+                    isSelected: selectedSlot == i,
+                    onTap: { onTapPlot?(i, m != nil) }
                 )
                 .frame(maxWidth: .infinity)
             }
@@ -263,6 +303,9 @@ private struct PlotView: View {
     let member: Collectible?
     let phase: Double
     var animated: Bool
+    var wilted: Bool = false
+    var isSelected: Bool = false
+    var onTap: (() -> Void)? = nil
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -273,13 +316,17 @@ private struct PlotView: View {
                 .offset(y: -2)
                 .overlay(
                     Ellipse()
-                        .stroke(Garden.soilBottom.opacity(0.6), lineWidth: 1)
+                        .stroke(isSelected ? Garden.leaf.opacity(0.9) : Garden.soilBottom.opacity(0.6),
+                                lineWidth: isSelected ? 2 : 1)
                         .frame(width: Garden.plotSize * 0.74, height: Garden.plotSize * 0.34)
                         .offset(y: -2)
                 )
 
             if let member {
-                CollectibleView(collectible: member, phase: phase, animated: animated)
+                CollectibleView(collectible: member, phase: phase, animated: animated, wilted: wilted)
+                    .scaleEffect(isSelected ? 1.14 : 1, anchor: .bottom)
+                    .offset(y: isSelected ? -6 : 0)
+                    .shadow(color: .black.opacity(isSelected ? 0.22 : 0), radius: 6, y: 5)
             } else {
                 // Empty: a small mound + faint seed hint.
                 Circle()
@@ -289,6 +336,8 @@ private struct PlotView: View {
             }
         }
         .frame(height: Garden.plotSize + 6)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap?() }
     }
 }
 
@@ -298,6 +347,7 @@ private struct CollectibleView: View {
     let collectible: Collectible
     let phase: Double
     var animated: Bool
+    var wilted: Bool = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -342,15 +392,22 @@ private struct CollectibleView: View {
         }
         .frame(width: Garden.plotSize, height: Garden.plotSize)
         .scaleEffect(scale, anchor: .bottom)
-        .saturation(saturation)
-        .opacity(opacity)
+        .saturation(saturation * (wilted ? 0.55 : 1.0))
+        .opacity(opacity * (wilted ? 0.92 : 1.0))
         .shadow(color: .black.opacity(collectible.state == .complete ? 0.18 : 0),
                 radius: 3, x: 0, y: 3)
         .offset(y: 4)
+        .rotationEffect(.degrees(wilted ? droopAngle : 0), anchor: .bottom)
+        .animation(.spring(response: 0.7, dampingFraction: 0.7), value: wilted)
+    }
+
+    /// Gentle, alternating droop when the garden is neglected — reverses on revival.
+    private var droopAngle: Double {
+        Int(phase) % 2 == 0 ? 8 : -7
     }
 
     private var shouldSway: Bool {
-        animated && !reduceMotion && collectible.state == .complete
+        animated && !reduceMotion && !wilted && collectible.state == .complete
     }
 
     private func swayAngle(at date: Date) -> Double {
