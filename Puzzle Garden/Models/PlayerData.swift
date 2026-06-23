@@ -45,10 +45,40 @@ struct DailyResult: Codable {
 // MARK: - Persistent store (JSON file)
 
 private struct PlayerDataStore: Codable {
+    var schemaVersion: Int = 1
     var stats: PlayerStats = PlayerStats()
+    /// Legacy v1 collection. Still written for one version as a rollback safety net.
     var garden: [Plant] = []
+    /// v2 source of truth, keyed by package id ("garden", "cucina", …).
+    var collections: [String: [CollectibleSet]] = [:]
     var dailyHistory: [String: DailyResult] = [:]
     var lastPlayedDate: String?
+    /// Last date the daily growth tick ran, so each collectible advances at most once per day.
+    var lastGrowthDate: String?
+    /// Last date ANY puzzle was solved (daily or free play). Drives wilting, independent of the
+    /// daily-only streak clock in `lastPlayedDate`.
+    var lastTendedDate: String?
+
+    init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion, stats, garden, collections, dailyHistory
+        case lastPlayedDate, lastGrowthDate, lastTendedDate
+    }
+
+    /// Tolerant decode: missing keys fall back to defaults so v1 save files (which lack the
+    /// v2 fields) load without throwing — otherwise the decode would fail and wipe the garden.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try c.decodeIfPresent(Int.self, forKey: .schemaVersion) ?? 1
+        stats         = try c.decodeIfPresent(PlayerStats.self, forKey: .stats) ?? PlayerStats()
+        garden        = try c.decodeIfPresent([Plant].self, forKey: .garden) ?? []
+        collections   = try c.decodeIfPresent([String: [CollectibleSet]].self, forKey: .collections) ?? [:]
+        dailyHistory  = try c.decodeIfPresent([String: DailyResult].self, forKey: .dailyHistory) ?? [:]
+        lastPlayedDate = try c.decodeIfPresent(String.self, forKey: .lastPlayedDate)
+        lastGrowthDate = try c.decodeIfPresent(String.self, forKey: .lastGrowthDate)
+        lastTendedDate = try c.decodeIfPresent(String.self, forKey: .lastTendedDate)
+    }
 }
 
 // MARK: - Plant asset names (SVG imagesets in Assets.xcassets/Plants/)
@@ -96,20 +126,56 @@ final class PlayerData {
 
     private(set) var stats: PlayerStats
     private(set) var garden: [Plant]
+    /// v2 collections, keyed by package id. Garden lives at `GardenPackage.packageID`.
+    private(set) var collections: [String: [CollectibleSet]]
     private(set) var dailyHistory: [String: DailyResult]
     private var lastPlayedDate: String?
+    private var lastGrowthDate: String?
+    private var lastTendedDate: String?
 
     var lastAwardedPlant: Plant?
 
     private static let gardenColumns = 6
 
     private init() {
-        let store = Self.load()
+        var store = Self.load()
+        Self.migrateIfNeeded(&store)
         stats = store.stats
         garden = store.garden
+        collections = store.collections
         dailyHistory = store.dailyHistory
         lastPlayedDate = store.lastPlayedDate
+        lastGrowthDate = store.lastGrowthDate
+        lastTendedDate = store.lastTendedDate
+
+        // Advance growth for any day(s) that passed while the app was closed.
+        advanceGrowthIfNeeded()
     }
+
+    // MARK: - v2 collection accessors
+
+    /// The garden package's sets (the beds), in fill order.
+    var gardenSets: [CollectibleSet] {
+        collections[GardenPackage.packageID] ?? []
+    }
+
+    /// Whole days since the last solve (any mode). 0 if never played or played today.
+    /// Falls back to the streak clock for pre-v2 saves that have no `lastTendedDate` yet.
+    var daysSinceTended: Int {
+        guard let last = lastTendedDate ?? lastPlayedDate,
+              let lastDate = Self.dateFormatter().date(from: last),
+              let todayDate = Self.dateFormatter().date(from: Self.todayString())
+        else { return 0 }
+        let cal = Calendar(identifier: .gregorian)
+        let days = cal.dateComponents([.day], from: lastDate, to: todayDate).day ?? 0
+        return max(0, days)
+    }
+
+    /// Wilt threshold — gentle, fully reversible (see GARDEN_V2.md §Wilting). Tune here.
+    static let wiltThresholdDays = 5
+
+    /// True when the scene should show the wilted presentation. Derived, never persisted.
+    var isWilted: Bool { daysSinceTended >= Self.wiltThresholdDays }
 
     // MARK: - Record a solve
 
@@ -134,6 +200,13 @@ final class PlayerData {
 
         let plant = awardPlant(difficulty: difficulty, isDaily: isDaily, date: today)
         lastAwardedPlant = plant
+
+        // v2: dual-write the same reward into the garden package's beds.
+        awardCollectible(difficulty: difficulty, isDaily: isDaily, date: today,
+                         emoji: plant.emoji, assetBase: plant.assetName)
+
+        // Any solve tends the garden — clears a wilt lapse.
+        lastTendedDate = today
 
         save()
     }
@@ -185,6 +258,102 @@ final class PlayerData {
         return plant
     }
 
+    // MARK: - v2 collectible award + growth
+
+    /// Drop a freshly earned collectible (as `.seed`) into the garden's first non-full bed,
+    /// opening a new bed when all are full.
+    private func awardCollectible(difficulty: GridSize, isDaily: Bool, date: String,
+                                  emoji: String, assetBase: String?) {
+        let pkg = GardenPackage.shared
+        let tier = CollectibleTier(gridSize: difficulty)
+        var sets = collections[pkg.id] ?? []
+
+        // Find the active (first non-full) bed, or open a new one.
+        var activeIndex = sets.firstIndex { !$0.isFull }
+        if activeIndex == nil {
+            let newIndex = sets.count
+            sets.append(CollectibleSet(
+                id: "\(pkg.id)-bed-\(newIndex)",
+                templateID: "bed",
+                displayName: pkg.displayName(forSetIndex: newIndex),
+                capacity: pkg.setCapacity
+            ))
+            activeIndex = sets.count - 1
+        }
+
+        guard let index = activeIndex else { return }
+        let slot = sets[index].members.count
+        let item = Collectible(
+            packageID: pkg.id,
+            setID: sets[index].id,
+            assetBase: assetBase ?? pkg.assetBase(forTier: tier),
+            emoji: emoji,
+            tier: tier,
+            state: .seed,
+            slot: slot,
+            earnedDate: date,
+            fromDaily: isDaily
+        )
+        sets[index].members.append(item)
+        collections[pkg.id] = sets
+    }
+
+    /// Advance growth once per calendar day: every collectible earned on an earlier day
+    /// steps `.seed`→`.growing`→`.complete`. Today's rewards stay young until tomorrow.
+    private func advanceGrowthIfNeeded() {
+        let today = Self.todayString()
+        guard lastGrowthDate != today else { return }
+
+        for (pkgID, var sets) in collections {
+            for s in sets.indices {
+                for m in sets[s].members.indices where sets[s].members[m].earnedDate != today {
+                    sets[s].members[m].state = sets[s].members[m].state.advanced
+                }
+            }
+            collections[pkgID] = sets
+        }
+        lastGrowthDate = today
+        save()
+    }
+
+    // MARK: - Migration (v1 garden → v2 collections)
+
+    /// One-time, non-destructive: wrap legacy `Plant`s into the garden package as completed,
+    /// bloomed beds. Old plants therefore appear as a finished garden — no loss. Runs only if
+    /// the garden package hasn't been populated yet.
+    private static func migrateIfNeeded(_ store: inout PlayerDataStore) {
+        let gid = GardenPackage.packageID
+        guard store.collections[gid] == nil else { return }
+
+        let pkg = GardenPackage.shared
+        var sets: [CollectibleSet] = []
+        for (i, plant) in store.garden.enumerated() {
+            let bedIndex = i / pkg.setCapacity
+            if bedIndex >= sets.count {
+                sets.append(CollectibleSet(
+                    id: "\(gid)-bed-\(bedIndex)",
+                    templateID: "bed",
+                    displayName: pkg.displayName(forSetIndex: bedIndex),
+                    capacity: pkg.setCapacity
+                ))
+            }
+            sets[bedIndex].members.append(Collectible(
+                id: plant.id,
+                packageID: gid,
+                setID: sets[bedIndex].id,
+                assetBase: plant.assetName ?? pkg.assetBase(forTier: CollectibleTier(gridSize: plant.difficulty)),
+                emoji: plant.emoji,
+                tier: CollectibleTier(gridSize: plant.difficulty),
+                state: .complete,
+                slot: i % pkg.setCapacity,
+                earnedDate: plant.earnedDate,
+                fromDaily: plant.fromDaily
+            ))
+        }
+        store.collections[gid] = sets
+        store.schemaVersion = max(store.schemaVersion, 2)
+    }
+
     // MARK: - Persistence
 
     private static func fileURL() -> URL {
@@ -200,12 +369,15 @@ final class PlayerData {
     }
 
     private func save() {
-        let store = PlayerDataStore(
-            stats: stats,
-            garden: garden,
-            dailyHistory: dailyHistory,
-            lastPlayedDate: lastPlayedDate
-        )
+        var store = PlayerDataStore()
+        store.schemaVersion = 2
+        store.stats = stats
+        store.garden = garden
+        store.collections = collections
+        store.dailyHistory = dailyHistory
+        store.lastPlayedDate = lastPlayedDate
+        store.lastGrowthDate = lastGrowthDate
+        store.lastTendedDate = lastTendedDate
         guard let data = try? JSONEncoder().encode(store) else { return }
         try? data.write(to: Self.fileURL(), options: .atomic)
     }
