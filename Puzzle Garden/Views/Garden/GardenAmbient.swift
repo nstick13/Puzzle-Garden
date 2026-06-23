@@ -63,49 +63,6 @@ struct SkyModel {
     }
 }
 
-// MARK: - Sky background (sits behind the scrolling beds)
-
-struct SkyBackground: View {
-    let model: SkyModel
-
-    var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .topLeading) {
-                LinearGradient(colors: [model.sky.top, model.sky.bottom],
-                               startPoint: .top, endPoint: .bottom)
-
-                celestial
-                    .position(
-                        x: geo.size.width * model.celestialPosition.x,
-                        y: geo.size.height * model.celestialPosition.y
-                    )
-            }
-        }
-        .ignoresSafeArea()
-    }
-
-    private var celestial: some View {
-        ZStack {
-            Circle()
-                .fill(model.celestialColor.opacity(0.28))
-                .frame(width: 96, height: 96)
-                .blur(radius: 14)
-            Circle()
-                .fill(model.celestialColor)
-                .frame(width: 52, height: 52)
-            if model.isMoon {
-                // Soft crescent: a cream-tinted overlay nudged aside.
-                Circle()
-                    .fill(model.sky.top)
-                    .frame(width: 44, height: 44)
-                    .offset(x: 12, y: -6)
-                    .blur(radius: 1)
-            }
-        }
-        .accessibilityHidden(true)
-    }
-}
-
 // MARK: - Breeze (drifting leaves)
 
 struct BreezeLayer: View {

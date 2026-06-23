@@ -4,7 +4,7 @@ import SwiftUI
 //
 // Warm, cozy tokens shared by the scene. Mirrors ILLUSTRATION.md hex tokens.
 
-private enum Garden {
+enum Garden {
     static let cream      = Color(red: 0.97, green: 0.95, blue: 0.90)
     static let creamWarm  = Color(red: 0.98, green: 0.93, blue: 0.83)
     static let ink        = Color(red: 0.30, green: 0.22, blue: 0.14)
@@ -17,6 +17,18 @@ private enum Garden {
     static let soilHole   = Color(red: 0.26, green: 0.18, blue: 0.12)
     static let soilRim    = Color(red: 0.60, green: 0.45, blue: 0.30)
 
+    // Scenery
+    static let grassTop    = Color(red: 0.74, green: 0.84, blue: 0.58)
+    static let grassBottom = Color(red: 0.62, green: 0.76, blue: 0.46)
+    static let grassBlade  = Color(red: 0.50, green: 0.67, blue: 0.34)
+    static let shrub       = Color(red: 0.45, green: 0.63, blue: 0.34)
+    static let shrubDark   = Color(red: 0.37, green: 0.54, blue: 0.28)
+    static let fenceWood   = Color(red: 0.95, green: 0.91, blue: 0.81)
+    static let fenceShade  = Color(red: 0.80, green: 0.72, blue: 0.57)
+    static let stone       = Color(red: 0.82, green: 0.79, blue: 0.72)
+    static let stoneDark   = Color(red: 0.68, green: 0.64, blue: 0.56)
+    static let gold        = Color(red: 0.98, green: 0.80, blue: 0.30)
+
     static let plotSize: CGFloat = 54
 }
 
@@ -28,6 +40,7 @@ struct GardenView: View {
     @State private var gardenImage: UIImage?
     @State private var showShareSheet = false
     @State private var picked: PickedPlot?
+    @State private var celebratingBedID: String?
     @Environment(\.displayScale) private var displayScale
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -73,35 +86,64 @@ struct GardenView: View {
         }
     }
 
-    // Sky tints with the system clock; refreshes each minute as the sun/moon arcs.
+    // Sky/ground world tints with the system clock; refreshes each minute as the sun arcs.
     private var background: some View {
         TimelineView(.periodic(from: .now, by: 60)) { ctx in
-            SkyBackground(model: SkyModel(date: ctx.date))
+            GardenWorldBackground(sky: SkyModel(date: ctx.date))
         }
     }
 
     private var scene: some View {
         ScrollView {
-            VStack(spacing: 22) {
+            VStack(spacing: 14) {
                 summaryHeader
 
                 if playerData.isWilted {
                     wiltNote
                 }
 
-                ForEach(Array(sets.enumerated()), id: \.element.id) { _, set in
+                ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
                     BedStageView(
                         set: set,
                         animated: true,
                         wilted: playerData.isWilted,
+                        celebrating: celebratingBedID == set.id,
                         selectedSlot: picked?.setID == set.id ? picked?.slot : nil,
                         onTapPlot: { slot, hasPlant in handleTap(setID: set.id, slot: slot, hasPlant: hasPlant) }
                     )
+
+                    if index < sets.count - 1 {
+                        SteppingStones()
+                            .padding(.vertical, 2)
+                    }
                 }
             }
             .padding(.horizontal, 16)
             .padding(.top, 4)
-            .padding(.bottom, 32)
+            .padding(.bottom, 40)
+        }
+        .onAppear { checkCelebrations() }
+        .onChange(of: completedSignature) { checkCelebrations() }
+    }
+
+    // MARK: - Bloom celebration
+
+    private var completedSignature: String {
+        sets.filter { $0.isComplete }.map { $0.id }.joined(separator: ",")
+    }
+
+    /// Fire a one-time sparkle + haptic for any newly-completed bed not yet celebrated.
+    private func checkCelebrations() {
+        guard celebratingBedID == nil else { return }
+        guard let bed = sets.first(where: { $0.isComplete && !playerData.celebratedSetIDs.contains($0.id) })
+        else { return }
+
+        celebratingBedID = bed.id
+        HapticsManager.shared.hapticSolve()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
+            playerData.markCelebrated(bed.id)
+            celebratingBedID = nil
+            checkCelebrations()   // chain to the next pending bed, if any
         }
     }
 
@@ -202,6 +244,7 @@ private struct BedStageView: View {
     let set: CollectibleSet
     var animated: Bool
     var wilted: Bool = false
+    var celebrating: Bool = false
     var selectedSlot: Int? = nil
     var onTapPlot: ((Int, Bool) -> Void)? = nil
 
@@ -278,6 +321,16 @@ private struct BedStageView: View {
         .padding(.top, 10)
         .padding(.bottom, 10)
         .background(soilBackground)
+        .overlay(alignment: .bottom) {
+            GrassFringe()
+                .padding(.horizontal, 14)
+                .offset(y: 7)
+        }
+        .overlay {
+            if celebrating { SparkleBurst() }
+        }
+        .scaleEffect(celebrating ? 1.015 : 1)
+        .animation(.spring(response: 0.4, dampingFraction: 0.6), value: celebrating)
     }
 
     private var soilBackground: some View {
@@ -355,21 +408,19 @@ private struct CollectibleView: View {
     // seed/growing from the bloomed art by scaling + softening (per ILLUSTRATION.md).
     private var scale: CGFloat {
         switch collectible.state {
-        case .seed:     return 0.52
+        case .seed:     return 0.92   // SeedlingView is already drawn small
         case .growing:  return 0.78
         case .complete: return 1.0
         }
     }
     private var saturation: Double {
         switch collectible.state {
-        case .seed:     return 0.55
-        case .growing:  return 0.85
+        case .seed:     return 1.0    // a fresh sprout is vivid green
+        case .growing:  return 0.9
         case .complete: return 1.0
         }
     }
-    private var opacity: Double {
-        collectible.state == .seed ? 0.85 : 1.0
-    }
+    private var opacity: Double { 1.0 }
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: !shouldSway)) { ctx in
@@ -381,7 +432,10 @@ private struct CollectibleView: View {
 
     private var artwork: some View {
         Group {
-            if !collectible.assetBase.isEmpty {
+            if collectible.state == .seed {
+                // Real seed-state art: a little sprout, not a shrunk flower.
+                SeedlingView(size: Garden.plotSize)
+            } else if !collectible.assetBase.isEmpty {
                 Image(collectible.assetBase)
                     .resizable()
                     .scaledToFit()

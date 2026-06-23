@@ -58,12 +58,14 @@ private struct PlayerDataStore: Codable {
     /// Last date ANY puzzle was solved (daily or free play). Drives wilting, independent of the
     /// daily-only streak clock in `lastPlayedDate`.
     var lastTendedDate: String?
+    /// Bed (set) ids whose "in bloom" celebration has already played, so it fires once.
+    var celebratedSetIDs: Set<String> = []
 
     init() {}
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, stats, garden, collections, dailyHistory
-        case lastPlayedDate, lastGrowthDate, lastTendedDate
+        case lastPlayedDate, lastGrowthDate, lastTendedDate, celebratedSetIDs
     }
 
     /// Tolerant decode: missing keys fall back to defaults so v1 save files (which lack the
@@ -78,6 +80,7 @@ private struct PlayerDataStore: Codable {
         lastPlayedDate = try c.decodeIfPresent(String.self, forKey: .lastPlayedDate)
         lastGrowthDate = try c.decodeIfPresent(String.self, forKey: .lastGrowthDate)
         lastTendedDate = try c.decodeIfPresent(String.self, forKey: .lastTendedDate)
+        celebratedSetIDs = try c.decodeIfPresent(Set<String>.self, forKey: .celebratedSetIDs) ?? []
     }
 }
 
@@ -132,6 +135,7 @@ final class PlayerData {
     private var lastPlayedDate: String?
     private var lastGrowthDate: String?
     private var lastTendedDate: String?
+    private(set) var celebratedSetIDs: Set<String>
 
     var lastAwardedPlant: Plant?
 
@@ -147,9 +151,17 @@ final class PlayerData {
         lastPlayedDate = store.lastPlayedDate
         lastGrowthDate = store.lastGrowthDate
         lastTendedDate = store.lastTendedDate
+        celebratedSetIDs = store.celebratedSetIDs
 
         // Advance growth for any day(s) that passed while the app was closed.
         advanceGrowthIfNeeded()
+    }
+
+    /// Record that a bed's bloom celebration has played (fires once per bed).
+    func markCelebrated(_ setID: String) {
+        guard !celebratedSetIDs.contains(setID) else { return }
+        celebratedSetIDs.insert(setID)
+        save()
     }
 
     // MARK: - v2 collection accessors
@@ -372,6 +384,9 @@ final class PlayerData {
             ))
         }
         store.collections[gid] = sets
+        // Pre-existing migrated beds are already bloomed — mark them celebrated so the
+        // first v2 launch doesn't fire a storm of sparkles.
+        store.celebratedSetIDs.formUnion(sets.filter { $0.isComplete }.map { $0.id })
         store.schemaVersion = max(store.schemaVersion, 2)
     }
 
@@ -399,6 +414,7 @@ final class PlayerData {
         store.lastPlayedDate = lastPlayedDate
         store.lastGrowthDate = lastGrowthDate
         store.lastTendedDate = lastTendedDate
+        store.celebratedSetIDs = celebratedSetIDs
         guard let data = try? JSONEncoder().encode(store) else { return }
         try? data.write(to: Self.fileURL(), options: .atomic)
     }
