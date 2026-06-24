@@ -275,13 +275,23 @@ private struct BedStageView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Text(set.displayName)
-                .font(.system(.headline, design: .rounded))
-                .foregroundStyle(Garden.ink)
-
-            if set.isComplete {
-                bloomBadge
+            // A soft cream "plaque" behind the name so it stays legible over the
+            // fence/grass and reads as an intentional label, never text-on-pickets.
+            HStack(spacing: 6) {
+                Text(set.displayName)
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundStyle(Garden.ink)
+                if set.isComplete {
+                    bloomBadge
+                }
             }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Garden.cream.opacity(0.85))
+                    .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
+            )
 
             Spacer()
             progressPips

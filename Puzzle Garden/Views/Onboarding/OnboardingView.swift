@@ -66,8 +66,8 @@ private struct MechanicPage: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 28) {
-                Spacer().frame(height: 72)
+            VStack(spacing: 22) {
+                Spacer().frame(height: 56)
 
                 Text("How to grow\nyour garden")
                     .font(.system(size: 30, weight: .bold, design: .rounded))
@@ -75,7 +75,7 @@ private struct MechanicPage: View {
                     .multilineTextAlignment(.center)
 
                 MechanicGrid()
-                    .padding(.horizontal, 40)
+                    .padding(.horizontal, 52)
 
                 VStack(alignment: .leading, spacing: 14) {
                     RuleRow(icon: "square.grid.2x2.fill",
@@ -89,9 +89,9 @@ private struct MechanicPage: View {
                             text: "Flowers can't touch — **not even diagonally**")
                 }
                 .padding(.horizontal, 36)
-
-                Spacer().frame(height: 80)
             }
+            // Reserve space for the page-control dots so the last rule never sits under them.
+            .padding(.bottom, 64)
         }
         .scrollBounceBehavior(.basedOnSize)
     }
