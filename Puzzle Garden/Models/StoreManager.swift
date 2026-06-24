@@ -27,7 +27,7 @@ final class StoreManager {
     }
 
     var priceString: String {
-        product?.displayPrice ?? "$2.99"
+        product?.displayPrice ?? "$4.99"
     }
 
     // MARK: - Purchase

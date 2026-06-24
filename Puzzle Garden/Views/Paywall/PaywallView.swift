@@ -137,7 +137,7 @@ struct PaywallView: View {
         if let product = store.product {
             return "Get Full Access — \(product.displayPrice)"
         }
-        return "Get Full Access — $2.99"
+        return "Get Full Access — $4.99"
     }
 }
 
