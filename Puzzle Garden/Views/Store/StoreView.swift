@@ -80,6 +80,9 @@ struct StoreView: View {
                 Spacer()
             }
         }
+        .task {
+            if storeManager.product == nil { await storeManager.loadProduct() }
+        }
         .onChange(of: storeManager.hasFullAccess) { _, unlocked in
             if unlocked { onDismiss() }
         }

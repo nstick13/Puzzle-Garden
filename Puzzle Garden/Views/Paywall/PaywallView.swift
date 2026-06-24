@@ -75,7 +75,7 @@ struct PaywallView: View {
                         .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .disabled(store.product == nil || store.isLoading)
+                    .disabled(store.isLoading)
 
                     Button(action: {
                         isRestoring = true
@@ -100,6 +100,11 @@ struct PaywallView: View {
                 .padding(.horizontal, 32)
                 .padding(.bottom, 36)
             }
+        }
+        .task {
+            // Retry the product load when the paywall opens, in case the launch fetch
+            // raced or failed. Without this a cold-start miss leaves the button stuck.
+            if store.product == nil { await store.loadProduct() }
         }
         .onChange(of: store.hasFullAccess) { _, hasAccess in
             if hasAccess { dismiss() }

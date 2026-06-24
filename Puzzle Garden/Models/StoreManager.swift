@@ -33,7 +33,13 @@ final class StoreManager {
     // MARK: - Purchase
 
     func purchase() async {
-        guard let product else { return }
+        // Self-heal: the product may not have loaded at launch (cold-start race, or it
+        // wasn't fetchable yet). Try once more before giving up so the button isn't a no-op.
+        if product == nil { await loadProduct() }
+        guard let product else {
+            errorMessage = "The store isn't ready yet. Please try again in a moment."
+            return
+        }
         isLoading = true
         errorMessage = nil
         defer { isLoading = false }
@@ -70,12 +76,26 @@ final class StoreManager {
 
     // MARK: - Internal
 
-    private func loadProduct() async {
+    /// Fetch the IAP product. Public so the paywall can retry on appear / on tap.
+    /// Surfaces a real reason on failure instead of silently leaving `product` nil.
+    func loadProduct() async {
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
         do {
             let products = try await Product.products(for: [productID])
-            product = products.first
+            if let first = products.first {
+                product = first
+            } else {
+                errorMessage = "The store is unavailable right now. Please check your connection and try again."
+                NSLog("[Store] No products returned for id \(productID). " +
+                      "Simulator: confirm the StoreKit configuration is selected in the run scheme. " +
+                      "Device/TestFlight: confirm the IAP exists in App Store Connect in a fetchable state " +
+                      "(at least 'Ready to Submit'), the Paid Apps agreement is active, and the id matches exactly.")
+            }
         } catch {
-            // Non-fatal: price falls back to default display string
+            errorMessage = error.localizedDescription
+            NSLog("[Store] Product.products(for:) threw: \(error)")
         }
     }
 
