@@ -16,10 +16,12 @@ struct OnboardingView: View {
             TabView(selection: $currentPage) {
                 MechanicPage()
                     .tag(0)
-                ControlsPage()
+                DeductionPage()
                     .tag(1)
-                GardenPage()
+                ControlsPage()
                     .tag(2)
+                GardenPage()
+                    .tag(3)
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
@@ -37,7 +39,7 @@ struct OnboardingView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if currentPage == 2 {
+            if currentPage == 3 {
                 Button(action: onDismiss) {
                     Text("Get started")
                         .font(.system(.headline, design: .rounded))
@@ -113,7 +115,200 @@ private struct RuleRow: View {
     }
 }
 
-// MARK: - Page 2: The Controls
+// MARK: - Page 2: How to think (deduction)
+
+/// Teaches the mental model — elimination, not guessing. A 4×4 board solves itself:
+/// place a flower → it rules out its row/column/neighbors → that forces the next, and so on.
+/// The cascade is hand-verified: every "only one left" beat is a true naked single.
+private struct DeductionPage: View {
+    private let warmGreen = Color(red: 0.353, green: 0.478, blue: 0.235)
+    private let warmGray  = Color(red: 0.45, green: 0.42, blue: 0.38)
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Spacer().frame(height: 72)
+
+            Text("You never\nhave to guess")
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(warmGreen)
+                .multilineTextAlignment(.center)
+
+            DeductionBoard()
+                .padding(.horizontal, 44)
+
+            Spacer()
+        }
+    }
+}
+
+private struct DeductionBoard: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    // Region index per cell. A=0, B=1, C=2, D=3.
+    private let regions: [[Int]] = [
+        [0, 0, 1, 1],
+        [2, 0, 0, 1],
+        [2, 2, 3, 1],
+        [2, 3, 3, 3],
+    ]
+    private let regionColors: [Color] = [
+        Color(red: 0.353, green: 0.478, blue: 0.235),
+        Color(red: 0.769, green: 0.443, blue: 0.294),
+        Color(red: 0.545, green: 0.412, blue: 0.259),
+        Color(red: 0.420, green: 0.561, blue: 0.278),
+    ]
+    private let gold = Color(red: 0.85, green: 0.62, blue: 0.18)
+
+    // Verified forced cascade (see header). Eliminations revealed step by step.
+    private let f1 = GridIndex(row: 0, col: 1)
+    private let f2 = GridIndex(row: 1, col: 3)
+    private let f3 = GridIndex(row: 3, col: 2)
+    private let f4 = GridIndex(row: 2, col: 0)
+    private let e1 = [(0,0),(0,2),(0,3),(1,0),(1,1),(1,2),(2,1),(3,1)].map { GridIndex(row: $0.0, col: $0.1) }
+    private let e2 = [(2,3),(3,3),(2,2)].map { GridIndex(row: $0.0, col: $0.1) }
+    private let e3 = [GridIndex(row: 3, col: 0)]
+
+    @State private var flowers: Set<GridIndex> = []
+    @State private var ruledOut: Set<GridIndex> = []
+    @State private var forced: GridIndex?
+    @State private var caption = "Every row, column, and plot gets one flower."
+
+    private let warmGray = Color(red: 0.45, green: 0.42, blue: 0.38)
+
+    var body: some View {
+        VStack(spacing: 18) {
+            grid
+            Text(caption)
+                .font(.system(.subheadline, design: .rounded).weight(.medium))
+                .foregroundStyle(warmGray)
+                .multilineTextAlignment(.center)
+                .frame(minHeight: 44)
+                .animation(.easeInOut(duration: 0.2), value: caption)
+        }
+        .task {
+            if reduceMotion {
+                showSolved()
+            } else {
+                await play()
+            }
+        }
+    }
+
+    private var grid: some View {
+        VStack(spacing: 4) {
+            ForEach(0..<4, id: \.self) { row in
+                HStack(spacing: 4) {
+                    ForEach(0..<4, id: \.self) { col in
+                        cell(GridIndex(row: row, col: col))
+                    }
+                }
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 14)
+                .fill(Color(red: 0.98, green: 0.96, blue: 0.93))
+                .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
+        )
+    }
+
+    private func cell(_ idx: GridIndex) -> some View {
+        let color = regionColors[regions[idx.row][idx.col]]
+        let isFlower = flowers.contains(idx)
+        let isOut = ruledOut.contains(idx)
+        let isForced = forced == idx
+
+        return ZStack {
+            RoundedRectangle(cornerRadius: 7)
+                .fill(color.opacity(isOut && !isFlower ? 0.12 : 0.30))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 7)
+                        .stroke(isForced ? gold : color.opacity(isOut ? 0.2 : 0.5),
+                                lineWidth: isForced ? 3 : 1.5)
+                )
+
+            if isFlower {
+                Image(systemName: "leaf.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(color)
+                    .transition(.scale(scale: 0.2).combined(with: .opacity))
+            } else if isOut {
+                Image(systemName: "xmark")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(warmGray.opacity(0.45))
+                    .transition(.opacity)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fit)
+        .scaleEffect(isForced ? 1.06 : 1)
+    }
+
+    private func showSolved() {
+        flowers = [f1, f2, f3, f4]
+        caption = "Every move is forced by logic — no guessing."
+    }
+
+    private func play() async {
+        while !Task.isCancelled {
+            reset()
+            await pause(1.1)
+
+            caption = "Plant one flower…"
+            bloom(f1)
+            await pause(1.0)
+
+            caption = "…it rules out its row, column, and every touching square."
+            rule(e1)
+            await pause(1.6)
+
+            await force(f2, "Only one open square left in this row.", reveal: e2)
+            await force(f3, "Only one left in this plot, too.", reveal: e3)
+            await force(f4, "And the last falls into place.", reveal: [])
+
+            caption = "Rule out the impossible. You never have to guess. 🌱"
+            await pause(2.6)
+        }
+    }
+
+    // MARK: - Steps
+
+    private func reset() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            flowers = []; ruledOut = []; forced = nil
+        }
+        caption = "Every row, column, and plot gets one flower."
+    }
+
+    private func bloom(_ idx: GridIndex) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.55)) {
+            _ = flowers.insert(idx)
+        }
+    }
+
+    private func rule(_ cells: [GridIndex]) {
+        withAnimation(.easeInOut(duration: 0.45)) {
+            ruledOut.formUnion(cells)
+        }
+    }
+
+    /// Highlight a forced cell, then bloom it and reveal the next round of eliminations.
+    private func force(_ idx: GridIndex, _ text: String, reveal: [GridIndex]) async {
+        caption = text
+        withAnimation(.easeInOut(duration: 0.25)) { forced = idx }
+        await pause(0.9)
+        withAnimation(.easeInOut(duration: 0.2)) { forced = nil }
+        bloom(idx)
+        if !reveal.isEmpty { rule(reveal) }
+        await pause(1.3)
+    }
+
+    private func pause(_ seconds: Double) async {
+        try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+    }
+}
+
+// MARK: - Page 3: The Controls
 
 private struct ControlsPage: View {
     private let warmGreen = Color(red: 0.353, green: 0.478, blue: 0.235)
