@@ -1,6 +1,11 @@
 # Garden v2 — Living Scene & the Collection Package Pattern
 
-Branch: `v2.0-garden-redesign`. Companion: `ILLUSTRATION.md` (art token contract).
+Branch: `v2.0-garden-redesign` (shipped to `main`). Companion: `ILLUSTRATION.md` (art token contract).
+
+> **Next-up roadmap (designed 2026-06-24, not yet built):** see the two sections at the
+> bottom — **Onboarding: "you never have to guess"** (animated deduction page) and
+> **The garden world: zoom-out areas** (progression hierarchy + map). Everything between
+> here and there is built/shipped.
 
 ## Why
 
@@ -189,3 +194,77 @@ Note: this is additive to save format; verify decode of a real v1 save before sh
 4. Real garden art per `ILLUSTRATION.md` (derive seed/growing from existing complete SVGs).
 5. Wire awards + daily growth tick; set-complete celebration.
 6. Stub `CucinaPackage` to prove the descriptor swap, then gate behind its IAP.
+
+---
+
+# Roadmap (designed 2026-06-24, NOT yet built)
+
+## Onboarding: "You never have to guess" — animated deduction page
+
+The current onboarding (`Views/Onboarding/OnboardingView.swift`) has 3 pages: rules (static
+`MechanicGrid`), controls (`TapDemoCell`), garden reward. It states the rules but never teaches
+the **mental model** — that this is *elimination*, not guessing.
+
+Add a **new animated page, inserted as page index 1** (between rules and controls). Order:
+*rules → how to think (new) → controls → garden*. Update the "Get started" gate (currently
+`currentPage == 2`) to the new last index (3).
+
+**What it does:** a small board that **solves itself**, narrating the deduction cascade:
+1. "Plant one flower." → a flower blooms.
+2. "It clears its row, column & every touching square — even corners." → those cells shade with
+   a soft shadow/✕ (not a harsh mark; cozy).
+3. "Now a plot has one square left — so a flower must go there." → forced cell pulses, blooms.
+4. cascade 2–3 more forced placements, then: "Rule out the impossible, and the garden solves
+   itself." → board completes, gentle celebration.
+
+**Confirmed copy/promise:** lead line **"You never have to guess."** (user-approved 2026-06-24)
+— this single promise converts "looks hard" bounces into a try.
+
+**Build notes:**
+- Loop it; captions fade in sync with each beat. Reduce-Motion → static final solved frame + the
+  same captions stacked.
+- **Make the deduction honest:** drive it from a real `LogicSolver` trace on a *verified* 4×4 so
+  every "forced" step is a true deduction. NOTE the existing `MechanicGrid` sample board is NOT
+  region-valid (two flowers share a region, one region has none) — use a fresh verified board.
+- Reuse the v2 garden visual language (region beds, flowers, soft-shadow "ruled out").
+
+## The garden world: zoom-out areas (progression hierarchy)
+
+Replaces the infinite single-column scroll with a **world of themed areas** you zoom between.
+Solves both "endless list" and "same plants forever."
+
+**Progression hierarchy (4 tiers):**
+- **Plant** — 1 win (seed→bloom). Every solve.
+- **Bed** — 5 plants → blooms (existing `isComplete` sparkle+haptic). ~every 5 wins. The
+  constant small-win drumbeat — keep it.
+- **Area** — "a bed of beds", ~3 beds (~15 wins). A themed corner (Orchard, Lily Pond, Meadow…).
+  Filling it **unlocks the next area**. This is the slow gate. (User: merge fast bed cadence +
+  bigger world via this nesting — "a bed of beds". Tunable constants; ~3 beds/area default.)
+- **World** — areas connect on a zoom-out **map**; fills over months (long game).
+
+**Decisions (user, 2026-06-24):**
+- **Each area re-themes BOTH flora and scenery** (Orchard = fruit trees, Pond = water flowers,
+  Meadow = wildflowers). This is the cure for plant repetition. New collectible art + scenery
+  skin per area, kept cohesive by `ILLUSTRATION.md`. Effectively each area is a mini-"skin" —
+  reuses the package Skin concept at area granularity.
+- **Zoom out / zoom in**, NOT a shelf/inventory (shelf reverts garden→storage; rejected).
+
+**UX:**
+- New top level = **world overview/map**: area tiles with status (in bloom ✓ / tending x/N beds /
+  locked "fill the herbs to open"), connected by a stone path, fence + sun. Tap an area to zoom in.
+- **Zoom transition** (matchedGeometryEffect + scale) from area tile → the existing fenced-bed
+  `SceneView` (which becomes the view of ONE area). Pinch-out / back button returns to the map.
+- Cat roams the *current* area when zoomed-in; could appear as a tiny dot wandering the map when
+  zoomed-out.
+
+**Model implications:**
+- `CollectionPackage` gains `areas: [GardenArea]` (id, displayName, icon, bedCount, theme:
+  palette + scenery skin + collectible pool).
+- Tag each `CollectibleSet` (bed) with its `areaID` (or derive area from bed index).
+- Awards fill the **active area's** beds; when an area's beds are all complete, unlock + start the
+  next area. Persist unlocked-area state (like `celebratedSetIDs`).
+- World view is a new screen; the bed scene renders the focused area's beds.
+- `GardenWorldBackground` becomes per-area (each area supplies its scenery skin).
+
+**Suggested sequencing:** onboarding page first (small, self-contained, high-value), then the
+world/areas (bigger; needs per-area art + a new navigation layer + model changes).

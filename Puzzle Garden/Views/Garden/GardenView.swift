@@ -32,10 +32,12 @@ enum Garden {
     static let plotSize: CGFloat = 54
 }
 
-// MARK: - Garden scene
+// MARK: - Area scene (one corner of the garden world)
 
-struct GardenView: View {
+struct AreaSceneView: View {
     var playerData: PlayerData
+    let areaIndex: Int
+    var onZoomOut: () -> Void
 
     @State private var gardenImage: UIImage?
     @State private var showShareSheet = false
@@ -44,7 +46,8 @@ struct GardenView: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var sets: [CollectibleSet] { playerData.gardenSets }
+    private var area: GardenArea { playerData.gardenAreas[areaIndex] }
+    private var sets: [CollectibleSet] { playerData.setsForArea(areaIndex) }
     private var totalPlants: Int { sets.reduce(0) { $0 + $1.members.count } }
     private var bedsInBloom: Int { sets.filter { $0.isComplete }.count }
 
@@ -66,9 +69,15 @@ struct GardenView: View {
                 WanderingCat(asleep: playerData.isWilted, reduceMotion: reduceMotion)
                     .padding(.bottom, 2)
             }
-            .navigationTitle("My Garden")
+            .navigationTitle(area.displayName)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button { onZoomOut() } label: {
+                        Label("Garden", systemImage: "chevron.left")
+                    }
+                    .tint(Garden.green)
+                }
                 if totalPlants > 0 {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button { renderAndShare() } label: {
@@ -86,10 +95,10 @@ struct GardenView: View {
         }
     }
 
-    // Sky/ground world tints with the system clock; refreshes each minute as the sun arcs.
+    // Sky/ground world tints with the system clock; ground re-skins per area.
     private var background: some View {
         TimelineView(.periodic(from: .now, by: 60)) { ctx in
-            GardenWorldBackground(sky: SkyModel(date: ctx.date))
+            GardenWorldBackground(sky: SkyModel(date: ctx.date), scenery: area.scenery)
         }
     }
 
@@ -213,10 +222,10 @@ struct GardenView: View {
             Image(systemName: "leaf.fill")
                 .font(.system(size: 54))
                 .foregroundStyle(Garden.leaf.opacity(0.8))
-            Text("Your garden is empty")
+            Text("This patch is ready")
                 .font(.system(.title3, design: .rounded).bold())
                 .foregroundStyle(Garden.ink)
-            Text("Solve a puzzle to plant your first seed.\nIt'll sprout and bloom over the days you return.")
+            Text("Solve a puzzle to plant your first seed here.\nIt'll sprout and bloom over the days you return.")
                 .multilineTextAlignment(.center)
                 .font(.system(.subheadline, design: .rounded))
                 .foregroundStyle(Garden.inkSoft)

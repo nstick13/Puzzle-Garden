@@ -1,5 +1,19 @@
 import SwiftUI
 
+extension Color {
+    /// Parse "#RRGGBB". Falls back to clear on malformed input.
+    init(hexString: String) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        var v: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&v)
+        self = Color(
+            red: Double((v & 0xFF0000) >> 16) / 255,
+            green: Double((v & 0x00FF00) >> 8) / 255,
+            blue: Double(v & 0x0000FF) / 255
+        )
+    }
+}
+
 // MARK: - Garden world background
 //
 // Turns the blank scene into a *place*: a time-of-day sky up top, a row of shrubs
@@ -7,6 +21,13 @@ import SwiftUI
 
 struct GardenWorldBackground: View {
     let sky: SkyModel
+    /// Optional per-area skin; falls back to the default garden palette.
+    var scenery: AreaScenery? = nil
+
+    private var grassTop: Color { scenery.map { Color(hexString: $0.grassTopHex) } ?? Garden.grassTop }
+    private var grassBottom: Color { scenery.map { Color(hexString: $0.grassBottomHex) } ?? Garden.grassBottom }
+    private var shrubColor: Color { scenery.map { Color(hexString: $0.shrubHex) } ?? Garden.shrub }
+    private var fenceColor: Color { scenery.map { Color(hexString: $0.fenceHex) } ?? Garden.fenceWood }
 
     var body: some View {
         GeometryReader { geo in
@@ -26,7 +47,7 @@ struct GardenWorldBackground: View {
                               y: (horizon + 40) * min(max(sky.celestialPosition.y * 1.4, 0.12), 0.9))
 
                 // Grass ground
-                LinearGradient(colors: [Garden.grassTop, Garden.grassBottom],
+                LinearGradient(colors: [grassTop, grassBottom],
                                startPoint: .top, endPoint: .bottom)
                     .frame(height: h - horizon)
                     .offset(y: horizon)
@@ -36,7 +57,7 @@ struct GardenWorldBackground: View {
                     .position(x: w / 2, y: horizon - 6)
 
                 // Picket fence at the horizon
-                PicketFence()
+                PicketFence(wood: fenceColor)
                     .frame(width: w, height: 46)
                     .position(x: w / 2, y: horizon + 6)
             }
@@ -59,7 +80,7 @@ struct GardenWorldBackground: View {
         HStack(spacing: -18) {
             ForEach(0..<Int(width / 46) + 2, id: \.self) { i in
                 Ellipse()
-                    .fill(i % 2 == 0 ? Garden.shrub : Garden.shrubDark)
+                    .fill(i % 2 == 0 ? shrubColor : shrubColor.opacity(0.82))
                     .frame(width: 62, height: 38)
             }
         }
@@ -70,6 +91,8 @@ struct GardenWorldBackground: View {
 // MARK: - Picket fence
 
 struct PicketFence: View {
+    var wood: Color = Garden.fenceWood
+
     var body: some View {
         GeometryReader { geo in
             let w = geo.size.width
@@ -84,7 +107,7 @@ struct PicketFence: View {
                 // Pickets
                 HStack(spacing: 12) {
                     ForEach(0..<pickets, id: \.self) { _ in
-                        Picket()
+                        Picket(wood: wood)
                     }
                 }
             }
@@ -94,17 +117,18 @@ struct PicketFence: View {
 
     private var rail: some View {
         RoundedRectangle(cornerRadius: 2)
-            .fill(Garden.fenceWood)
+            .fill(wood)
             .frame(height: 5)
             .overlay(RoundedRectangle(cornerRadius: 2).stroke(Garden.fenceShade, lineWidth: 0.5))
     }
 }
 
 private struct Picket: View {
+    var wood: Color = Garden.fenceWood
     var body: some View {
         UnevenRoundedRectangle(topLeadingRadius: 6, bottomLeadingRadius: 1,
                                bottomTrailingRadius: 1, topTrailingRadius: 6)
-            .fill(Garden.fenceWood)
+            .fill(wood)
             .overlay(
                 UnevenRoundedRectangle(topLeadingRadius: 6, bottomLeadingRadius: 1,
                                        bottomTrailingRadius: 1, topTrailingRadius: 6)

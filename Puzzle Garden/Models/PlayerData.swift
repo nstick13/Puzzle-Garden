@@ -214,8 +214,7 @@ final class PlayerData {
         lastAwardedPlant = plant
 
         // v2: dual-write the same reward into the garden package's beds.
-        awardCollectible(difficulty: difficulty, isDaily: isDaily, date: today,
-                         emoji: plant.emoji, assetBase: plant.assetName)
+        awardCollectible(difficulty: difficulty, isDaily: isDaily, date: today)
 
         // Any solve tends the garden — clears a wilt lapse.
         lastTendedDate = today
@@ -294,33 +293,35 @@ final class PlayerData {
     // MARK: - v2 collectible award + growth
 
     /// Drop a freshly earned collectible (as `.seed`) into the garden's first non-full bed,
-    /// opening a new bed when all are full.
-    private func awardCollectible(difficulty: GridSize, isDaily: Bool, date: String,
-                                  emoji: String, assetBase: String?) {
+    /// opening a new bed when all are full. Flora is drawn from the owning area's pool.
+    private func awardCollectible(difficulty: GridSize, isDaily: Bool, date: String) {
         let pkg = GardenPackage.shared
         let tier = CollectibleTier(gridSize: difficulty)
         var sets = collections[pkg.id] ?? []
 
-        // Find the active (first non-full) bed, or open a new one.
+        // Find the active (first non-full) bed, or open a new one in its area.
         var activeIndex = sets.firstIndex { !$0.isFull }
         if activeIndex == nil {
             let newIndex = sets.count
+            let area = pkg.area(forBedIndex: newIndex)
+            let ordinal = newIndex - pkg.areaStartIndex(pkg.areaIndex(forBedIndex: newIndex)) + 1
             sets.append(CollectibleSet(
                 id: "\(pkg.id)-bed-\(newIndex)",
                 templateID: "bed",
-                displayName: pkg.displayName(forSetIndex: newIndex),
+                displayName: pkg.bedName(area: area, ordinal: ordinal),
                 capacity: pkg.setCapacity
             ))
             activeIndex = sets.count - 1
         }
 
         guard let index = activeIndex else { return }
+        let area = pkg.area(forBedIndex: index)
         let slot = sets[index].members.count
         let item = Collectible(
             packageID: pkg.id,
             setID: sets[index].id,
-            assetBase: assetBase ?? pkg.assetBase(forTier: tier),
-            emoji: emoji,
+            assetBase: area.asset(for: tier),
+            emoji: area.emoji(for: tier),
             tier: tier,
             state: .seed,
             slot: slot,
@@ -329,6 +330,39 @@ final class PlayerData {
         )
         sets[index].members.append(item)
         collections[pkg.id] = sets
+    }
+
+    // MARK: - v2 area queries (for the world map + zoom)
+
+    var gardenAreas: [GardenArea] { GardenPackage.shared.areas }
+
+    /// Beds belonging to area `k` (a slice of the flat bed list, which fills in order).
+    func setsForArea(_ k: Int) -> [CollectibleSet] {
+        let pkg = GardenPackage.shared
+        guard k < pkg.areas.count else { return [] }
+        let start = pkg.areaStartIndex(k)
+        let end = min(start + pkg.areas[k].bedCount, gardenSets.count)
+        return start < end ? Array(gardenSets[start..<end]) : []
+    }
+
+    /// An area is reachable once the beds before it have begun filling.
+    func isAreaUnlocked(_ k: Int) -> Bool {
+        GardenPackage.shared.areaStartIndex(k) <= gardenSets.count
+    }
+
+    func areaBloomedBeds(_ k: Int) -> Int { setsForArea(k).filter { $0.isComplete }.count }
+
+    func isAreaComplete(_ k: Int) -> Bool {
+        let area = GardenPackage.shared.areas[k]
+        let s = setsForArea(k)
+        return s.count == area.bedCount && s.allSatisfy { $0.isComplete }
+    }
+
+    /// The area currently being tended (first unlocked, not-yet-complete area).
+    var activeAreaIndex: Int {
+        let pkg = GardenPackage.shared
+        for k in pkg.areas.indices where isAreaUnlocked(k) && !isAreaComplete(k) { return k }
+        return pkg.areas.count - 1
     }
 
     /// Advance growth once per calendar day: every collectible earned on an earlier day

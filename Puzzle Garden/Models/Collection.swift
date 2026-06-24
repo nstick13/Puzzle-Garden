@@ -152,4 +152,86 @@ struct GardenPackage: CollectionPackage {
     func emoji(forTier tier: CollectibleTier) -> String {
         PlantEmoji.random(for: tierToGridSize(tier))
     }
+
+    // MARK: - Areas (the world is a sequence of themed corners)
+    //
+    // Beds fill in order; every `bedCount` beds make one area. An area re-skins the
+    // scenery and (eventually) the flora. v1 reuses existing plant art per area; bespoke
+    // per-area flora (fruit, lilies) is a follow-up art task against ILLUSTRATION.md.
+
+    let areas: [GardenArea] = [
+        GardenArea(
+            id: "flowerbeds", displayName: "Flowerbeds", systemIcon: "camera.macro", bedCount: 3,
+            scenery: AreaScenery(grassTopHex: "#BCD892", grassBottomHex: "#9EC576",
+                                 fenceHex: "#F2E9CF", shrubHex: "#739E57"),
+            pools: [.sprig: PlantAsset.easy, .bloom: PlantAsset.medium, .specimen: PlantAsset.hard],
+            emojiPools: [.sprig: PlantEmoji.easy, .bloom: PlantEmoji.medium, .specimen: PlantEmoji.hard]
+        ),
+        GardenArea(
+            id: "orchard", displayName: "Orchard", systemIcon: "tree.fill", bedCount: 3,
+            scenery: AreaScenery(grassTopHex: "#AEC97E", grassBottomHex: "#8EB35E",
+                                 fenceHex: "#EAD9B0", shrubHex: "#6E9A4A"),
+            pools: [.sprig: PlantAsset.easy, .bloom: PlantAsset.hard, .specimen: PlantAsset.hard],
+            emojiPools: [.sprig: PlantEmoji.easy, .bloom: PlantEmoji.hard, .specimen: PlantEmoji.hard]
+        ),
+        GardenArea(
+            id: "pond", displayName: "Lily Pond", systemIcon: "drop.fill", bedCount: 3,
+            scenery: AreaScenery(grassTopHex: "#AFD0A6", grassBottomHex: "#8FC0A0",
+                                 fenceHex: "#E6EAD0", shrubHex: "#5FA07A"),
+            pools: [.sprig: PlantAsset.easy, .bloom: PlantAsset.medium, .specimen: PlantAsset.medium],
+            emojiPools: [.sprig: PlantEmoji.easy, .bloom: PlantEmoji.medium, .specimen: PlantEmoji.medium]
+        ),
+        GardenArea(
+            id: "meadow", displayName: "Meadow", systemIcon: "sun.max.fill", bedCount: 3,
+            scenery: AreaScenery(grassTopHex: "#C8E08C", grassBottomHex: "#ACD06A",
+                                 fenceHex: "#F4E8C8", shrubHex: "#7FA84E"),
+            pools: [.sprig: PlantAsset.easy, .bloom: PlantAsset.medium, .specimen: PlantAsset.hard],
+            emojiPools: [.sprig: PlantEmoji.easy, .bloom: PlantEmoji.medium, .specimen: PlantEmoji.hard]
+        ),
+    ]
+
+    /// Index of the area that owns a given global bed index (clamped to the last area).
+    func areaIndex(forBedIndex i: Int) -> Int {
+        var acc = 0
+        for (k, a) in areas.enumerated() {
+            acc += a.bedCount
+            if i < acc { return k }
+        }
+        return areas.count - 1
+    }
+
+    func area(forBedIndex i: Int) -> GardenArea { areas[areaIndex(forBedIndex: i)] }
+
+    /// Global bed index where area `k` begins.
+    func areaStartIndex(_ k: Int) -> Int { areas.prefix(k).reduce(0) { $0 + $1.bedCount } }
+
+    func bedName(area: GardenArea, ordinal: Int) -> String {
+        "\(area.displayName) · bed \(ordinal)"
+    }
+}
+
+// MARK: - Garden area descriptor
+
+struct AreaScenery {
+    let grassTopHex: String
+    let grassBottomHex: String
+    let fenceHex: String
+    let shrubHex: String
+}
+
+struct GardenArea: Identifiable {
+    let id: String
+    let displayName: String
+    let systemIcon: String
+    let bedCount: Int
+    let scenery: AreaScenery
+    let pools: [CollectibleTier: [String]]
+    let emojiPools: [CollectibleTier: [String]]
+
+    func asset(for tier: CollectibleTier) -> String {
+        (pools[tier] ?? PlantAsset.easy).randomElement() ?? PlantAsset.easy[0]
+    }
+    func emoji(for tier: CollectibleTier) -> String {
+        (emojiPools[tier] ?? PlantEmoji.easy).randomElement() ?? "🌱"
+    }
 }
