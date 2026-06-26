@@ -44,14 +44,43 @@ enum PuzzleBank {
         banks[difficulty.rawValue] != nil
     }
 
-    /// A puzzle for `difficulty`, picked deterministically by `seed` — so the daily stays stable
-    /// across devices and Free Play's time-based seed gives an effectively random board. Returns
-    /// nil when no bank exists for the size (caller should generate live).
-    static func puzzle(for difficulty: GridSize, seed: UInt64) -> Puzzle? {
+    /// Serializes the read-modify-write of the persisted cursor so two rapid taps can't hand out
+    /// the same board (or skip one).
+    private static let cursorLock = NSLock()
+
+    /// The next puzzle for `difficulty`, with NO repeats until every board in the bank has been
+    /// shown once — then it reshuffles and starts a fresh pass. The shuffled order and position
+    /// persist across launches (per install), so a player works through all N boards before
+    /// seeing any again. Returns nil when no bank exists for the size (caller generates live).
+    static func nextPuzzle(for difficulty: GridSize) -> Puzzle? {
         guard let file = banks[difficulty.rawValue], !file.boards.isEmpty else { return nil }
-        let board = file.boards[Int(seed % UInt64(file.boards.count))]
+        let board = file.boards[nextIndex(size: difficulty.rawValue, count: file.boards.count)]
         let n = difficulty.rawValue
         let empty = Array(repeating: Array(repeating: 0, count: n), count: n)
         return Puzzle(grid: empty, regions: board.regions, solution: board.solution, difficulty: difficulty)
+    }
+
+    /// Advances the persisted no-repeat cursor and returns the next board index. (Re)shuffles when
+    /// the saved order is missing, exhausted, or stale (bank size changed, e.g. after an update).
+    private static func nextIndex(size: Int, count: Int) -> Int {
+        cursorLock.lock()
+        defer { cursorLock.unlock() }
+
+        let orderKey = "puzzleBank.order.\(size)"
+        let posKey   = "puzzleBank.pos.\(size)"
+        let defaults = UserDefaults.standard
+
+        var order = (defaults.array(forKey: orderKey) as? [Int]) ?? []
+        var pos   = defaults.integer(forKey: posKey)
+
+        if order.count != count || pos >= order.count {
+            order = Array(0..<count).shuffled()
+            pos = 0
+            defaults.set(order, forKey: orderKey)
+        }
+
+        let index = order[pos]
+        defaults.set(pos + 1, forKey: posKey)
+        return index
     }
 }

@@ -7,9 +7,11 @@ import Foundation
 /// gate — a guess-requiring puzzle must never ship again.
 struct GeneratorFairnessTests {
 
-    /// For each grid size, generate many puzzles and assert each one is produced,
-    /// uniquely solvable, and fully solvable by the no-guess `LogicSolver`.
-    @Test(arguments: GridSize.allCases)
+    /// For each *live-generated* grid size, generate many puzzles and assert each is produced,
+    /// uniquely solvable, and fully solvable by the no-guess `LogicSolver`. 9×9 is excluded here
+    /// because it's served from the bank (covered by `PuzzleBankTests`, which also keeps the
+    /// shared cursor out of this parallel test).
+    @Test(arguments: [GridSize.five, .six, .seven, .eight])
     func everyGeneratedPuzzleIsFairAndUnique(size: GridSize) {
         let n = size.rawValue
         let trials = n >= 8 ? 15 : 30
@@ -33,17 +35,50 @@ struct GeneratorFairnessTests {
         }
     }
 
-    /// 9×9 is served from the bundled pre-generated bank — verify it loaded in-app and that
-    /// `generate` returns fair boards from it (different seeds → potentially different boards).
-    @Test func nineByNineLoadsFromBundledBank() {
-        #expect(PuzzleBank.hasBank(for: .nine), "9×9 bank (boards_9x9.json) should be bundled and loaded")
+}
 
-        for seed in UInt64(0)..<8 {
-            guard let puzzle = PuzzleGenerator.generate(difficulty: .nine, seed: seed) else {
-                Issue.record("bank returned nil for seed \(seed)"); continue
+/// 9×9 bank tests. Serialized because they share the persisted no-repeat cursor
+/// (`UserDefaults`) — running them in parallel would interleave cursor draws and make the
+/// no-repeat assertion flaky. No other suite touches the 9×9 cursor (the fairness test above
+/// excludes `.nine`), so within this suite the cursor is deterministic.
+@Suite(.serialized)
+struct PuzzleBankTests {
+
+    private static let orderKey = "puzzleBank.order.9"
+    private static let posKey   = "puzzleBank.pos.9"
+
+    private func resetCursor() {
+        UserDefaults.standard.removeObject(forKey: Self.orderKey)
+        UserDefaults.standard.removeObject(forKey: Self.posKey)
+    }
+
+    /// The bank is bundled, loads in-app, and serves fully no-guess boards.
+    @Test func loadsFromBundledBankAndIsFair() {
+        #expect(PuzzleBank.hasBank(for: .nine), "9×9 bank (boards_9x9.json) should be bundled and loaded")
+        resetCursor()
+        for _ in 0..<8 {
+            guard let puzzle = PuzzleGenerator.generate(difficulty: .nine, seed: 0) else {
+                Issue.record("bank returned nil"); continue
             }
             #expect(LogicSolver.grade(regions: puzzle.regions, n: 9).fullySolved,
-                    "banked 9×9 (seed \(seed)) must be fully no-guess solvable")
+                    "banked 9×9 must be fully no-guess solvable")
         }
+    }
+
+    /// The no-repeat cursor serves every board once before any repeat: 200 consecutive draws
+    /// must all be distinct (with random `seed % count` selection, the birthday paradox would
+    /// make a repeat near-certain by ~40 draws — so this meaningfully proves the cursor).
+    @Test func cursorServesDistinctBoardsWithoutRepeats() {
+        resetCursor()
+        var seen = Set<String>()
+        let draws = 200
+        for _ in 0..<draws {
+            guard let puzzle = PuzzleGenerator.generate(difficulty: .nine, seed: 0) else {
+                Issue.record("bank returned nil"); continue
+            }
+            seen.insert(puzzle.regions.map { $0.map(String.init).joined() }.joined(separator: "|"))
+        }
+        #expect(seen.count == draws,
+                "first \(draws) bank draws should be distinct (no-repeat cursor); got \(seen.count)")
     }
 }

@@ -93,8 +93,11 @@ The promise is enforced in code, not just by uniqueness:
 - **`PuzzleGenerator.generate`** = bank lookup → else `generateLive`. Live 9×9 has a slow tail
   (median ~0.3s but worst case several seconds on old devices), so:
 - **`PuzzleBank`** serves 9×9 from a bundled, pre-vetted set (`Puzzle Garden/Resources/boards_9x9.json`,
-  1000 unique fair boards, ~378 KB). Instant load, zero tail, zero nil risk. Daily is 5×5 so it
-  generates live; only Free Play 9×9 uses the bank.
+  **5000 unique fair boards**, ~1.8 MB raw / ~247 KB gzipped). Instant load, zero tail, zero nil
+  risk. Daily is 5×5 so it generates live; only Free Play 9×9 uses the bank.
+- **No-repeat cursor:** the bank serves boards via a persisted shuffled cursor (`UserDefaults`),
+  so a player sees every one of the 5000 before any repeat; it reshuffles after a full pass (or
+  if the bank size changes in an update). Far more impactful than raw count for "feels fresh".
 - **Rebuild/expand the bank:** `tools/build_bank.sh [count]` (compiles the generator with `-O` and
   runs it offline; ~0.35s/board). To bank another size, generate `boards_NxN.json` and add N to
   `PuzzleBank.bankedSizes`. Regression net: `GeneratorFairnessTests`.
@@ -107,10 +110,9 @@ Captured 2026-06-26. Roughly ordered by user value / low effort.
    result/solution** and shows only (a) the solve time and (b) the current streak (# of days).
    Spoiler-free, brag-friendly — think Wordle-style. Distinct from the existing win-overlay
    `ShareCard` (which renders the emoji grid). Likely a new card layout in `Views/Game/`.
-2. **Free Play "next game"** — after completing a Free Play puzzle, offer **"Next puzzle"** in the
-   win overlay so the player can keep going at the same size without bouncing back to Home.
-   (Daily stays one-per-day; this is Free-Play only.) Generate a fresh puzzle in place + reset
-   `GameState`.
+2. ~~**Free Play "next game"**~~ ✅ **DONE** — `GameView` win overlay shows **"Next Puzzle"** for
+   Free Play (Daily keeps "Continue"); it generates a fresh same-size puzzle off-thread and swaps
+   `GameState` in place (no trip to Home). Pairs with the 9×9 no-repeat bank cursor.
 3. **Even better onboarding** — iterate on the first-launch tutorial. Current flow is the 4-page
    `OnboardingView` (rules → "you never have to guess" deduction → two-taps → plants-something-new).
    Open question: where it falls short — interactivity? a guided first solve? Worth a design pass.

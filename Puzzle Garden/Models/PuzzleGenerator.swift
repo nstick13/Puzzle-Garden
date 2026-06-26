@@ -25,10 +25,11 @@ enum PuzzleGenerator {
     ///   - seed: Deterministic seed. Pass `DailyPuzzleManager.todaySeed()` for the daily puzzle.
     /// - Returns: A fully validated `Puzzle`, or `nil` if generation fails after the retry budget.
     nonisolated static func generate(difficulty: GridSize, seed: UInt64) -> Puzzle? {
-        // Large sizes (e.g. 9×9) load instantly from a bundled, pre-vetted no-guess bank — this
-        // avoids live generation's slow tail. Falls through to live generation for un-banked sizes
-        // (and the bank is empty when run from the offline generator, so building it still works).
-        if let banked = PuzzleBank.puzzle(for: difficulty, seed: seed) { return banked }
+        // Large sizes (e.g. 9×9) come from a bundled, pre-vetted no-guess bank — instant, and
+        // served via a no-repeat cursor (every board once before any repeat). This avoids live
+        // generation's slow tail. Falls through to live generation for un-banked sizes (and the
+        // bank is empty when run from the offline generator, so building it still works).
+        if let banked = PuzzleBank.nextPuzzle(for: difficulty) { return banked }
         return generateLive(difficulty: difficulty, seed: seed)
     }
 

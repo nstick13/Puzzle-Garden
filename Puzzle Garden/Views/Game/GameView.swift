@@ -4,6 +4,7 @@ struct GameView: View {
     @State private var game: GameState
     @State private var conflictTrigger = false   // drives shake animation
     @State private var shareImage: UIImage?
+    @State private var isLoadingNext = false      // generating the next Free Play puzzle
     @AppStorage("showRules") private var showRules = true
 
     @Environment(\.dismiss) private var dismiss
@@ -66,16 +67,8 @@ struct GameView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
+            wireWin(game)
             game.startTimer()
-            game.onWin = {
-                playerData.recordSolve(
-                    difficulty: game.puzzle.difficulty,
-                    solveTime: TimeInterval(game.elapsedSeconds),
-                    isDaily: isDaily
-                )
-                SoundManager.shared.playSolve()
-                HapticsManager.shared.hapticSolve()
-            }
         }
         .onDisappear { game.stopTimer() }
         .task(id: game.showWin) {
@@ -223,28 +216,33 @@ struct GameView: View {
                 }
 
                 VStack(spacing: 10) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Continue")
-                            .font(.system(.headline, design: .rounded))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color(red: 0.25, green: 0.50, blue: 0.28))
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    if isDaily {
+                        // Daily is one-per-day — just return to the garden/home.
+                        Button { dismiss() } label: {
+                            primaryButtonLabel(Text("Continue"))
+                        }
+                    } else {
+                        // Free Play is unlimited — keep the player going without a trip home.
+                        Button { loadNextPuzzle() } label: {
+                            primaryButtonLabel(
+                                Group {
+                                    if isLoadingNext {
+                                        ProgressView().tint(.white)
+                                    } else {
+                                        Text("Next Puzzle")
+                                    }
+                                }
+                            )
+                        }
+                        .disabled(isLoadingNext)
+
+                        Button { dismiss() } label: {
+                            secondaryButtonLabel(Text("Back to Home"))
+                        }
                     }
 
                     ShareLink(item: shareText) {
-                        Label("Share Result", systemImage: "square.and.arrow.up")
-                            .font(.system(.subheadline, design: .rounded).bold())
-                            .foregroundStyle(Color(red: 0.25, green: 0.50, blue: 0.28))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
-                            )
+                        secondaryButtonLabel(Label("Share Result", systemImage: "square.and.arrow.up"))
                     }
                 }
                 .padding(.horizontal, 32)
@@ -302,6 +300,72 @@ struct GameView: View {
 
     private func triggerShake() {
         withAnimation { conflictTrigger.toggle() }
+    }
+
+    // MARK: - Win wiring & "next puzzle"
+
+    /// Wires a game's fire-once win callback. Captures the specific instance (not the `@State`)
+    /// so it stays correct after `startGame` swaps in a new game. See gotcha #2 in HANDOFF.
+    private func wireWin(_ g: GameState) {
+        g.onWin = { [weak g, isDaily, playerData] in
+            guard let g else { return }
+            playerData.recordSolve(
+                difficulty: g.puzzle.difficulty,
+                solveTime: TimeInterval(g.elapsedSeconds),
+                isDaily: isDaily
+            )
+            SoundManager.shared.playSolve()
+            HapticsManager.shared.hapticSolve()
+        }
+    }
+
+    /// Swaps in a fresh puzzle in place — dismisses the win overlay (new game starts unsolved)
+    /// and starts a new timer, no trip back to Home.
+    private func startGame(with puzzle: Puzzle) {
+        let next = GameState(puzzle: puzzle)
+        wireWin(next)
+        shareImage = nil
+        game = next
+        game.startTimer()
+    }
+
+    /// Generates the next Free Play puzzle at the same size (off the main thread — banked 9×9 is
+    /// instant, smaller sizes generate live) and swaps it in.
+    private func loadNextPuzzle() {
+        let difficulty = game.puzzle.difficulty
+        isLoadingNext = true
+        Task.detached(priority: .userInitiated) {
+            let seed = UInt64(Date().timeIntervalSince1970 * 1000)
+            let puzzle = PuzzleGenerator.generate(difficulty: difficulty, seed: seed)
+            await MainActor.run {
+                isLoadingNext = false
+                if let puzzle { startGame(with: puzzle) }
+            }
+        }
+    }
+
+    // MARK: - Win-overlay button styles
+
+    private func primaryButtonLabel(_ content: some View) -> some View {
+        content
+            .font(.system(.headline, design: .rounded))
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(Color(red: 0.25, green: 0.50, blue: 0.28))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func secondaryButtonLabel(_ content: some View) -> some View {
+        content
+            .font(.system(.subheadline, design: .rounded).bold())
+            .foregroundStyle(Color(red: 0.25, green: 0.50, blue: 0.28))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Color(red: 0.25, green: 0.50, blue: 0.28).opacity(0.12))
+            )
     }
 }
 
