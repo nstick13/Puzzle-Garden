@@ -1,6 +1,11 @@
 # macOS
 .DS_Store
 
+# Agent / local tooling (not part of the app)
+.claude/
+.agents/
+skills-lock.json
+
 # Xcode
 ## User settings
 xcuserdata/

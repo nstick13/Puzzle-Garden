@@ -1,177 +1,348 @@
 import SwiftUI
 
-// MARK: - Garden tab root: zoom-out world ⇄ zoom-in area
+// MARK: - Garden tab root: one continuous world you fly a camera over
+//
+// The whole garden lives on a single fixed-size canvas (`World.size`). A camera
+// (zoom + center) maps that canvas onto the screen. Far out you see the whole
+// estate as a lush map; tap an area — or pinch toward it — and that parcel scales
+// up *in place* while finer detail (real planter beds you can tend) fades in.
+// Pinch back, drag to pan, or tap the chevron to pull out to the map again.
 
-/// Top level of the Garden tab. Shows the world map; tapping an area zooms into its
-/// `AreaSceneView`. Pulling back (chevron) zooms out to the map.
 struct GardenView: View {
     var playerData: PlayerData
 
-    @State private var zoomedArea: Int?
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
     var body: some View {
-        ZStack {
-            if let k = zoomedArea {
-                AreaSceneView(playerData: playerData, areaIndex: k, onZoomOut: zoomOut)
-                    .transition(reduceMotion ? .opacity
-                                : .scale(scale: 0.86).combined(with: .opacity))
-                    .zIndex(1)
-            } else {
-                WorldMapView(playerData: playerData, onSelect: zoomIn)
-                    .transition(.opacity)
-            }
-        }
-    }
-
-    private func zoomIn(_ k: Int) {
-        withAnimation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.82)) {
-            zoomedArea = k
-        }
-    }
-    private func zoomOut() {
-        withAnimation(reduceMotion ? nil : .spring(response: 0.45, dampingFraction: 0.82)) {
-            zoomedArea = nil
+        GeometryReader { proxy in
+            // Capture the safe-area inset before going full-bleed, so the HUD can sit
+            // clear of the status bar / clock while the map itself fills the screen.
+            GardenWorldCanvas(playerData: playerData, safeTop: proxy.safeAreaInsets.top)
+                .ignoresSafeArea()
         }
     }
 }
 
-// MARK: - World map (zoomed-out overview)
+// MARK: - World geometry
 
-private struct WorldMapView: View {
-    var playerData: PlayerData
-    var onSelect: (Int) -> Void
+private enum World {
+    /// Logical canvas the camera moves over (portrait, taller than the screen).
+    /// The vertical margins are deliberately ≥ half a focused screen so the camera
+    /// can center fully on the top/bottom parcels without the clamp fighting it.
+    static let size = CGSize(width: 1000, height: 2040)
+    /// Footprint of one area parcel in world units.
+    static let areaSize = CGSize(width: 440, height: 500)
 
-    // Fractional positions for up to 4 areas, winding bottom → top.
-    private let positions: [CGPoint] = [
-        CGPoint(x: 0.20, y: 0.82),
-        CGPoint(x: 0.62, y: 0.62),
-        CGPoint(x: 0.26, y: 0.42),
-        CGPoint(x: 0.66, y: 0.22),
+    /// Parcel centers, winding bottom → top like a path up a hillside garden.
+    static let centers: [CGPoint] = [
+        CGPoint(x: 270, y: 1500),
+        CGPoint(x: 720, y: 1180),
+        CGPoint(x: 280, y: 860),
+        CGPoint(x: 710, y: 540),
     ]
+
+    static func center(_ k: Int) -> CGPoint { centers[min(k, centers.count - 1)] }
+    static var worldCenter: CGPoint { CGPoint(x: size.width / 2, y: size.height / 2) }
+}
+
+private func smoothstep(_ a: CGFloat, _ b: CGFloat, _ x: CGFloat) -> CGFloat {
+    guard b > a else { return x >= b ? 1 : 0 }
+    let t = min(max((x - a) / (b - a), 0), 1)
+    return t * t * (3 - 2 * t)
+}
+
+// MARK: - The canvas (camera + content + gestures + HUD)
+
+private struct GardenWorldCanvas: View {
+    var playerData: PlayerData
+    var safeTop: CGFloat = 0
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    // Live camera.
+    @State private var zoom: CGFloat = 1
+    @State private var center: CGPoint = World.worldCenter
+    // Snapshots taken at the start of a continuous gesture.
+    @State private var baseZoom: CGFloat = 1
+    @State private var baseCenter: CGPoint = World.worldCenter
+
+    @State private var screen: CGSize = .zero
+    @State private var didInit = false
+
+    // Share
+    @State private var shareImage: UIImage?
+    @State private var showShare = false
+    @Environment(\.displayScale) private var displayScale
 
     private var areas: [GardenArea] { playerData.gardenAreas }
 
     var body: some View {
-        NavigationStack {
-            GeometryReader { geo in
-                ZStack {
-                    LinearGradient(
-                        colors: [Color(red: 0.81, green: 0.89, blue: 0.95),
-                                 Color(red: 0.74, green: 0.84, blue: 0.56),
-                                 Color(red: 0.62, green: 0.76, blue: 0.46)],
-                        startPoint: .top, endPoint: .bottom
-                    )
-                    .ignoresSafeArea()
+        GeometryReader { geo in
+            let s = geo.size
+            // Pin the stack to the screen (top-leading) and clip, so the giant world
+            // frame doesn't balloon the layout — screen-space overlays (cat, breeze,
+            // HUD) then position against the real screen, not the 1000×2040 canvas.
+            ZStack(alignment: .topLeading) {
+                worldContent(screen: s)
+                    .frame(width: World.size.width, height: World.size.height)
+                    .scaleEffect(zoom, anchor: .topLeading)
+                    .offset(x: offset(s).x, y: offset(s).y)
+                    .gesture(panGesture(screen: s))
+                    .simultaneousGesture(zoomGesture(screen: s))
 
-                    Circle()
-                        .fill(Color(red: 0.97, green: 0.78, blue: 0.34).opacity(0.85))
-                        .frame(width: 56, height: 56)
-                        .position(x: geo.size.width * 0.84, y: geo.size.height * 0.10)
-
-                    path(in: geo.size)
-
-                    ForEach(areas.indices, id: \.self) { k in
-                        let p = positions[min(k, positions.count - 1)]
-                        AreaTile(
-                            area: areas[k],
-                            unlocked: playerData.isAreaUnlocked(k),
-                            complete: playerData.isAreaComplete(k),
-                            active: playerData.activeAreaIndex == k,
-                            bloomedBeds: playerData.areaBloomedBeds(k),
-                            onTap: { onSelect(k) }
-                        )
-                        .position(x: geo.size.width * p.x, y: geo.size.height * p.y)
-                    }
+                // Ambient life rides above the map in screen space.
+                BreezeLayer(paused: playerData.isWilted, reduceMotion: reduceMotion)
+                    .frame(width: s.width, height: s.height)
+                WanderingCat(asleep: playerData.isWilted, reduceMotion: reduceMotion) {
+                    SoundManager.shared.playMeow()
+                    HapticsManager.shared.hapticDigMark()
                 }
+                .frame(width: s.width, height: s.height)
+
+                hud(screen: s)
+                    .frame(width: s.width, height: s.height, alignment: .top)
             }
-            .navigationTitle("My Garden")
-            .navigationBarTitleDisplayMode(.large)
+            .frame(width: s.width, height: s.height, alignment: .topLeading)
+            .clipped()
+            .background(skyFloor)
+            .onAppear {
+                screen = s
+                if !didInit { initCamera(s); didInit = true }
+            }
+        }
+        .sheet(isPresented: $showShare) {
+            if let img = shareImage { ShareSheet(items: [img]) }
         }
     }
 
-    /// Dashed stone path linking the areas you've reached.
-    private func path(in size: CGSize) -> some View {
-        let reached = areas.indices.filter { playerData.isAreaUnlocked($0) }
-        return Path { p in
-            guard let first = reached.first else { return }
-            let pt0 = positions[min(first, positions.count - 1)]
-            p.move(to: CGPoint(x: size.width * pt0.x, y: size.height * pt0.y))
-            for k in reached.dropFirst() {
-                let pt = positions[min(k, positions.count - 1)]
-                p.addLine(to: CGPoint(x: size.width * pt.x, y: size.height * pt.y))
+    // A soft sky wash behind everything so the map never sits on black during a zoom.
+    private var skyFloor: some View {
+        TimelineView(.periodic(from: .now, by: 120)) { ctx in
+            let sky = SkyModel(date: ctx.date).sky
+            LinearGradient(colors: [sky.top, sky.bottom], startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+        }
+    }
+
+    // MARK: World content
+
+    @ViewBuilder
+    private func worldContent(screen s: CGSize) -> some View {
+        let details = areas.indices.map { detail($0, screen: s) }
+        let maxD = details.max() ?? 0
+        let topK = details.firstIndex(of: maxD)
+        let someFocused = maxD > 0.55
+
+        return ZStack {
+            WorldGround()
+            WorldPath(reachable: reachableCenters)
+            ForEach(areas.indices, id: \.self) { k in
+                let isTop = someFocused && k == topK
+                AreaPlot(
+                    playerData: playerData,
+                    areaIndex: k,
+                    detail: details[k],
+                    // Fade the parcels you're not drilling into so the focused one stands alone.
+                    dim: isTop ? 0 : (someFocused ? maxD : 0),
+                    onFocus: { focus(k, screen: s) }
+                )
+                .frame(width: World.areaSize.width, height: World.areaSize.height)
+                .position(World.center(k))
+                .zIndex(isTop ? 1 : 0)
             }
         }
-        .stroke(Color(red: 0.80, green: 0.76, blue: 0.62),
-                style: StrokeStyle(lineWidth: 9, lineCap: .round, dash: [1, 16]))
-        .accessibilityHidden(true)
+    }
+
+    private var reachableCenters: [CGPoint] {
+        areas.indices.filter { playerData.isAreaUnlocked($0) }.map { World.center($0) }
+    }
+
+    // MARK: Camera math
+
+    private func overviewZoom(_ s: CGSize) -> CGFloat {
+        guard s.width > 0 else { return 1 }
+        return min(s.width / World.size.width, s.height / World.size.height)
+    }
+    private func focusZoom(_ s: CGSize) -> CGFloat {
+        guard s.width > 0 else { return 1 }
+        return min(s.width / World.areaSize.width, s.height / World.areaSize.height) * 0.97
+    }
+    // Never zoom past the point where a single parcel fills the screen — beyond that
+    // the beds would spill off the edges with nothing more to reveal.
+    private func maxZoom(_ s: CGSize) -> CGFloat { focusZoom(s) }
+
+    /// World→screen offset so that `center` lands at the screen midpoint.
+    private func offset(_ s: CGSize) -> CGPoint {
+        CGPoint(x: s.width / 2 - center.x * zoom,
+                y: s.height / 2 - center.y * zoom)
+    }
+
+    private func clampZoom(_ z: CGFloat, _ s: CGSize) -> CGFloat {
+        min(max(z, overviewZoom(s) * 0.9), maxZoom(s))
+    }
+
+    /// Keep the camera inside the world; recenters on the axis where the world is
+    /// smaller than the viewport (so the map can't drift off into empty space).
+    private func clampCenter(_ c: CGPoint, _ z: CGFloat, _ s: CGSize) -> CGPoint {
+        var p = c
+        let hx = s.width / (2 * z)
+        if World.size.width >= 2 * hx { p.x = min(max(p.x, hx), World.size.width - hx) }
+        else { p.x = World.size.width / 2 }
+        let hy = s.height / (2 * z)
+        if World.size.height >= 2 * hy { p.y = min(max(p.y, hy), World.size.height - hy) }
+        else { p.y = World.size.height / 2 }
+        return p
+    }
+
+    private func initCamera(_ s: CGSize) {
+        zoom = overviewZoom(s)
+        center = clampCenter(World.worldCenter, zoom, s)
+        baseZoom = zoom
+        baseCenter = center
+    }
+
+    // 0 = far/map, 1 = fully drilled in. Gated by proximity so only the area you
+    // move toward blooms into full detail.
+    private func detail(_ k: Int, screen s: CGSize) -> Double {
+        let g = smoothstep(overviewZoom(s) * 1.5, focusZoom(s) * 0.92, zoom)
+        let d = hypot(center.x - World.center(k).x, center.y - World.center(k).y)
+        let prox = max(0, 1 - d / (World.areaSize.width * 0.85))
+        return Double(g) * Double(prox)
+    }
+
+    private var focusedIndex: Int? {
+        areas.indices
+            .map { ($0, detail($0, screen: screen)) }
+            .filter { $0.1 > 0.55 }
+            .max { $0.1 < $1.1 }?.0
+    }
+
+    // MARK: Gestures
+
+    private func zoomGesture(screen s: CGSize) -> some Gesture {
+        MagnificationGesture()
+            .onChanged { v in
+                zoom = clampZoom(baseZoom * v, s)
+                center = clampCenter(center, zoom, s)
+            }
+            .onEnded { _ in
+                if zoom < overviewZoom(s) * 1.25 { goOverview(s) }
+                baseZoom = zoom
+                baseCenter = center
+            }
+    }
+
+    private func panGesture(screen s: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: 6)
+            .onChanged { v in
+                let p = CGPoint(x: baseCenter.x - v.translation.width / zoom,
+                                y: baseCenter.y - v.translation.height / zoom)
+                center = clampCenter(p, zoom, s)
+            }
+            .onEnded { _ in
+                baseCenter = center
+                baseZoom = zoom
+            }
+    }
+
+    private func focus(_ k: Int, screen s: CGSize) {
+        guard playerData.isAreaUnlocked(k) else { return }
+        let z = focusZoom(s)
+        let c = clampCenter(World.center(k), z, s)
+        withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.82)) {
+            zoom = z
+            center = c
+        }
+        baseZoom = z
+        baseCenter = c
+        HapticsManager.shared.hapticDigMark()
+    }
+
+    private func goOverview(_ s: CGSize) {
+        let z = overviewZoom(s)
+        let c = clampCenter(World.worldCenter, z, s)
+        withAnimation(reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.85)) {
+            zoom = z
+            center = c
+        }
+        baseZoom = z
+        baseCenter = c
+    }
+
+    // MARK: HUD
+
+    @ViewBuilder
+    private func hud(screen s: CGSize) -> some View {
+        let focused = focusedIndex
+        VStack {
+            HStack(alignment: .top) {
+                if focused != nil {
+                    hudButton(system: "chevron.left") { goOverview(s) }
+                        .transition(.scale.combined(with: .opacity))
+                } else {
+                    Spacer().frame(width: 44)
+                }
+
+                Spacer()
+
+                titlePill(focused: focused)
+
+                Spacer()
+
+                if let k = focused, !playerData.setsForArea(k).isEmpty {
+                    hudButton(system: "square.and.arrow.up") { shareArea(k) }
+                        .transition(.scale.combined(with: .opacity))
+                } else {
+                    Spacer().frame(width: 44)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, safeTop + 6)
+
+            Spacer()
+        }
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: focused)
+    }
+
+    private func titlePill(focused: Int?) -> some View {
+        Text(focused.map { areas[$0].displayName } ?? "My Garden")
+            .font(.system(.headline, design: .rounded).bold())
+            .foregroundStyle(Garden.green)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 9)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Garden.cream.opacity(0.92))
+                    .shadow(color: .black.opacity(0.12), radius: 5, y: 2)
+            )
+            .id(focused ?? -1)
+            .transition(.opacity)
+    }
+
+    private func hudButton(system: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: system)
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(Garden.green)
+                .frame(width: 44, height: 44)
+                .background(Circle().fill(Garden.cream.opacity(0.92))
+                    .shadow(color: .black.opacity(0.12), radius: 5, y: 2))
+        }
+    }
+
+    @MainActor
+    private func shareArea(_ k: Int) {
+        let sets = playerData.setsForArea(k)
+        let total = sets.reduce(0) { $0 + $1.members.count }
+        let bloom = sets.filter { $0.isComplete }.count
+        let view = GardenSnapshotView(sets: sets, totalPlants: total, bedsInBloom: bloom)
+        let renderer = ImageRenderer(content: view)
+        renderer.scale = displayScale
+        if let img = renderer.uiImage {
+            shareImage = img
+            showShare = true
+        }
     }
 }
 
-// MARK: - Area tile
-
-private struct AreaTile: View {
-    let area: GardenArea
-    let unlocked: Bool
-    let complete: Bool
-    let active: Bool
-    let bloomedBeds: Int
-    var onTap: () -> Void
-
-    var body: some View {
-        Button(action: { if unlocked { onTap() } }) {
-            VStack(spacing: 6) {
-                Image(systemName: complete ? area.systemIcon : (unlocked ? area.systemIcon : "lock.fill"))
-                    .font(.system(size: 22))
-                    .foregroundStyle(unlocked ? Garden.green : Garden.inkSoft.opacity(0.7))
-
-                Text(area.displayName)
-                    .font(.system(.subheadline, design: .rounded).bold())
-                    .foregroundStyle(unlocked ? Garden.ink : Garden.inkSoft)
-
-                statusChip
-            }
-            .padding(.vertical, 12)
-            .frame(width: 138)
-            .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(unlocked ? Color(red: 0.98, green: 0.96, blue: 0.91)
-                                   : Color(red: 0.93, green: 0.92, blue: 0.87))
-                    .shadow(color: .black.opacity(unlocked ? 0.14 : 0.06), radius: 5, y: 3)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(active ? Garden.green : .clear, lineWidth: 2)
-            )
-            .opacity(unlocked ? 1 : 0.6)
-        }
-        .buttonStyle(.plain)
-        .disabled(!unlocked)
-    }
-
-    @ViewBuilder
-    private var statusChip: some View {
-        if complete {
-            chip("In full bloom", system: "checkmark.seal.fill",
-                 fg: Garden.green, bg: Garden.leaf.opacity(0.18))
-        } else if unlocked {
-            chip("Tending · \(bloomedBeds)/\(area.bedCount)", system: "leaf.fill",
-                 fg: Color(red: 0.12, green: 0.40, blue: 0.62), bg: Color(red: 0.85, green: 0.92, blue: 0.97))
-        } else {
-            chip("Locked", system: "lock.fill",
-                 fg: Garden.inkSoft, bg: Color(red: 0.88, green: 0.86, blue: 0.80))
-        }
-    }
-
-    private func chip(_ text: String, system: String, fg: Color, bg: Color) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: system).font(.system(size: 9))
-            Text(text)
-        }
-        .font(.system(size: 11, weight: .semibold, design: .rounded))
-        .foregroundStyle(fg)
-        .padding(.horizontal, 8)
-        .padding(.vertical, 3)
-        .background(Capsule().fill(bg))
-    }
+#Preview {
+    GardenView(playerData: PlayerData.shared)
 }

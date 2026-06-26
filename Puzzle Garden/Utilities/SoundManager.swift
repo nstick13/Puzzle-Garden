@@ -64,6 +64,13 @@ final class SoundManager {
         playChord(frequencies: [523.25, 659.25, 783.99, 1046.50], duration: 1.2, amplitude: 0.20)
     }
 
+    /// A short, vocal "meow" — a pitch that rises then falls, with a little harmonic
+    /// for a cat-like timbre. Played when the wandering cat is tapped.
+    func playMeow() {
+        guard soundEnabled else { return }
+        playGlide(duration: 0.5, amplitude: 0.20)
+    }
+
     // MARK: - Synthesis
 
     private func makePCMBuffer(sampleRate: Double, frameCount: AVAudioFrameCount) -> AVAudioPCMBuffer? {
@@ -125,6 +132,27 @@ final class SoundManager {
                 sample += sin(2 * .pi * freq * tAdj) * env
             }
             data[i] = sample
+        }
+        scheduleBuffer(buffer)
+    }
+
+    /// A pitched glide whose frequency rises then falls across the duration — the
+    /// contour of a little "meow". Phase is accumulated so the bend stays smooth.
+    private func playGlide(duration: Float, amplitude: Float) {
+        guard ensureEngineRunning() else { return }
+        let sr: Double = 44100
+        let frames = AVAudioFrameCount(sr * Double(duration))
+        guard let buffer = makePCMBuffer(sampleRate: sr, frameCount: frames) else { return }
+        let data = buffer.floatChannelData![0]
+        var phase: Float = 0
+        for i in 0..<Int(frames) {
+            let p = Float(i) / Float(frames)                 // 0…1 through the sound
+            let freq = 380 + 320 * sin(.pi * p)              // 380 → 700 → 380 Hz
+            phase += 2 * .pi * freq / Float(sr)
+            let attack: Float = p < 0.08 ? p / 0.08 : 1
+            let release: Float = p > 0.7 ? max(0, 1 - (p - 0.7) / 0.3) : 1
+            let env = attack * release * amplitude
+            data[i] = (sin(phase) + 0.35 * sin(2 * phase)) * env
         }
         scheduleBuffer(buffer)
     }

@@ -160,6 +160,27 @@ struct SteppingStones: View {
     }
 }
 
+// MARK: - Stepping-path marker (a few stones leading into a named bed)
+
+struct SteppingPathMarker: View {
+    var body: some View {
+        HStack(spacing: 5) {
+            ForEach(0..<3, id: \.self) { i in
+                Ellipse()
+                    .fill(
+                        LinearGradient(colors: [Garden.stone, Garden.stoneDark],
+                                       startPoint: .top, endPoint: .bottom)
+                    )
+                    .frame(width: 17 - CGFloat(i) * 2, height: 10 - CGFloat(i))
+                    .overlay(Ellipse().stroke(Garden.stoneDark.opacity(0.6), lineWidth: 0.5))
+                    .offset(y: i == 1 ? -3 : 0)
+                    .shadow(color: .black.opacity(0.12), radius: 1, y: 1)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+}
+
 // MARK: - Grass fringe (nests a planter into the ground)
 
 struct GrassFringe: View {

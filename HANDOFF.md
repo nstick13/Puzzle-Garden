@@ -1,6 +1,6 @@
 # Puzzle Garden — Agent Handoff
 
-_Last updated: 2026-06-20_
+_Last updated: 2026-06-26_
 
 ## What this is
 
@@ -22,8 +22,20 @@ and the core differentiator vs. the Meowdoku/Starstruck/Queens clone market.
 | 2 | Game UI: grid, tap/long-press/drag gestures, conflict shake, win overlay, timer, home | ✅ Complete |
 | 3 | Garden + daily + stats: garden grid, plant awards, streaks, stats dashboard, calendar | ✅ Complete |
 | 4 | Share card (emoji + ImageRenderer) + StoreKit 2 IAP + paywall | ✅ Complete |
-| 5 | Polish: sound, haptics, settings, app icon, onboarding | ⏳ Next up |
-| 6 | Ship: screenshots, ASO, privacy policy, TestFlight, App Review | ⏳ Pending |
+| 5 | Polish: sound, haptics, settings, app icon, onboarding | ✅ Complete |
+| 6 | Ship: screenshots, ASO, privacy policy, TestFlight, App Review | 🚧 v1.0 submitted to App Store (2026-06-26) |
+
+## Current state (2026-06-26)
+
+- **v1.0 submitted** to App Store review. This is the `main` branch.
+  - Privacy Policy: `https://nstick13.github.io/Puzzle-Garden/privacy.html`
+  - Support URL: `https://nstick13.github.io/Puzzle-Garden/support.html`
+  - Both hosted via **GitHub Pages** (serving from `main` `/docs`). App Privacy = "Data Not Collected".
+  - 13" iPad screenshots captured from the iPad Pro 13-inch (M5) simulator.
+- **v2 garden redesign** in progress on the `v2` branch (zoom-out garden world: per-area flora/scenery, parcels, ambient life). Versioned **2.0**; `main` stays **1.0**.
+- **TestFlight workflow for v2:** Xcode Cloud workflow scoped to the `v2` branch only → Archive →
+  TestFlight *Internal Testing* (group "Dev"). Pushes to `main` never trigger it; build numbers
+  auto-increment. App has zero dependencies, so no `ci_scripts/` needed.
 
 ## Code map (what's actually built)
 
@@ -68,6 +80,22 @@ Puzzle Garden/
 - Bigger grids: **8×8 and 9×9 shipped** on branch `feature/bigger-puzzles` — generated on-device, ride the existing Free Play gate (part of the $2.99 Full Access, no new IAP).
 - Planned value-adds (not yet built): daily archive, streak shield, garden themes
 
+## Feature backlog (post-v1)
+
+Captured 2026-06-26. Roughly ordered by user value / low effort.
+
+1. **Daily share sheet** — a dedicated share for the *daily* puzzle that **hides the actual
+   result/solution** and shows only (a) the solve time and (b) the current streak (# of days).
+   Spoiler-free, brag-friendly — think Wordle-style. Distinct from the existing win-overlay
+   `ShareCard` (which renders the emoji grid). Likely a new card layout in `Views/Game/`.
+2. **Free Play "next game"** — after completing a Free Play puzzle, offer **"Next puzzle"** in the
+   win overlay so the player can keep going at the same size without bouncing back to Home.
+   (Daily stays one-per-day; this is Free-Play only.) Generate a fresh puzzle in place + reset
+   `GameState`.
+3. **Even better onboarding** — iterate on the first-launch tutorial. Current flow is the 4-page
+   `OnboardingView` (rules → "you never have to guess" deduction → two-taps → plants-something-new).
+   Open question: where it falls short — interactivity? a guided first solve? Worth a design pass.
+
 ## Backlog: 10×10 "weekly drop" (potential paid upgrade)
 
 10×10 was deliberately **not** shipped on-device: worst-case generation runs multi-second (the uniqueness refiner blows up at that size). Idea for later:
@@ -86,9 +114,9 @@ Puzzle Garden/
 
 ## Git / repo status
 
-- **GitHub repo:** [https://github.com/nstick13/Puzzle-Garden](https://github.com/nstick13/Puzzle-Garden) — public, all commits pushed.
-- Local repo is clean and in sync with `origin/main`.
-- `.gitignore` excludes `xcuserdata/` and `DerivedData/` — no Xcode user data tracked.
+- **GitHub repo:** [https://github.com/nstick13/Puzzle-Garden](https://github.com/nstick13/Puzzle-Garden) — public.
+- `main` = shipped v1.0; active feature work lives on `v2` (this branch).
+- `.gitignore` excludes `xcuserdata/`, `DerivedData/`, `build/`, and local tooling (`.claude/`, `.agents/`, `skills-lock.json`).
 
 ## Open product decisions
 
@@ -100,9 +128,7 @@ Puzzle Garden/
 
 ## Suggested next task
 
-Phase 5 polish — suggested order:
-1. **Haptics** — `UIImpactFeedbackGenerator` on correct placement, `UINotificationFeedbackGenerator` (.success) on win. Low effort, high feel.
-2. **App icon** — needed before TestFlight. Even a placeholder beats the default.
-3. **Settings screen** — sound toggle, reset progress, restore purchase link.
-4. **Onboarding** — first-launch tutorial or tooltip overlay on the grid.
-5. **Sound** — last because it needs assets and direction decision first.
+Phases 1–5 are done and v1.0 is in App Store review. Two tracks from here:
+
+1. **Finish v2** on the `v2` branch (garden world redesign) and dogfood via TestFlight (Xcode Cloud → Internal).
+2. **Pick from the Feature backlog** above — daily share sheet, Free Play "next game", onboarding polish.

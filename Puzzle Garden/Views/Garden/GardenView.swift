@@ -32,224 +32,9 @@ enum Garden {
     static let plotSize: CGFloat = 54
 }
 
-// MARK: - Area scene (one corner of the garden world)
-
-struct AreaSceneView: View {
-    var playerData: PlayerData
-    let areaIndex: Int
-    var onZoomOut: () -> Void
-
-    @State private var gardenImage: UIImage?
-    @State private var showShareSheet = false
-    @State private var picked: PickedPlot?
-    @State private var celebratingBedID: String?
-    @Environment(\.displayScale) private var displayScale
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-
-    private var area: GardenArea { playerData.gardenAreas[areaIndex] }
-    private var sets: [CollectibleSet] { playerData.setsForArea(areaIndex) }
-    private var totalPlants: Int { sets.reduce(0) { $0 + $1.members.count } }
-    private var bedsInBloom: Int { sets.filter { $0.isComplete }.count }
-
-    struct PickedPlot: Equatable { let setID: String; let slot: Int }
-
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                background
-
-                if totalPlants == 0 {
-                    emptyState
-                } else {
-                    scene
-                }
-
-                // Ambient life floats over the scene (fixed, doesn't scroll).
-                BreezeLayer(paused: playerData.isWilted, reduceMotion: reduceMotion)
-                WanderingCat(asleep: playerData.isWilted, reduceMotion: reduceMotion)
-                    .padding(.bottom, 2)
-            }
-            .navigationTitle(area.displayName)
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button { onZoomOut() } label: {
-                        Label("Garden", systemImage: "chevron.left")
-                    }
-                    .tint(Garden.green)
-                }
-                if totalPlants > 0 {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button { renderAndShare() } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .tint(Garden.green)
-                    }
-                }
-            }
-            .sheet(isPresented: $showShareSheet) {
-                if let image = gardenImage {
-                    ShareSheet(items: [image])
-                }
-            }
-        }
-    }
-
-    // Sky/ground world tints with the system clock; ground re-skins per area.
-    private var background: some View {
-        TimelineView(.periodic(from: .now, by: 60)) { ctx in
-            GardenWorldBackground(sky: SkyModel(date: ctx.date), scenery: area.scenery)
-        }
-    }
-
-    private var scene: some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                summaryHeader
-
-                if playerData.isWilted {
-                    wiltNote
-                }
-
-                ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
-                    BedStageView(
-                        set: set,
-                        animated: true,
-                        wilted: playerData.isWilted,
-                        celebrating: celebratingBedID == set.id,
-                        selectedSlot: picked?.setID == set.id ? picked?.slot : nil,
-                        onTapPlot: { slot, hasPlant in handleTap(setID: set.id, slot: slot, hasPlant: hasPlant) }
-                    )
-
-                    if index < sets.count - 1 {
-                        SteppingStones()
-                            .padding(.vertical, 2)
-                    }
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 4)
-            .padding(.bottom, 40)
-        }
-        .onAppear { checkCelebrations() }
-        .onChange(of: completedSignature) { checkCelebrations() }
-    }
-
-    // MARK: - Bloom celebration
-
-    private var completedSignature: String {
-        sets.filter { $0.isComplete }.map { $0.id }.joined(separator: ",")
-    }
-
-    /// Fire a one-time sparkle + haptic for any newly-completed bed not yet celebrated.
-    private func checkCelebrations() {
-        guard celebratingBedID == nil else { return }
-        guard let bed = sets.first(where: { $0.isComplete && !playerData.celebratedSetIDs.contains($0.id) })
-        else { return }
-
-        celebratingBedID = bed.id
-        HapticsManager.shared.hapticSolve()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
-            playerData.markCelebrated(bed.id)
-            celebratingBedID = nil
-            checkCelebrations()   // chain to the next pending bed, if any
-        }
-    }
-
-    /// Tap a plant to lift it, tap another plot in the same bed to drop/swap it.
-    private func handleTap(setID: String, slot: Int, hasPlant: Bool) {
-        withAnimation(.spring(response: 0.32, dampingFraction: 0.7)) {
-            if let p = picked {
-                if p.setID == setID, p.slot != slot {
-                    playerData.moveCollectible(setID: setID, fromSlot: p.slot, toSlot: slot)
-                }
-                picked = nil
-            } else if hasPlant {
-                picked = PickedPlot(setID: setID, slot: slot)
-            }
-        }
-    }
-
-    private var summaryHeader: some View {
-        HStack(spacing: 14) {
-            summaryStat(value: "\(totalPlants)", label: totalPlants == 1 ? "plant" : "plants")
-            Divider().frame(height: 28).overlay(Garden.inkSoft.opacity(0.25))
-            summaryStat(value: "\(bedsInBloom)", label: bedsInBloom == 1 ? "bed in bloom" : "beds in bloom")
-            Spacer()
-        }
-        .padding(.horizontal, 18)
-        .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(.white.opacity(0.55))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .stroke(Garden.soilRim.opacity(0.18), lineWidth: 1)
-        )
-    }
-
-    private func summaryStat(value: String, label: String) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text(value)
-                .font(.system(.title3, design: .rounded).bold())
-                .foregroundStyle(Garden.green)
-            Text(label)
-                .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(Garden.inkSoft)
-        }
-    }
-
-    private var wiltNote: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "drop.fill")
-                .foregroundStyle(Color(red: 0.45, green: 0.62, blue: 0.78))
-            Text("Your garden misses you — solve a puzzle to perk it back up.")
-                .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(Garden.inkSoft)
-            Spacer(minLength: 0)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(Color(red: 0.90, green: 0.93, blue: 0.95))
-        )
-    }
-
-    private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "leaf.fill")
-                .font(.system(size: 54))
-                .foregroundStyle(Garden.leaf.opacity(0.8))
-            Text("This patch is ready")
-                .font(.system(.title3, design: .rounded).bold())
-                .foregroundStyle(Garden.ink)
-            Text("Solve a puzzle to plant your first seed here.\nIt'll sprout and bloom over the days you return.")
-                .multilineTextAlignment(.center)
-                .font(.system(.subheadline, design: .rounded))
-                .foregroundStyle(Garden.inkSoft)
-        }
-        .padding(32)
-    }
-
-    // MARK: - Share
-
-    @MainActor
-    private func renderAndShare() {
-        let view = GardenSnapshotView(sets: sets, totalPlants: totalPlants, bedsInBloom: bedsInBloom)
-        let renderer = ImageRenderer(content: view)
-        renderer.scale = displayScale
-        if let image = renderer.uiImage {
-            gardenImage = image
-            showShareSheet = true
-        }
-    }
-}
-
 // MARK: - Bed stage (a planter)
 
-private struct BedStageView: View {
+struct BedStageView: View {
     let set: CollectibleSet
     var animated: Bool
     var wilted: Bool = false
@@ -275,6 +60,10 @@ private struct BedStageView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
+            // A few stones leading into the named bed, so each corner reads as a
+            // little destination along the garden path.
+            SteppingPathMarker()
+
             // A soft cream "plaque" behind the name so it stays legible over the
             // fence/grass and reads as an intentional label, never text-on-pickets.
             HStack(spacing: 6) {
@@ -502,7 +291,7 @@ private struct CollectibleView: View {
 
 // MARK: - Snapshot view (for ImageRenderer; static, no sway)
 
-private struct GardenSnapshotView: View {
+struct GardenSnapshotView: View {
     let sets: [CollectibleSet]
     let totalPlants: Int
     let bedsInBloom: Int
@@ -531,7 +320,7 @@ private struct GardenSnapshotView: View {
 
 // MARK: - UIActivityViewController wrapper
 
-private struct ShareSheet: UIViewControllerRepresentable {
+struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
 
     func makeUIViewController(context: Context) -> UIActivityViewController {

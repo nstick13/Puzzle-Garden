@@ -89,7 +89,9 @@ private struct PlayerDataStore: Codable {
 enum PlantAsset {
     static let easy:   [String] = ["Plants/herb_lavender", "Plants/herb_chamomile", "Plants/herb_clover", "Plants/herb_mint", "Plants/herb_thyme"]
     static let medium: [String] = ["Plants/flower_rose", "Plants/flower_foxglove", "Plants/flower_hydrangea", "Plants/flower_dahlia", "Plants/flower_sweetpeas"]
-    static let hard:   [String] = ["Plants/tree_apple_blossom", "Plants/vine_wisteria", "Plants/shrub_rosehip", "Plants/tree_elderflower", "Plants/vine_climbing_roses"]
+    static let hard:   [String] = ["Plants/tree_apple_blossom", "Plants/shrub_rosehip", "Plants/tree_elderflower", "Plants/vine_climbing_roses"]
+    /// Assets pulled from rotation; existing planted instances are swapped on load.
+    static let retired: [String] = ["Plants/vine_wisteria"]
 
     static func random(for difficulty: GridSize) -> String {
         let pool: [String]
@@ -144,6 +146,8 @@ final class PlayerData {
     private init() {
         var store = Self.load()
         Self.migrateIfNeeded(&store)
+        Self.refreshBedNames(&store)
+        Self.replaceRetiredAssets(&store)
         stats = store.stats
         garden = store.garden
         collections = store.collections
@@ -303,12 +307,10 @@ final class PlayerData {
         var activeIndex = sets.firstIndex { !$0.isFull }
         if activeIndex == nil {
             let newIndex = sets.count
-            let area = pkg.area(forBedIndex: newIndex)
-            let ordinal = newIndex - pkg.areaStartIndex(pkg.areaIndex(forBedIndex: newIndex)) + 1
             sets.append(CollectibleSet(
                 id: "\(pkg.id)-bed-\(newIndex)",
                 templateID: "bed",
-                displayName: pkg.bedName(area: area, ordinal: ordinal),
+                displayName: pkg.displayName(forSetIndex: newIndex),
                 capacity: pkg.setCapacity
             ))
             activeIndex = sets.count - 1
@@ -422,6 +424,34 @@ final class PlayerData {
         // first v2 launch doesn't fire a storm of sparkles.
         store.celebratedSetIDs.formUnion(sets.filter { $0.isComplete }.map { $0.id })
         store.schemaVersion = max(store.schemaVersion, 2)
+    }
+
+    /// Re-derive every bed's display name from its fill order, so renames in
+    /// `GardenPackage` always take effect even for beds saved under the old names.
+    private static func refreshBedNames(_ store: inout PlayerDataStore) {
+        let pkg = GardenPackage.shared
+        guard var sets = store.collections[pkg.id] else { return }
+        for i in sets.indices {
+            sets[i].displayName = pkg.displayName(forSetIndex: i)
+        }
+        store.collections[pkg.id] = sets
+    }
+
+    /// Swap any already-planted, now-retired plant art for a stable replacement from
+    /// the current pool (keyed off the collectible's id so it doesn't change per launch).
+    private static func replaceRetiredAssets(_ store: inout PlayerDataStore) {
+        guard !PlantAsset.retired.isEmpty, !PlantAsset.hard.isEmpty else { return }
+        for (pid, var sets) in store.collections {
+            var changed = false
+            for s in sets.indices {
+                for m in sets[s].members.indices where PlantAsset.retired.contains(sets[s].members[m].assetBase) {
+                    let pick = PlantAsset.hard[Int(sets[s].members[m].id.uuid.0) % PlantAsset.hard.count]
+                    sets[s].members[m].assetBase = pick
+                    changed = true
+                }
+            }
+            if changed { store.collections[pid] = sets }
+        }
     }
 
     // MARK: - Persistence

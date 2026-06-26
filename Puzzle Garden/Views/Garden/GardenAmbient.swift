@@ -122,6 +122,9 @@ struct BreezeLayer: View {
 struct WanderingCat: View {
     var asleep: Bool          // wilted or reduce-motion → curled up, still
     var reduceMotion: Bool
+    var onTap: (() -> Void)? = nil
+
+    @State private var pop = false
 
     // Roam targets scattered across the garden (x,y fractions), not a single floor line.
     private let waypoints: [CGPoint] = [
@@ -136,6 +139,9 @@ struct WanderingCat: View {
         GeometryReader { geo in
             if asleep || reduceMotion {
                 sleeping
+                    .scaleEffect(pop ? 1.25 : 1)
+                    .contentShape(Rectangle())
+                    .onTapGesture { tapped() }
                     .position(x: geo.size.width * 0.74, y: geo.size.height * 0.84)
             } else {
                 TimelineView(.animation) { ctx in
@@ -143,13 +149,27 @@ struct WanderingCat: View {
                     let depth = 0.84 + s.point.y * 0.34            // nearer (lower) = bigger
                     CatView(asleep: false, walkPhase: s.walkPhase, height: 30 * depth)
                         .scaleEffect(x: s.facingLeft ? -1 : 1)
+                        .scaleEffect(pop ? 1.25 : 1)
+                        .contentShape(Rectangle())
+                        .onTapGesture { tapped() }
                         .position(x: geo.size.width * s.point.x,
                                   y: geo.size.height * s.point.y - s.bob)
                 }
             }
         }
-        .allowsHitTesting(false)
+        .allowsHitTesting(onTap != nil)
         .accessibilityHidden(true)
+    }
+
+    /// Meow + a happy little bounce when the cat is tapped.
+    private func tapped() {
+        guard let onTap else { return }
+        onTap()
+        guard !reduceMotion else { return }
+        withAnimation(.spring(response: 0.18, dampingFraction: 0.45)) { pop = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { pop = false }
+        }
     }
 
     private var sleeping: some View {

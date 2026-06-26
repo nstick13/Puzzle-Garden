@@ -127,8 +127,8 @@ struct GardenPackage: CollectionPackage {
     let setCapacity = 5
 
     private let bedNames = [
-        "Wildflower bed", "Herb corner", "Cottage border",
-        "Orchard row", "Rose arbor", "Meadow patch",
+        "Wildflower bed", "Herb corner", "Flower patch",
+        "Orchard row", "Rose arbor", "Berry hedge",
     ]
 
     func displayName(forSetIndex index: Int) -> String {
@@ -204,10 +204,6 @@ struct GardenPackage: CollectionPackage {
 
     /// Global bed index where area `k` begins.
     func areaStartIndex(_ k: Int) -> Int { areas.prefix(k).reduce(0) { $0 + $1.bedCount } }
-
-    func bedName(area: GardenArea, ordinal: Int) -> String {
-        "\(area.displayName) · bed \(ordinal)"
-    }
 }
 
 // MARK: - Garden area descriptor
