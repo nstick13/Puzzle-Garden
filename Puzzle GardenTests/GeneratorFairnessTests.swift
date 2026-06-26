@@ -32,4 +32,18 @@ struct GeneratorFairnessTests {
                     "\(n)×\(n) seed \(seed) needs a guess: logic placed \(grade.placedByLogic)/\(n)")
         }
     }
+
+    /// 9×9 is served from the bundled pre-generated bank — verify it loaded in-app and that
+    /// `generate` returns fair boards from it (different seeds → potentially different boards).
+    @Test func nineByNineLoadsFromBundledBank() {
+        #expect(PuzzleBank.hasBank(for: .nine), "9×9 bank (boards_9x9.json) should be bundled and loaded")
+
+        for seed in UInt64(0)..<8 {
+            guard let puzzle = PuzzleGenerator.generate(difficulty: .nine, seed: seed) else {
+                Issue.record("bank returned nil for seed \(seed)"); continue
+            }
+            #expect(LogicSolver.grade(regions: puzzle.regions, n: 9).fullySolved,
+                    "banked 9×9 (seed \(seed)) must be fully no-guess solvable")
+        }
+    }
 }

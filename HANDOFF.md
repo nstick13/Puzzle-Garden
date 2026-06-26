@@ -80,6 +80,25 @@ Puzzle Garden/
 - Bigger grids: **8×8 and 9×9 shipped** on branch `feature/bigger-puzzles` — generated on-device, ride the existing Free Play gate (part of the $2.99 Full Access, no new IAP).
 - Planned value-adds (not yet built): daily archive, streak shield, garden themes
 
+## Puzzle fairness & the 9×9 bank (the "you never have to guess" guarantee)
+
+The promise is enforced in code, not just by uniqueness:
+
+- **`LogicSolver.grade`** is a *no-guess* solver (naked singles, line↔plot, plot/line subset locks
+  for any K). `fullySolved` ⟹ the board is solvable with zero guessing — and is therefore also
+  *uniquely* solvable.
+- **`PuzzleGenerator.generateLive`** ships ONLY boards `LogicSolver` fully solves; it never returns
+  a guess-requiring fallback (returns nil instead). Uniqueness validation (`refineToUnique`) is
+  still needed — it's what makes a fair board findable at 9×9; raw grown regions almost never are.
+- **`PuzzleGenerator.generate`** = bank lookup → else `generateLive`. Live 9×9 has a slow tail
+  (median ~0.3s but worst case several seconds on old devices), so:
+- **`PuzzleBank`** serves 9×9 from a bundled, pre-vetted set (`Puzzle Garden/Resources/boards_9x9.json`,
+  1000 unique fair boards, ~378 KB). Instant load, zero tail, zero nil risk. Daily is 5×5 so it
+  generates live; only Free Play 9×9 uses the bank.
+- **Rebuild/expand the bank:** `tools/build_bank.sh [count]` (compiles the generator with `-O` and
+  runs it offline; ~0.35s/board). To bank another size, generate `boards_NxN.json` and add N to
+  `PuzzleBank.bankedSizes`. Regression net: `GeneratorFairnessTests`.
+
 ## Feature backlog (post-v1)
 
 Captured 2026-06-26. Roughly ordered by user value / low effort.

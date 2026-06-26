@@ -25,6 +25,16 @@ enum PuzzleGenerator {
     ///   - seed: Deterministic seed. Pass `DailyPuzzleManager.todaySeed()` for the daily puzzle.
     /// - Returns: A fully validated `Puzzle`, or `nil` if generation fails after the retry budget.
     nonisolated static func generate(difficulty: GridSize, seed: UInt64) -> Puzzle? {
+        // Large sizes (e.g. 9×9) load instantly from a bundled, pre-vetted no-guess bank — this
+        // avoids live generation's slow tail. Falls through to live generation for un-banked sizes
+        // (and the bank is empty when run from the offline generator, so building it still works).
+        if let banked = PuzzleBank.puzzle(for: difficulty, seed: seed) { return banked }
+        return generateLive(difficulty: difficulty, seed: seed)
+    }
+
+    /// Generates a puzzle entirely on-device (no bank). Used for un-banked sizes and, crucially,
+    /// by the offline `tools/build_bank.sh` generator to *build* the bank in the first place.
+    nonisolated static func generateLive(difficulty: GridSize, seed: UInt64) -> Puzzle? {
         var rng = SeededRNG(seed: seed)
         let n   = difficulty.rawValue
 
