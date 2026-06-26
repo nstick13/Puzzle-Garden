@@ -95,6 +95,13 @@ Captured 2026-06-26. Roughly ordered by user value / low effort.
 3. **Even better onboarding** — iterate on the first-launch tutorial. Current flow is the 4-page
    `OnboardingView` (rules → "you never have to guess" deduction → two-taps → plants-something-new).
    Open question: where it falls short — interactivity? a guided first solve? Worth a design pass.
+4. **In-app brand = "SO MUCH DOKU"** — the App Store name is **SO MUCH DOKU** (because "Puzzle
+   Garden" was taken), but the app still says "Puzzle Garden" internally. Align during a design
+   pass. App-brand spots → "SO MUCH DOKU": `HomeView.swift:26` (hero), `LaunchScreenView.swift:15`,
+   `ShareCard.swift:28` (share header), `GameView.swift:271-272` (share text). Keep
+   `GardenView.swift:303` as a *feature* name → "My Garden" (not the app brand). Also set
+   `CFBundleDisplayName` = "SO MUCH DOKU" (currently unset → on-device icon label defaults to the
+   target name "Puzzle Garden").
 
 ## Backlog: 10×10 "weekly drop" (potential paid upgrade)
 
