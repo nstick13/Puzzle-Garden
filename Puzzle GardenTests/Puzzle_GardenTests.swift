@@ -207,9 +207,7 @@ struct GameStateWinTests {
 
         for r in 0..<5 {
             for c in 0..<5 where board[r][c] == 1 {
-                // Cycle empty → marked → flower
-                state.tap(CellCoord(row: r, col: c))  // → marked
-                state.tap(CellCoord(row: r, col: c))  // → flower
+                state.guess(CellCoord(row: r, col: c))  // double tap → plant flower
             }
         }
 
@@ -228,8 +226,7 @@ struct GameStateWinTests {
 
         for r in 0..<5 {
             for c in 0..<5 where board[r][c] == 1 {
-                state.tap(CellCoord(row: r, col: c))
-                state.tap(CellCoord(row: r, col: c))
+                state.guess(CellCoord(row: r, col: c))
             }
         }
 
@@ -248,8 +245,7 @@ struct GameStateWinTests {
         let state = GameState(puzzle: puzzle)
         for r in 0..<puzzle.size {
             for c in 0..<puzzle.size where puzzle.solution[r][c] == 1 {
-                state.tap(CellCoord(row: r, col: c))  // → marked
-                state.tap(CellCoord(row: r, col: c))  // → flower
+                state.guess(CellCoord(row: r, col: c))  // double tap → plant flower
             }
         }
         #expect(state.showWin, "showWin should be true after solving a generated puzzle")
@@ -268,7 +264,7 @@ struct GameStateWinTests {
         // Drop a wrong flower on the first non-solution cell.
         outer: for r in 0..<n {
             for c in 0..<n where puzzle.solution[r][c] != 1 {
-                state.tap(CellCoord(row: r, col: c)); state.tap(CellCoord(row: r, col: c))
+                state.guess(CellCoord(row: r, col: c))
                 break outer
             }
         }
@@ -277,7 +273,7 @@ struct GameStateWinTests {
         // Now place every correct flower.
         for r in 0..<n {
             for c in 0..<n where puzzle.solution[r][c] == 1 {
-                state.tap(CellCoord(row: r, col: c)); state.tap(CellCoord(row: r, col: c))
+                state.guess(CellCoord(row: r, col: c))
             }
         }
         #expect(state.showWin, "Win should fire once all correct flowers are placed, despite the stray wrong one")
@@ -291,10 +287,8 @@ struct GameStateWinTests {
         let state = GameState(puzzle: puzzle)
 
         // Place two flowers in the same row (conflict)
-        state.tap(CellCoord(row: 0, col: 0))
-        state.tap(CellCoord(row: 0, col: 0))  // flower at (0,0)
-        state.tap(CellCoord(row: 0, col: 1))
-        state.tap(CellCoord(row: 0, col: 1))  // flower at (0,1) — same row conflict
+        state.guess(CellCoord(row: 0, col: 0))  // flower at (0,0)
+        state.guess(CellCoord(row: 0, col: 1))  // flower at (0,1) — same row conflict
 
         #expect(!state.isSolved, "Should not be solved with row conflict")
         #expect(!state.conflicts.isEmpty, "Conflicts should be flagged")

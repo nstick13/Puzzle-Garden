@@ -10,9 +10,15 @@ import Foundation
 ///     is entirely yellow" opening.)*
 ///   • **Plot → line** — a plot whose open squares all sit in one row/column
 ///     reserves that line; clear other plots' squares on it.
-///   • **Subset lock** — K plots whose open squares occupy exactly K columns (or
+///   • **Plot subset lock** — K plots whose open squares occupy exactly K columns (or
 ///     rows) reserve those columns; clear other plots there. *(The "two plots lock
 ///     two columns" deduction.)*
+///   • **Line subset lock** *(dual of the above)* — K rows (or columns) whose open
+///     squares occupy exactly K plots reserve those plots to those lines; clear those
+///     plots' squares on every other line.
+///
+/// Both subset locks run for any K up to n−1 (not just K=2,3), so deeper deductions
+/// that larger boards rely on are still found without guessing.
 ///
 /// The point: if this solver can't even place the **first flower**, the puzzle
 /// requires a leap of faith — reject it. `grade` reports how far pure logic gets.
@@ -62,7 +68,7 @@ enum LogicSolver {
             }
         }
 
-        // Subset lock: K plots confined to K lines reserve those lines.
+        // Plot subset lock: K plots confined to K lines reserve those lines.
         func applySubsets(byColumn: Bool) -> Bool {
             // For each active plot, which lines (columns or rows) do its open squares touch?
             var active: [Int] = []
@@ -75,7 +81,7 @@ enum LogicSolver {
             }
             guard active.count >= 3 else { return false }   // need K + at least one outsider
 
-            for k in 2...min(3, active.count - 1) {
+            for k in 2...min(active.count - 1, n - 1) {
                 var hit = false
                 combinations(active, choose: k) { combo in
                     var union = Set<Int>()
@@ -87,6 +93,45 @@ enum LogicSolver {
                         for j in 0..<n where cand[i][j] {
                             let line = byColumn ? j : i
                             if union.contains(line), !comboSet.contains(regions[i][j]) {
+                                cand[i][j] = false; hit = true
+                            }
+                        }
+                    }
+                }
+                if hit { return true }
+            }
+            return false
+        }
+
+        // Line subset lock (dual): K lines whose open squares occupy exactly K plots reserve
+        // those plots to those lines — each of the K plots must place its flower on one of the
+        // K lines, so clear those plots' squares on every other line.
+        func applyLineSubsets(byColumn: Bool) -> Bool {
+            // For each active line (column or row), which plots do its open squares touch?
+            var active: [Int] = []
+            var plots: [Int: Set<Int>] = [:]
+            for line in 0..<n where !(byColumn ? colDone[line] : rowDone[line]) {
+                var regs = Set<Int>()
+                for k in 0..<n {
+                    let (i, j) = byColumn ? (k, line) : (line, k)
+                    if cand[i][j] { regs.insert(regions[i][j]) }
+                }
+                if !regs.isEmpty { active.append(line); plots[line] = regs }
+            }
+            guard active.count >= 3 else { return false }
+
+            for k in 2...min(active.count - 1, n - 1) {
+                var hit = false
+                combinations(active, choose: k) { combo in
+                    var union = Set<Int>()
+                    for line in combo { union.formUnion(plots[line]!) }
+                    guard union.count == k else { return }
+                    // Those K plots belong to these K lines; clear their squares on other lines.
+                    let comboSet = Set(combo)
+                    for i in 0..<n {
+                        for j in 0..<n where cand[i][j] {
+                            let line = byColumn ? j : i
+                            if union.contains(regions[i][j]), !comboSet.contains(line) {
                                 cand[i][j] = false; hit = true
                             }
                         }
@@ -147,9 +192,13 @@ enum LogicSolver {
             }
             if changed { continue }
 
-            // Technique 4 — subset locks.
+            // Technique 4 — plot subset locks.
             if applySubsets(byColumn: true)  { changed = true; continue }
             if applySubsets(byColumn: false) { changed = true; continue }
+
+            // Technique 5 — line subset locks (the dual).
+            if applyLineSubsets(byColumn: true)  { changed = true; continue }
+            if applyLineSubsets(byColumn: false) { changed = true; continue }
         }
 
         return Grade(placedByLogic: placed, total: n)

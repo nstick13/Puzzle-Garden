@@ -28,17 +28,15 @@ enum PuzzleGenerator {
         var rng = SeededRNG(seed: seed)
         let n   = difficulty.rawValue
 
-        // Region growth + refinement is cheap; a failed daily (nil) is far worse than retries.
-        // Only pathological seeds ever exhaust these, so the deep budget costs nothing typically.
-        let attempts = n >= 8 ? 250 : 120
+        // Region growth + refinement is cheap, and the loop returns the moment it finds a
+        // fully-fair board, so a deep budget costs nothing in the common case and only matters
+        // for rare hard seeds. (refineToUnique is load-bearing: reshaping toward uniqueness is
+        // what makes a no-guess board findable at 8×8/9×9 — raw grown regions almost never are.)
+        let attempts = n >= 8 ? 2500 : 800
 
-        // Most unique boards still require a guess to crack (empirically only ~15–20% are
-        // fully no-guess solvable). We reject the rest so every puzzle has a fair logical
-        // path — most importantly a forced *first flower*. A fully-fair board turns up within
-        // a handful of attempts, well inside the budget.
-        var fallback: Puzzle?     // best-effort if the budget somehow runs out
-        var fallbackScore = -1
-
+        // We ship ONLY boards that pure logic can fully crack — no guessing, ever (the "you never
+        // have to guess" promise). A guess-requiring board is never returned as a fallback; we'd
+        // rather return nil and let the caller retry with a fresh seed.
         for _ in 0..<attempts {
             guard let solution = placeQueens(n: n, rng: &rng) else { continue }
 
@@ -46,20 +44,20 @@ enum PuzzleGenerator {
             // Reshape region boundaries until `solution` is the *only* solution.
             guard refineToUnique(regions: &regions, target: solution, n: n, rng: &rng) else { continue }
 
-            let empty  = Array(repeating: Array(repeating: 0, count: n), count: n)
-            let puzzle = Puzzle(grid: empty, regions: regions, solution: solution, difficulty: difficulty)
+            // The hard gate: reject anything the no-guess solver can't fully unravel.
+            guard LogicSolver.grade(regions: regions, n: n).fullySolved else { continue }
 
-            let grade = LogicSolver.grade(regions: regions, n: n)
-            if grade.fullySolved { return puzzle }
-
-            // Hang onto the fairest board seen, so a degenerate seed still yields *a* puzzle
-            // (graceful degradation) rather than nothing.
-            if grade.placedByLogic > fallbackScore {
-                fallbackScore = grade.placedByLogic
-                fallback = puzzle
-            }
+            let empty = Array(repeating: Array(repeating: 0, count: n), count: n)
+            return Puzzle(grid: empty, regions: regions, solution: solution, difficulty: difficulty)
         }
-        return fallback
+
+        // Budget exhausted without a fully-fair board. Deliberately return nil rather than ship
+        // a guess-requiring puzzle. In practice unreachable for supported sizes: the daily is 5×5
+        // (fair boards abundant) and Free Play uses a fresh seed each tap.
+        #if DEBUG
+        print("⚠️ PuzzleGenerator: no no-guess \(n)×\(n) board in \(attempts) attempts (seed \(seed))")
+        #endif
+        return nil
     }
 
     // MARK: - Step 3: refine regions to a unique solution
