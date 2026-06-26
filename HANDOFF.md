@@ -102,6 +102,10 @@ Captured 2026-06-26. Roughly ordered by user value / low effort.
    `GardenView.swift:303` as a *feature* name → "My Garden" (not the app brand). Also set
    `CFBundleDisplayName` = "SO MUCH DOKU" (currently unset → on-device icon label defaults to the
    target name "Puzzle Garden").
+5. **⚠️ Before v2 ships — drop the unused background mode.** `Puzzle Garden/Info.plist` declares
+   `UIBackgroundModes → remote-notification`, but the app has no networking/push. Declaring an
+   unused capability is a common App Review rejection reason — remove the `UIBackgroundModes` key
+   (it's leftover boilerplate) before submitting v2.
 
 ## Backlog: 10×10 "weekly drop" (potential paid upgrade)
 
